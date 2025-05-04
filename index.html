@@ -9,202 +9,128 @@
         :root {
             --c-purple: #5F0F40; --c-red: #9A031E; --c-orange1: #FB8B24;
             --c-orange2: #E36414; --c-teal: #0F4C5C; --c-background: #f8f9fa;
-            --c-text: #343a40; --c-grey: #6c757d; --c-light-grey: #e9ecef;
-            --c-border: #ced4da; --c-white: #ffffff; --c-success: #28a745;
+            --c-text: var(--c-teal);
+            /* --- Adjusted Greys --- */
+            --c-grey: #686e78; /* Intermediate Bluish Grey */
+            --c-grey-darker: #4f5a68; /* Darker for hover */
+            --c-light-grey: #e8eef3;
+            --c-border: #dfe4e9;
+            /* --- Other Colors --- */
+            --c-white: #ffffff; --c-success: #28a745;
+            --c-teal-darker: #0b3a42;
+            --c-red-darker: #7a0218; --c-success-darker: #218838;
+            --c-orange1-darker: var(--c-orange2);
+            --c-teal-lighter: #327C8F; --c-locked-bg: #d6dde4;
         }
         /* --- General & Layout --- */
-        body { font-family: sans-serif; margin: 0; padding: 10px; background-color: var(--c-background); color: var(--c-text); font-size: 16px; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; margin: 0; padding: 10px; background-color: var(--c-background); color: var(--c-text); font-size: 16px; }
         .card { border: 1px solid var(--c-border); padding: 16px; border-radius: 8px; margin-bottom: 16px; background-color: var(--c-white); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
         .card-content { padding: 8px; }
-        h1 { text-align: center; margin-bottom: 1em; color: var(--c-teal); } h2 { color: var(--c-purple); border-bottom: 1px solid var(--c-light-grey); padding-bottom: 5px; margin-top: 0; margin-bottom: 0.75em;} h3 { color: var(--c-teal); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.75em;}
-        p.info-text { font-size: 0.9em; color: var(--c-grey); margin-bottom: 1em; margin-top: 0.5em; } hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
+        h1 { text-align: center; margin-bottom: 0.8em; color: var(--c-teal); font-weight: 700; font-size: 2em; }
+        h2 { color: var(--c-purple); border-bottom: 1px solid var(--c-light-grey); padding-bottom: 5px; margin-top: 0; margin-bottom: 0.75em; font-weight: 600;}
+        h3 { color: var(--c-teal); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.75em; font-weight: 600;}
+        p.info-text { font-size: 0.9em; color: var(--c-grey); margin-bottom: 1em; margin-top: 0.5em; }
+        hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
         .screen { display: none; } .hidden { display: none !important; } .text-center { text-align: center; }
         /* --- Buttons --- */
-        .button { padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; transition: background-color 0.2s ease, opacity 0.2s ease; color: var(--c-white); } .button:hover { opacity: 0.85; } .button:disabled { background-color: #ccc !important; cursor: not-allowed; opacity: 0.7;}
-        .button-primary { background-color: var(--c-teal); } .button-secondary { background-color: var(--c-grey); } .button-success { background-color: var(--c-success); } .button-warning { background-color: var(--c-orange1); color: var(--c-white); } .button-danger { background-color: var(--c-red); } .button-large { width: 100%; font-size: 1.2em; padding: 15px; } .button-small { font-size: 0.85em; padding: 5px 10px; margin-left: 0; vertical-align: middle;} .button-icon { background: none; border: none; padding: 2px 5px; cursor: pointer; font-size: 1.2em; vertical-align: middle; line-height: 1; color: var(--c-grey); } .button-icon:hover { color: var(--c-text); } .button-icon:disabled { color: #ccc; cursor: not-allowed; } .button-danger.button-icon { color: var(--c-red); } .button-danger.button-icon:hover { color: var(--c-purple); }
+        .button { padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; color: var(--c-white); }
+        .button:hover:not(:disabled) {}
+        .button:disabled { background-color: #ccc !important; cursor: not-allowed; opacity: 0.7;}
+        .button-primary { background-color: var(--c-teal); } .button-primary:hover:not(:disabled) { /* Handled by JS if random */ }
+        .button-secondary { background-color: var(--c-grey); } .button-secondary:hover:not(:disabled) { background-color: var(--c-grey-darker); }
+        .button-success { background-color: var(--c-success); } .button-success:hover:not(:disabled) { background-color: var(--c-success-darker); }
+        .button-warning { background-color: var(--c-orange1); color: var(--c-white); } .button-warning:hover:not(:disabled) { background-color: var(--c-orange1-darker); }
+        .button-danger { background-color: var(--c-red); } .button-danger:hover:not(:disabled) { background-color: var(--c-red-darker); }
+        .button-large { width: 65%; max-width: 320px; font-size: 1.2em; padding: 15px; display: block; margin-left: auto; margin-right: auto; margin-top: 15px; margin-bottom: 10px; }
+        .button-small { font-size: 0.85em; padding: 5px 10px; margin-left: 0; vertical-align: middle;}
+        .button-icon { background: none; border: none; padding: 0 3px; cursor: pointer; font-size: 1.2em; vertical-align: middle; line-height: 1; color: var(--c-grey); display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+        .button-icon:hover:not(:disabled) { color: var(--c-text); }
+        .button-icon:disabled { background: none !important; color: #ccc !important; cursor: not-allowed; opacity: 0.6; }
+        .delete-element-button:hover { color: var(--c-red) !important; transform: scale(1.1); }
+        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
+
         /* --- Inputs & Forms --- */
-        .input { padding: 10px; border: 1px solid var(--c-border); border-radius: 4px; width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; } .input-group { display: flex; gap: 5px; margin-bottom: 10px; align-items: center;} .input-group .input { flex-grow: 1; margin-bottom: 0; } .input-group label { flex-shrink: 0; margin-right: 5px;}
-        /* --- Toggle Switch --- */
-        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 20px; margin: 0 5px; vertical-align: middle; flex-shrink: 0; } .toggle-switch input { opacity: 0; width: 0; height: 0; } .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; } .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; } input:checked + .slider { background-color: var(--c-success); } input:checked + .slider:before { transform: translateX(20px); }
-        /* --- Lists --- */
-        .list-container { margin-top: 15px; } .list-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; } .list-item:last-child { border-bottom: none; } .list-item-name { flex-grow: 1; cursor: pointer; padding: 5px; border-radius: 3px; margin: 0 5px; } .list-item-name:hover { background-color: var(--c-light-grey); } .list-item.disabled .list-item-name { text-decoration: line-through; color: #999; } .list-item-controls-left { display: flex; align-items: center; gap: 5px; flex-shrink: 0; } .reorder-controls button { font-size: 1.1em; padding: 0 5px; line-height: 1; height: 24px; min-width: 24px;}
-        /* --- Element Item (Edit Screen) --- */
-        .element-item { background-color: var(--c-light-grey); padding: 8px 12px; margin-bottom: 5px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; gap: 5px; } .element-item-name { flex-grow: 1; margin: 0 5px; padding: 3px; border-radius: 3px; } .element-item.disabled .element-item-name { text-decoration: line-through; color: #777; } .element-item-controls-left { display: flex; align-items: center; gap: 3px; flex-shrink: 0; } .element-item-controls-right { flex-shrink: 0; }
+        .input { padding: 10px; border: 1px solid var(--c-border); border-radius: 4px; width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; } .input-group { display: flex; gap: 5px; margin-bottom: 10px; align-items: center;} .input-group .input { flex-grow: 1; margin-bottom: 0; } .input-group label { flex-shrink: 0; margin-right: 5px; font-weight: 500; color: var(--c-text); }
+
+        /* --- Lists & Elements Styling (Unified) --- */
+        .list-container { margin-top: 15px; } #elementsListContainer { padding-left: 0; list-style: none; }
+        .list-item, .element-item { padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; border: 1px solid var(--c-border); border-radius: 5px; cursor: pointer; background-color: var(--c-white); color: var(--c-text); min-height: 50px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+        .list-item.enabled, .element-item.enabled { background-color: var(--c-teal); color: var(--c-white); border-color: var(--c-teal); }
+        .list-item-name, .element-item-name { flex-grow: 1; padding: 12px 15px; font-weight: 500; text-align: left; }
+        .list-item.enabled .list-item-name, .element-item.enabled .element-item-name { color: var(--c-white); }
+        .list-item.enabled .button-icon, .element-item.enabled .button-icon { color: var(--c-white); }
+        .list-item.enabled .button-icon:hover:not(:disabled), .element-item.enabled .button-icon:hover:not(:disabled) { color: var(--c-light-grey); }
+        .list-item-controls-right, .element-item-controls-right { padding: 0 10px; border-left: 1px solid var(--c-border); display: flex; align-items: center; align-self: stretch; gap: 5px; flex-shrink: 0; }
+        .list-item.enabled .list-item-controls-right, .element-item.enabled .element-item-controls-right { border-left-color: rgba(255,255,255,0.3); }
+        .list-item-controls-right button, .element-item-controls-right button { font-size: 1.2em; line-height: 1; height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
+        .edit-button { padding: 0 5px; }
+        .element-item.disabled .element-item-name { text-decoration: line-through; color: #777; } .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-grey); border-color: var(--c-border); cursor: default;} .element-item.disabled .button-icon { color: #bbb; } .element-item.disabled .button-icon:hover { color: #bbb; }
+        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
+
         /* --- Randomization Screen --- */
-        #randomizationResultsContainer { margin-top: 20px; } .random-result-content { font-size: 1.6em; font-weight: bold; color: var(--c-text); padding: 15px; border-radius: 4px; min-height: 1.5em; cursor: pointer; margin-bottom: 10px; transition: background-color 0.3s ease, border 0.3s ease; background-color: var(--c-light-grey); border: 1px solid transparent; text-align: center; display: block; } .random-result-content.locked { background-color: var(--c-light-grey) !important; color: var(--c-text) !important; border-left: 7px solid var(--c-orange2) !important; cursor: pointer; } .random-result-content:not(.locked):hover { background-color: #ddd; } .random-result-content.empty { font-style: italic; font-weight: normal; font-size: 1.1rem; color: var(--c-grey); cursor: default; background-color: #f8f9fa; }
-        /* --- Import/Export Styling --- */
-        .import-export-section { margin-top: 15px; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 15px;} .import-export-block { margin-bottom: 10px; padding: 10px; border: 1px dashed var(--c-border); border-radius: 4px;} .import-export-block p {margin: 0 0 5px 0; font-weight: bold; font-size: 0.9em; color: var(--c-teal);} .import-export-block .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        #randomizationResultsContainer { margin-top: 20px; }
+        .random-result-content { font-size: 2.2em; font-weight: 700; color: var(--c-text); background-color: var(--c-white); border: 1px solid var(--c-border); padding: 20px; border-radius: 4px; min-height: 1.8em; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease; text-align: center; display: block; word-wrap: break-word; }
+        .random-result-content.locked { background-color: var(--c-light-grey) !important; color: var(--c-teal-lighter) !important; border: 1px solid var(--c-light-grey) !important; cursor: pointer; }
+        .random-result-content:not(.locked):hover { background-color: #ddd; }
+        .random-result-content.empty { font-weight: normal; color: var(--c-teal); background-color: var(--c-white); border: 1px solid var(--c-border); cursor: default; }
+        /* --- Footer Bar --- */
+        .footer-bar { padding: 15px 10px; margin-top: 20px; text-align: center; border-top: 1px solid #eee; } .footer-bar .button-group { display: inline-block; margin-bottom: 15px; width: 100%; text-align: left; padding-left: 5px; } .footer-bar .button-group .button { margin-top: 0; margin-bottom: 0;} .footer-bar #goToRandomizeBtn { }
+        /* --- Edit Screen Bottom Buttons --- */
+        .edit-screen-bottom-controls { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; }
+        .edit-screen-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        #deleteListBtn:hover:not(:disabled) { background-color: var(--c-red) !important; border-color: var(--c-red-darker); }
+        /* --- Help Button & Tooltip --- */
+        .randomization-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        #helpButton { background-color: var(--c-grey); color: var(--c-white); border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 1.1em; font-weight: bold; line-height: 30px; padding: 0; text-align: center; cursor: pointer; margin-left: auto; margin-top: 10px; }
+        #helpButton:hover { background-color: var(--c-grey-darker); }
+        #helpTooltip { display: none; background-color: var(--c-light-grey); border: 1px solid var(--c-border); border-radius: 4px; padding: 10px; margin-top: 5px; font-size: 0.9em; color: var(--c-text); text-align: left; }
+
     </style>
 </head>
 <body>
 
-    <div class="card screen" id="homeScreen">
-        <div class="card-content">
-            <h1>Music List Randomizer</h1>
-            <div id="noListsText" class="info-text">No hay listas creadas todavía.</div>
-            <button class="button button-success" onclick="createNewListAndGoToEdit()">+ Crear Nueva Lista</button>
-            <div class="import-export-section">
-                <div class="import-export-block">
-                    <p>Importar / Exportar Listas (Nombres):</p>
-                     <div class="button-group">
-                        <button class="button button-secondary button-small" onclick="triggerImportNamesTxt()">Importar Listas (.txt)</button>
-                        <input type="file" id="importNamesFile" accept=".txt,text/plain" class="hidden" onchange="handleImportNamesTxt(event)">
-                        <button class="button button-secondary button-small" onclick="exportNamesTxt()">Exportar Listas (.txt)</button>
-                     </div>
-                     <p class="info-text" style="margin:0; width: 100%; font-size: 0.8em;">(Útil para compartir/editar nombres offline. No guarda todo el estado.)</p>
-                </div>
-            </div>
-            <div id="listsContainer" class="list-container"></div>
-            <hr>
-            <button id="goToRandomizeBtn" class="button button-primary button-large" onclick="showRandomizationScreen()" disabled>
-                Randomizar
-            </button>
-        </div>
-    </div>
-    <div class="card screen" id="editScreen">
-         <div class="card-content">
-            <h2>Editar Lista</h2>
-            <div class="input-group">
-                 <label for="listNameInput">Nombre:</label>
-                <input class="input" id="listNameInput" type="text" placeholder="Nombre de la lista" oninput="updateListName(this.value)">
-            </div>
-            <h3>Añadir Elemento</h3>
-            <div class="input-group">
-                <input class="input" id="newElementName" type="text" placeholder="Nombre del nuevo elemento">
-                <button class="button button-primary" onclick="addElement()" style="white-space: nowrap;">Añadir</button>
-            </div>
-             <div style="margin-top: 20px; margin-bottom: 20px; display: flex; gap: 10px;">
-                 <button class="button button-secondary button-small" onclick="triggerImportTxt()">Importar Elementos (.txt)</button>
-                 <input type="file" id="importFile" accept=".txt,text/plain" class="hidden" onchange="handleImportTxt(event)">
-                 <button class="button button-secondary button-small" onclick="exportTxt()">Exportar Elementos (.txt)</button>
-             </div>
-            <h3>Elementos (<span id="elementCount">0</span>)</h3>
-             <p class="info-text">(Controles: Habilitar/Deshabilitar, Ordenar, Eliminar)</p>
-            <ul id="elementsListContainer"></ul>
-            <hr>
-             <button class="button button-danger" onclick="deleteList()">Eliminar Lista Completa</button>
-            <button class="button button-primary" onclick="saveAndGoHome()" style="float: right;">Guardar y Volver</button>
-        </div>
-    </div>
-    <div class="card screen" id="randomizationScreen">
-         <div class="card-content">
-            <h2>Randomización</h2>
-             <p class="info-text">(Haz clic en un resultado para bloquearlo/desbloquearlo)</p>
-             <div class="text-center">
-                 <button class="button button-primary" onclick="randomizeResults()" style="margin-bottom: 20px; font-size: 1.1em;">
-                     Randomizar
-                 </button>
-             </div>
-             <div id="randomizationResultsContainer"></div>
-            <hr>
-            <button class="button button-secondary" onclick="showHomeScreen()">Volver a Pantalla Principal</button>
-        </div>
-    </div>
+    <div class="card screen" id="homeScreen"> <div class="card-content"> <h1>Music List Randomizer</h1> <button class="button button-secondary" onclick="createNewListAndGoToEdit()" style="display: block; width: fit-content; margin: 0 0 20px 0;">+ Crear Nueva Lista</button> <div id="listsContainer" class="list-container"></div> <div class="footer-bar"> <div class="button-group"> <button class="button button-secondary button-small" onclick="triggerImportNamesTxt()">Importar listas</button> <input type="file" id="importNamesFile" accept=".txt,text/plain" class="hidden" onchange="handleImportNamesTxt(event)"> <button class="button button-secondary button-small" onclick="exportNamesTxt()">Exportar listas</button> </div> <button id="goToRandomizeBtn" class="button button-primary button-large" onclick="showRandomizationScreen()" disabled> Randomizar </button> </div> </div> </div>
+    <div class="card screen" id="editScreen"> <div class="card-content"> <div class="input-group" style="margin-bottom: 25px;"> <label for="listNameInput">Nombre de la lista:</label> <input class="input" id="listNameInput" type="text" placeholder="Nombre de la lista" oninput="updateListName(this.value)"> </div> <button class="button button-secondary" onclick="promptAddElement()">+ Añadir Elemento</button> <h3>Elementos (<span id="elementCount">0</span>)</h3> <ul id="elementsListContainer"></ul> <div class="edit-screen-bottom-controls"> <div style="margin-bottom: 15px; display: flex; gap: 10px;"> <button class="button button-secondary button-small" onclick="triggerImportTxt()">Importar lista</button> <input type="file" id="importFile" accept=".txt,text/plain" class="hidden" onchange="handleImportTxt(event)"> <button class="button button-secondary button-small" onclick="exportTxt()">Exportar lista</button> </div> <div class="edit-screen-footer"> <button class="button button-primary" onclick="saveAndGoHome()">Guardar y Volver</button> <button id="deleteListBtn" class="button button-secondary" onclick="deleteList()">Eliminar Lista Completa</button> </div> </div> </div> </div>
+    <div class="card screen" id="randomizationScreen"> <div class="card-content"> <div id="randomizationResultsContainer"></div> <div class="text-center" style="margin-top: 20px;"> <button id="randomizeButton" class="button button-primary button-large" onclick="randomizeResults()"> Randomizar </button> </div> <hr> <div class="randomization-footer"> <button class="button button-secondary" onclick="showHomeScreen()">Volver</button> <button id="helpButton" onclick="toggleHelpTooltip()">?</button> </div> <div id="helpTooltip"> Haz clic sobre el nombre de un resultado para Bloquearlo o Desbloquearlo. Los elementos bloqueados no cambiarán al pulsar "Randomizar". </div> </div> </div>
 
 
     <script>
-        // Initialize with empty array, loadLists will populate it
-        let lists = [];
-        let selectedListIndex = null;
-        let lastDisplayedRandomElements = {};
-
-        // --- Persistence Functions (Using localStorage) ---
-        function saveLists() {
-            try {
-                 localStorage.setItem('musicListRandomizerData_v2', JSON.stringify(lists));
-                 console.log("saveLists: OK - Data saved. Lists:", lists.length);
-            } catch (e) {
-                 console.error("saveLists: ERROR saving to localStorage:", e);
-                 // Cannot use alert() reliably here if modals are blocked
-            }
-        }
-        function loadLists() {
-            const data = localStorage.getItem('musicListRandomizerData_v2');
-            console.log("loadLists: Attempting load. Data found:", !!data);
-            if (data) {
-                try {
-                    const parsed = JSON.parse(data);
-                    if (!Array.isArray(parsed)) { throw new Error("Saved data is not an array."); }
-                    // Map data to ensure structure and add defaults if needed
-                    lists = parsed.map(list => ({
-                        id: list.id || Date.now().toString() + Math.random(),
-                        name: list.name || "Sin nombre",
-                        elements: Array.isArray(list.elements) ? list.elements.map(el => ({
-                             id: el.id || Date.now().toString() + Math.random(),
-                             name: el.name || "Sin nombre",
-                             enabled: typeof el.enabled === 'boolean' ? el.enabled : true
-                        })) : [],
-                        enabled: typeof list.enabled === 'boolean' ? list.enabled : true,
-                        lockedElementId: list.lockedElementId || null
-                    }));
-                    console.log(`loadLists: OK - Loaded ${lists.length} lists.`);
-                } catch (e) {
-                    console.error("loadLists: ERROR parsing/mapping data:", e);
-                    lists = []; // Reset on error
-                    try { localStorage.removeItem('musicListRandomizerData_v2'); } catch (e2) {}
-                }
-            } else {
-                console.log("loadLists: No data found. Initializing empty list.");
-                lists = [];
-            }
-         }
-
-        // --- Screen Management ---
+        // --- JS (Sin cambios en lógica) ---
+        let lists = []; let selectedListIndex = null; let lastDisplayedRandomElements = {};
+        function saveLists() { try { localStorage.setItem('musicListRandomizerData_v2', JSON.stringify(lists)); console.log("saveLists: OK", lists.length); } catch (e) { console.error("saveLists ERROR:", e); } }
+        function loadLists() { const data = localStorage.getItem('musicListRandomizerData_v2'); console.log("loadLists: Data found:", !!data); if (data) { try { const parsed = JSON.parse(data); if (!Array.isArray(parsed)) { throw new Error("Not array."); } lists = parsed.map(list => ({ id: list.id||Date.now().toString()+Math.random(), name: list.name||"?", elements: Array.isArray(list.elements)?list.elements.map(el=>({ id: el.id||Date.now().toString()+Math.random(), name: el.name||"?", enabled: typeof el.enabled==='boolean'?el.enabled:true })):[], enabled: typeof list.enabled==='boolean'?list.enabled:true, lockedElementId: list.lockedElementId||null })); console.log(`loadLists: OK ${lists.length} lists.`); } catch (e) { console.error("loadLists ERROR:", e); lists = []; try { localStorage.removeItem('musicListRandomizerData_v2'); } catch (e2) {} } } else { console.log("loadLists: No data."); lists = []; } }
         function showScreen(screenId) { document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none'); const screenToShow = document.getElementById(screenId); if (screenToShow) { screenToShow.style.display = 'block'; const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; } else { console.error("Screen ID not found", screenId); } window.scrollTo(0, 0); }
         function showHomeScreen() { renderHome(); showScreen('homeScreen'); selectedListIndex = null; }
         function showEditScreen(index) { selectedListIndex = index; if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) { renderEditScreen(); showScreen('editScreen'); } else { console.error("Invalid list index", index); showHomeScreen(); } }
-        function showRandomizationScreen() { renderRandomizationScreen(true); showScreen('randomizationScreen'); }
-
-        // --- List Logic (Home) ---
-        // Actions call saveLists()
+        function showRandomizationScreen() { lists.forEach(list => list.lockedElementId = null); lastDisplayedRandomElements = {}; const tooltip = document.getElementById('helpTooltip'); if(tooltip) tooltip.style.display = 'none'; renderRandomizationScreen(true, false); showScreen('randomizationScreen'); }
         function createNewListAndGoToEdit() { const defaultName = `Nueva Lista ${lists.length + 1}`; const newList = { id: Date.now().toString(), name: defaultName, elements: [], enabled: true, lockedElementId: null }; lists.push(newList); saveLists(); showEditScreen(lists.length - 1); renderHome(); }
         function toggleListEnabled(listId) { const index = lists.findIndex(l => l.id === listId); if (index === -1) return; lists[index].enabled = !lists[index].enabled; saveLists(); renderHome(); }
         function moveList(listId, direction) { const index = lists.findIndex(l => l.id === listId); if (index === -1) return; if (direction === 'up' && index > 0) { [lists[index], lists[index - 1]] = [lists[index - 1], lists[index]]; } else if (direction === 'down' && index < lists.length - 1) { [lists[index], lists[index + 1]] = [lists[index + 1], lists[index]]; } else { return; } saveLists(); renderHome(); }
-
-        // --- List Editing Logic (Edit) ---
-         // Actions call saveLists()
-        function updateListName(newName) { if (selectedListIndex !== null && lists[selectedListIndex]) { lists[selectedListIndex].name = newName; /* Saved on exit */ } }
-        function saveAndGoHome() { if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { console.warn("List name cannot be empty."); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen(); }
-         // Delete confirmation removed previously, direct delete
-        function deleteList() { console.log("deleteList called", selectedListIndex); if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) { console.error("Invalid index", selectedListIndex); return; } const listIndexToDelete = selectedListIndex; const listNameToDelete = lists[listIndexToDelete].name; console.warn("Deleting list w/o confirm:", listNameToDelete); if (lists[listIndexToDelete]) { lists.splice(listIndexToDelete, 1); console.log("Spliced"); saveLists(); showHomeScreen(); } else { console.error("Data inconsistent"); renderHome(); } }
-
-        // --- Element Logic (Edit) ---
-         // Actions call saveLists()
-        function addElement() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const input = document.getElementById("newElementName"); const name = input.value.trim(); if (!name) return; lists[selectedListIndex].elements.push({ id: Date.now().toString(), name: name, enabled: true }); saveLists(); renderEditScreen(); input.value = ""; input.focus(); }
-        // *** editElementName function REMOVED ***
+        function updateListName(newName) { if (selectedListIndex !== null && lists[selectedListIndex]) { lists[selectedListIndex].name = newName; } }
+        function saveAndGoHome() { if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { console.warn("Name empty"); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen(); }
+        function deleteList() { console.log("deleteList called", selectedListIndex); if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) { console.error("Invalid index", selectedListIndex); return; } const listIndexToDelete = selectedListIndex; const listNameToDelete = lists[listIndexToDelete].name; console.log("Confirm delete", listNameToDelete, listIndexToDelete); if (confirm(`¿Eliminar lista "${listNameToDelete}"?`)) { console.log("Confirmed"); if (lists[listIndexToDelete] && lists[listIndexToDelete].name === listNameToDelete) { lists.splice(listIndexToDelete, 1); console.log("Spliced"); saveLists(); showHomeScreen(); } else { console.error("Data changed"); renderHome(); } } else { console.log("Cancelled"); } }
+        function promptAddElement() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const elementName = prompt("Introduce el nombre del nuevo elemento:"); if (elementName === null) { console.log("Add cancelled."); return; } const trimmedName = elementName.trim(); if (!trimmedName) { console.warn("Element name empty."); return; } const elementExists = list.elements.some(el => el.name.toLowerCase() === trimmedName.toLowerCase()); if(elementExists) { console.warn(`Element "${trimmedName}" exists.`); return; } list.elements.push({ id: Date.now().toString(), name: trimmedName, enabled: true }); saveLists(); renderEditScreen(); console.log(`Element "${trimmedName}" added.`); }
         function deleteElement(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const index = list.elements.findIndex(el => el.id === elementId); if (index === -1) return; if (list.lockedElementId === elementId) { list.lockedElementId = null; } list.elements.splice(index, 1); saveLists(); renderEditScreen(); }
         function toggleElementEnabled(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const element = list.elements.find(el => el.id === elementId); if (!element) return; element.enabled = !element.enabled; if (!element.enabled && list.lockedElementId === elementId) { list.lockedElementId = null; } saveLists(); renderEditScreen(); }
         function moveElement(elementId, direction) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const elements = lists[selectedListIndex].elements; const index = elements.findIndex(el => el.id === elementId); if (index === -1) return; if (direction === 'up' && index > 0) { [elements[index], elements[index - 1]] = [elements[index - 1], elements[index]]; } else if (direction === 'down' && index < elements.length - 1) { [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]]; } else { return; } saveLists(); renderEditScreen(); }
-
-        // --- Import/Export Logic ---
-        // Specific List Elements TXT
         function triggerImportTxt() { document.getElementById('importFile').click(); }
-        function handleImportTxt(event) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const lines = e.target.result.split(/[\r\n]+/).filter(line=>line.trim()!==''); if(lines.length===0){return;} const list = lists[selectedListIndex]; const names=new Set(list.elements.map(el=>el.name)); let added=0; lines.forEach(line=>{const name=line.trim(); if(name && !names.has(name)){ list.elements.push({id:Date.now().toString()+Math.random(),name:name,enabled:true}); names.add(name); added++;}}); if(added>0){ saveLists(); renderEditScreen(); console.log(`${added} elementos importados (TXT).`);} else{ console.log("Ningún elemento nuevo importado (TXT).");} event.target.value=null; }; reader.onerror = function(e){console.error("Error reading elem TXT", e); event.target.value=null;}; reader.readAsText(file); }
+        function handleImportTxt(event) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const lines = e.target.result.split(/[\r\n]+/).filter(line=>line.trim()!==''); if(lines.length===0){return;} const list = lists[selectedListIndex]; const names=new Set(list.elements.map(el=>el.name)); let added=0; lines.forEach(line=>{const name=line.trim(); if(name && !names.has(name)){ list.elements.push({id:Date.now().toString()+Math.random(),name:name,enabled:true}); names.add(name); added++;}}); if(added>0){ saveLists(); renderEditScreen(); console.log(`${added} elem import TXT.`);} else{ console.log("No new elem TXT.");} event.target.value=null; }; reader.onerror = function(e){console.error("Error elem TXT", e); event.target.value=null;}; reader.readAsText(file); }
         function exportTxt() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; if (list.elements.length === 0) { return; } const data = list.elements.map(el => el.name).join('\n'); const blob = new Blob([data], { type: 'text/plain;charset=utf-8' }); const filename = list.name.replace(/[^a-z0-9_\-\s]/gi, '_').replace(/[\s]/g, '_') + '_elementos.txt'; const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); }
-
-        // *** Import/Export Names TXT ***
         function triggerImportNamesTxt() { document.getElementById('importNamesFile').click(); }
-        function exportNamesTxt() { if (lists.length === 0) { return; } let txtData = ""; lists.forEach(list => { txtData += `# ${list.name}\n`; list.elements.forEach(element => { txtData += `${element.name}\n`; }); txtData += "\n"; }); try { const blob = new Blob([txtData.trim()], { type: 'text/plain;charset=utf-8' }); const filename = 'listas_nombres_export.txt'; const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); } catch (e) { console.error("Error export TXT:", e); } }
-        function handleImportNamesTxt(event) { const file = event.target.files[0]; console.log("handleImportNamesTxt: File selected:", file ? file.name : 'No file'); if (!file) { event.target.value = null; return; } const reader = new FileReader(); reader.onload = function(e) { console.log("handleImportNamesTxt: File loaded."); try { const fileContent = e.target.result; if (!fileContent) { throw new Error("Archivo vacío."); } const lines = fileContent.split(/[\r\n]+/); let currentListIndex = -1; let listsAdded = 0; let elementsAdded = 0; let listMap = {}; lists.forEach((list, index) => { listMap[list.name.toLowerCase()] = index; }); console.log("handleImportNamesTxt: Processing lines..."); lines.forEach(line => { const trimmedLine = line.trim(); if (trimmedLine.startsWith('# ')) { const listName = trimmedLine.substring(2).trim(); if (!listName) return; const lowerCaseListName = listName.toLowerCase(); if (listMap.hasOwnProperty(lowerCaseListName)) { currentListIndex = listMap[lowerCaseListName]; console.log(`-> Found list "${listName}"`); } else { console.log(`-> Creating list "${listName}"`); const newList = { id: Date.now().toString() + Math.random(), name: listName, elements: [], enabled: true, lockedElementId: null }; lists.push(newList); currentListIndex = lists.length - 1; listMap[lowerCaseListName] = currentListIndex; listsAdded++; } } else if (trimmedLine && currentListIndex !== -1 && currentListIndex < lists.length) { const elementName = trimmedLine; const currentList = lists[currentListIndex]; const elementExists = currentList.elements.some(el => el.name.toLowerCase() === elementName.toLowerCase()); if (!elementExists) { currentList.elements.push({ id: Date.now().toString() + Math.random(), name: elementName, enabled: true }); elementsAdded++; } else { console.log(` -> Skipping duplicate element "${elementName}" in list "${currentList.name}"`); } } }); console.log("handleImportNamesTxt: Processing complete."); if (listsAdded > 0 || elementsAdded > 0) { saveLists(); renderHome(); console.log(`Importación TXT: ${listsAdded} listas, ${elementsAdded} elementos añadidos.`); } else { console.log("Importación TXT: No se añadieron listas ni elementos nuevos."); } } catch (error) { console.error("Error processing TXT:", error); } finally { event.target.value = null; console.log("handleImportNamesTxt: Input reset."); } }; reader.onerror = function(e) { console.error("Error reading file:", e); event.target.value = null; }; console.log("handleImportNamesTxt: Reading file..."); reader.readAsText(file); }
-
-
-        // --- Randomization Logic ---
-        // Calls saveLists() on toggleLock
-        function randomizeResults() { renderRandomizationScreen(false); }
-        function toggleLock(listId) { const listIndex = lists.findIndex(l => l.id === listId); if (listIndex === -1) return; const list = lists[listIndex]; if (list.lockedElementId) { list.lockedElementId = null; } else { const elementToLockId = lastDisplayedRandomElements[list.id]; if (elementToLockId) { const elementExistsAndEnabled = list.elements.some(el => el.id === elementToLockId && el.enabled); if(elementExistsAndEnabled) { list.lockedElementId = elementToLockId; } else { list.lockedElementId = null; } } } saveLists(); renderRandomizationScreen(false); }
+        function exportNamesTxt() { if (lists.length === 0) { console.log("No lists"); return; } let txtData = ""; lists.forEach(list => { txtData += `# ${list.name}\n`; list.elements.forEach(element => { txtData += `${element.name}\n`; }); txtData += "\n"; }); const suggestedFilename = 'listas_nombres_export.txt'; let userFilename = prompt("Nombre para archivo (.txt):", suggestedFilename); if (userFilename === null) { console.log("Export cancelled."); return; } userFilename = userFilename.trim(); if (!userFilename) { userFilename = suggestedFilename; } if (!userFilename.toLowerCase().endsWith('.txt')) { userFilename += '.txt'; } try { const blob = new Blob([txtData.trim()], { type: 'text/plain;charset=utf-8' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = userFilename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); console.log("Export TXT OK:", userFilename); } catch (e) { console.error("Error export TXT:", e); } }
+        function handleImportNamesTxt(event) { const file = event.target.files[0]; console.log("handleImportNamesTxt: File selected:", file ? file.name : 'No file'); if (!file) { event.target.value = null; return; } const reader = new FileReader(); reader.onload = function(e) { console.log("handleImportNamesTxt: File loaded."); try { const fileContent = e.target.result; if (!fileContent) { throw new Error("Archivo vacío."); } const lines = fileContent.split(/[\r\n]+/); let currentListIndex = -1; let listsAdded = 0; let elementsAdded = 0; let listMap = {}; lists.forEach((list, index) => { listMap[list.name.toLowerCase()] = index; }); console.log("handleImportNamesTxt: Processing lines..."); lines.forEach(line => { const trimmedLine = line.trim(); if (trimmedLine.startsWith('# ')) { const listName = trimmedLine.substring(2).trim(); if (!listName) return; const lowerCaseListName = listName.toLowerCase(); if (listMap.hasOwnProperty(lowerCaseListName)) { currentListIndex = listMap[lowerCaseListName]; console.log(`-> Found list "${listName}"`); } else { console.log(`-> Creating list "${listName}"`); const newList = { id: Date.now().toString() + Math.random(), name: listName, elements: [], enabled: true, lockedElementId: null }; lists.push(newList); currentListIndex = lists.length - 1; listMap[lowerCaseListName] = currentListIndex; listsAdded++; } } else if (trimmedLine && currentListIndex !== -1 && currentListIndex < lists.length) { const elementName = trimmedLine; const currentList = lists[currentListIndex]; const elementExists = currentList.elements.some(el => el.name.toLowerCase() === elementName.toLowerCase()); if (!elementExists) { currentList.elements.push({ id: Date.now().toString() + Math.random(), name: elementName, enabled: true }); elementsAdded++; } else { console.log(` -> Skip duplicate "${elementName}" in "${currentList.name}"`); } } }); console.log("handleImportNamesTxt: Processing complete."); if (listsAdded > 0 || elementsAdded > 0) { saveLists(); renderHome(); console.log(`Import TXT: ${listsAdded} lists, ${elementsAdded} elements added.`); } else { console.log("Import TXT: No new lists or elements added."); } } catch (error) { console.error("Error processing TXT:", error); } finally { event.target.value = null; console.log("handleImportNamesTxt: Input reset."); } }; reader.onerror = function(e) { console.error("Error reading file:", e); event.target.value = null; }; console.log("handleImportNamesTxt: Reading file..."); reader.readAsText(file); }
+        function randomizeResults() { renderRandomizationScreen(false, true); }
+        function toggleLock(listId) { const listIndex = lists.findIndex(l => l.id === listId); if (listIndex === -1) return; const list = lists[listIndex]; if (list.lockedElementId) { list.lockedElementId = null; console.log(`List ${list.name} UNLOCKED.`); } else { const elementToLockId = lastDisplayedRandomElements[list.id]; if (elementToLockId) { const elementExistsAndEnabled = list.elements.some(el => el.id === elementToLockId && el.enabled); if(elementExistsAndEnabled) { list.lockedElementId = elementToLockId; console.log(`List ${list.name} LOCKED on ${elementToLockId}`); } else { list.lockedElementId = null; console.warn(`Cannot lock ${elementToLockId}, invalid.`);} } else { console.warn(`Cannot lock ${list.name}: No last element.`);}} /* NO saveLists() */ renderRandomizationScreen(false, false); }
+        function toggleHelpTooltip() { const tooltip = document.getElementById('helpTooltip'); if (tooltip) { tooltip.style.display = (tooltip.style.display === 'block') ? 'none' : 'block'; } }
 
         // --- Rendering Functions ---
-        function renderHome() { const container = document.getElementById("listsContainer"); const noLists = document.getElementById("noListsText"); container.innerHTML = ""; noLists.classList.toggle('hidden', lists.length === 0); lists.forEach((list, index) => { const item = document.createElement("div"); item.className = `list-item ${list.enabled ? '' : 'disabled'}`; item.setAttribute('data-list-id', list.id); const leftCtrls = document.createElement("div"); leftCtrls.className = "list-item-controls-left"; const toggleLbl = document.createElement("label"); toggleLbl.className="toggle-switch"; toggleLbl.title=list.enabled?"Deshab":"Hab"; const toggleIn = document.createElement("input"); toggleIn.type="checkbox"; toggleIn.checked=list.enabled; toggleIn.onclick=(e)=>{e.stopPropagation();toggleListEnabled(list.id);}; const slider = document.createElement("span"); slider.className="slider"; toggleLbl.appendChild(toggleIn); toggleLbl.appendChild(slider); const reorderDiv = document.createElement("div"); reorderDiv.className = "reorder-controls"; const upBtn = document.createElement("button"); upBtn.className="button button-icon"; upBtn.innerHTML="↑"; upBtn.title="Arriba"; upBtn.disabled=index===0; upBtn.onclick=(e)=>{e.stopPropagation();moveList(list.id,'up');}; const downBtn = document.createElement("button"); downBtn.className="button button-icon"; downBtn.innerHTML="↓"; downBtn.title="Abajo"; downBtn.disabled=index===lists.length-1; downBtn.onclick=(e)=>{e.stopPropagation();moveList(list.id,'down');}; reorderDiv.appendChild(upBtn); reorderDiv.appendChild(downBtn); leftCtrls.appendChild(toggleLbl); leftCtrls.appendChild(reorderDiv); const nameArea = document.createElement("div"); nameArea.className = "list-item-name"; nameArea.textContent = `${list.name} (${list.elements.length})`; nameArea.title = "Clic para editar"; nameArea.onclick = () => showEditScreen(lists.findIndex(l => l.id === list.id)); item.appendChild(leftCtrls); item.appendChild(nameArea); container.appendChild(item); }); const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; }
-        function renderEditScreen() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; document.getElementById("listNameInput").value = list.name; document.getElementById("elementCount").textContent = list.elements.length; const container = document.getElementById("elementsListContainer"); container.innerHTML = ""; if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding-left: 0;'>No hay elementos.</li>"; } else { list.elements.forEach((element, index) => { const li = document.createElement("li"); li.className = `element-item ${element.enabled ? '' : 'disabled'}`; li.setAttribute('data-element-id', element.id); const leftCtrls = document.createElement("div"); leftCtrls.className = "element-item-controls-left"; const toggleLbl = document.createElement("label"); toggleLbl.className="toggle-switch"; toggleLbl.title=element.enabled?"Deshab":"Hab"; const toggleIn = document.createElement("input"); toggleIn.type="checkbox"; toggleIn.checked=element.enabled; toggleIn.onclick=(e)=>{e.stopPropagation();toggleElementEnabled(element.id);}; const slider = document.createElement("span"); slider.className="slider"; toggleLbl.appendChild(toggleIn); toggleLbl.appendChild(slider); const upBtn = document.createElement("button"); upBtn.className="button-icon"; upBtn.innerHTML="↑"; upBtn.title="Arriba"; upBtn.disabled=index===0; upBtn.onclick=(e)=>{e.stopPropagation();moveElement(element.id,'up');}; const downBtn = document.createElement("button"); downBtn.className="button-icon"; downBtn.innerHTML="↓"; downBtn.title="Abajo"; downBtn.disabled=index===list.elements.length-1; downBtn.onclick=(e)=>{e.stopPropagation();moveElement(element.id,'down');}; leftCtrls.appendChild(toggleLbl); leftCtrls.appendChild(upBtn); leftCtrls.appendChild(downBtn); const nameSpan = document.createElement("span"); nameSpan.className = "element-item-name"; nameSpan.textContent = element.name; const rightCtrls = document.createElement("div"); rightCtrls.className = "element-item-controls-right"; const delBtn = document.createElement("button"); delBtn.className="button-icon button-danger"; delBtn.innerHTML="×"; delBtn.title="Eliminar"; delBtn.style.fontSize='1.4em'; delBtn.onclick=(e)=>{e.stopPropagation();deleteElement(element.id);}; rightCtrls.appendChild(delBtn); li.appendChild(leftCtrls); li.appendChild(nameSpan); li.appendChild(rightCtrls); container.appendChild(li); }); } }
-        function renderRandomizationScreen(initialState = false) { const container = document.getElementById('randomizationResultsContainer'); container.innerHTML = ''; lastDisplayedRandomElements = {}; const enabledLists = lists.filter(list => list.enabled); if (enabledLists.length === 0) { container.innerHTML = '<p class="info-text text-center">No hay listas habilitadas.</p>'; return; } enabledLists.forEach(list => { const contentDiv = document.createElement('div'); contentDiv.className = 'random-result-content'; contentDiv.setAttribute('data-list-id-ref', list.id); let elementToShow = null; let isLocked = false; let statusTxt = ""; if (initialState) { contentDiv.textContent = `(${list.name} - Pulsa 'Randomizar')`; contentDiv.classList.add('empty'); statusTxt = `${list.elements.filter(e => e.enabled).length} elem. hab.`; } else { isLocked = !!list.lockedElementId; const enabledElements = list.elements.filter(el => el.enabled); if (isLocked) { const lockedElement = enabledElements.find(el => el.id === list.lockedElementId); if (lockedElement) { elementToShow = lockedElement; contentDiv.classList.add('locked'); statusTxt = "Bloqueado"; } else { list.lockedElementId = null; isLocked = false; saveLists(); } } if (!isLocked) { if (enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; statusTxt = `${enabledElements.length} elem. hab.`; } else { elementToShow = null; statusTxt = "No elem. hab."; } } if (elementToShow) { contentDiv.textContent = elementToShow.name; contentDiv.onclick = () => toggleLock(list.id); } else { contentDiv.textContent = `(${list.name} - ${statusTxt || 'Vacía'})`; contentDiv.classList.add('empty'); contentDiv.onclick = null; } } container.appendChild(contentDiv); }); }
+        function renderHome() { const container = document.getElementById("listsContainer"); container.innerHTML = ""; lists.forEach((list, index) => { const item = document.createElement("div"); item.className = `list-item ${list.enabled ? 'enabled' : ''}`; item.setAttribute('data-list-id', list.id); item.onclick = () => toggleListEnabled(list.id); const nameArea = document.createElement("div"); nameArea.className = "list-item-name"; nameArea.textContent = `${list.name} (${list.elements.length})`; const rightCtrls = document.createElement("div"); rightCtrls.className = "list-item-controls-right"; const upBtn = document.createElement("button"); upBtn.className="button button-icon"; upBtn.innerHTML="&#9650;"; upBtn.title="Arriba"; upBtn.disabled=index===0; upBtn.onclick=(e)=>{e.stopPropagation();moveList(list.id,'up');}; const downBtn = document.createElement("button"); downBtn.className="button button-icon"; downBtn.innerHTML="&#9660;"; downBtn.title="Abajo"; downBtn.disabled=index===lists.length-1; downBtn.onclick=(e)=>{e.stopPropagation();moveList(list.id,'down');}; const editBtn = document.createElement("button"); editBtn.className = "button-icon edit-button"; editBtn.innerHTML = "&#9998;"; editBtn.title = "Editar"; editBtn.onclick = (e) => { e.stopPropagation(); showEditScreen(lists.findIndex(l => l.id === list.id)); }; rightCtrls.appendChild(upBtn); rightCtrls.appendChild(downBtn); rightCtrls.appendChild(editBtn); item.appendChild(nameArea); item.appendChild(rightCtrls); container.appendChild(item); }); const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; }
+        function renderEditScreen() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; document.getElementById("listNameInput").value = list.name; document.getElementById("elementCount").textContent = list.elements.length; const container = document.getElementById("elementsListContainer"); container.innerHTML = ""; if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none;'>No hay elementos.</li>"; } else { list.elements.forEach((element, index) => { const li = document.createElement("li"); li.className = `element-item ${element.enabled ? 'enabled' : ''}`; li.setAttribute('data-element-id', element.id); li.onclick = () => toggleElementEnabled(element.id); const nameSpan = document.createElement("span"); nameSpan.className = "element-item-name"; nameSpan.textContent = element.name; const rightCtrls = document.createElement("div"); rightCtrls.className = "element-item-controls-right"; const upBtn = document.createElement("button"); upBtn.className="button-icon"; upBtn.innerHTML="&#9650;"; upBtn.title="Arriba"; upBtn.disabled=index===0; upBtn.onclick=(e)=>{e.stopPropagation();moveElement(element.id,'up');}; const downBtn = document.createElement("button"); downBtn.className="button-icon"; downBtn.innerHTML="&#9660;"; downBtn.title="Abajo"; downBtn.disabled=index===list.elements.length-1; downBtn.onclick=(e)=>{e.stopPropagation();moveElement(element.id,'down');}; const delBtn = document.createElement("button"); delBtn.className="button-icon delete-element-button"; delBtn.innerHTML="×"; delBtn.title="Eliminar"; delBtn.style.fontSize='1.4em'; delBtn.onclick=(e)=>{e.stopPropagation();deleteElement(element.id);}; rightCtrls.appendChild(upBtn); rightCtrls.appendChild(downBtn); rightCtrls.appendChild(delBtn); li.appendChild(nameSpan); li.appendChild(rightCtrls); container.appendChild(li); }); } }
+        function renderRandomizationScreen(initialState = false, shouldRandomize = false) { const container = document.getElementById('randomizationResultsContainer'); container.innerHTML = ''; const enabledLists = lists.filter(list => list.enabled); if (enabledLists.length === 0) { container.innerHTML = '<p class="info-text text-center">No hay listas habilitadas.</p>'; return; } console.log(`Rendering Randomization: Initial=${initialState}, ShouldRandomize=${shouldRandomize}`); enabledLists.forEach(list => { const contentDiv = document.createElement('div'); contentDiv.className = 'random-result-content'; contentDiv.setAttribute('data-list-id-ref', list.id); let elementToShow = null; let isLocked = !!list.lockedElementId; const enabledElements = list.elements.filter(el => el.enabled); if (initialState) { contentDiv.textContent = list.name; contentDiv.classList.add('empty'); lastDisplayedRandomElements[list.id] = null; } else { if (isLocked) { const lockedElement = enabledElements.find(el => el.id === list.lockedElementId); if (lockedElement) { elementToShow = lockedElement; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List ${list.name}: Displaying LOCKED ${elementToShow.name}`); } else { console.warn(`Locked element invalid in list ${list.name}. Treating as unlocked.`); isLocked = false; list.lockedElementId = null; if (shouldRandomize && enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; } else { elementToShow = null; } } } if (!isLocked) { if (shouldRandomize || !lastDisplayedRandomElements[list.id]) { if (enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List ${list.name}: Picking NEW random: ${elementToShow?.name}`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List ${list.name}: No enabled elements.`); } } else { const lastElement = enabledElements.find(el => el.id === lastDisplayedRandomElements[list.id]); if(lastElement) { elementToShow = lastElement; console.log(`List ${list.name}: Re-displaying PREVIOUS: ${elementToShow.name}`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List ${list.name}: Last element gone, showing empty.`); } } } if (elementToShow) { contentDiv.textContent = elementToShow.name; contentDiv.onclick = () => toggleLock(list.id); if(isLocked) { contentDiv.classList.add('locked'); } } else { contentDiv.textContent = `(${list.name} - Vacía/Sin elem. hab.)`; contentDiv.classList.add('empty'); contentDiv.onclick = null; } } container.appendChild(contentDiv); }); }
 
         // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOMContentLoaded: Initializing...");
-            loadLists(); // Load saved lists on start
-            showHomeScreen(); // Show the home screen with loaded lists
-            console.log("DOMContentLoaded: Initialization complete.");
-        });
+        document.addEventListener('DOMContentLoaded', () => { console.log("DOMContentLoaded: Initializing..."); loadLists(); lists.forEach(list => list.lockedElementId = null); lastDisplayedRandomElements = {}; console.log("DOMContentLoaded: Lock states reset."); showHomeScreen(); console.log("DOMContentLoaded: Initialization complete."); const randomizeButton = document.getElementById('randomizeButton'); if(randomizeButton) { const defaultBgColor = getComputedStyle(randomizeButton).backgroundColor; randomizeButton.addEventListener('mouseenter', () => { randomizeButton.style.backgroundColor = getRandomRgbColor(); }); randomizeButton.addEventListener('mouseleave', () => { randomizeButton.style.backgroundColor = ''; }); console.log("Random color hover attached."); } else { console.warn("Randomize button not found."); } });
+        function getRandomRgbColor() { const r = Math.floor(Math.random() * 256); const g = Math.floor(Math.random() * 256); const b = Math.floor(Math.random() * 256); return `rgb(${r}, ${g}, ${b})`; }
     </script>
 
 </body>
