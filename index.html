@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music List Randomizer</title>
+    <title>Practice Helper</title>
     <style>
         /* --- Color Palette Variables --- */
         :root {
@@ -16,27 +16,42 @@
             --c-orange1-darker: var(--c-orange2);
             --c-teal-lighter: #327C8F; --c-locked-bg: #d6dde4;
             --c-dark-bg: #212529;
+            --c-radius: 4px; /* Added for consistency */
         }
+
         /* --- General & Layout --- */
         body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; margin: 0; padding: 10px; background-color: var(--c-background); color: var(--c-text); font-size: 16px; }
-        .card { border: 1px solid var(--c-border); padding: 16px; border-radius: 8px; margin-bottom: 16px; background-color: var(--c-white); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-        .card-content { padding: 8px; }
-        h1 { text-align: center; margin-bottom: 0.8em; color: var(--c-teal); font-weight: 700; font-size: 2em; }
-        /* H3 general style */
+        .card { border: 1px solid var(--c-border); padding: 16px; border-radius: var(--c-radius); margin-bottom: 16px; background-color: var(--c-white); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        .card-content { padding: 8px; position: relative; /* Needed for absolute positioning of info button */ }
+        h1 { text-align: center; margin-top: 0; margin-bottom: 0.8em; color: var(--c-teal); font-weight: 700; font-size: 2em; }
         h3 { color: var(--c-teal); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.75em; font-weight: 600;}
         p.info-text { font-size: 0.9em; color: var(--c-grey); margin-bottom: 1em; margin-top: 0.5em; }
         hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
-        .screen { display: none; } .hidden { display: none !important; } .text-center { text-align: center; }
+        .screen { display: none; }
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+
         /* --- Buttons --- */
-        .button { padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; color: var(--c-white); position: relative; overflow: visible; vertical-align: middle;}
+        .button { padding: 10px 18px; border: none; border-radius: var(--c-radius); cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; color: var(--c-white); position: relative; overflow: visible; vertical-align: middle;}
         .button:hover:not(:disabled) {}
         .button:disabled { background-color: #ccc !important; cursor: not-allowed; opacity: 0.7;}
-        .button-primary { background-color: var(--c-teal); } .button-primary:hover:not(:disabled) { /* Handled by JS if random */ }
+        .button-primary { background-color: var(--c-teal); } /* Hover state for primary button is handled by specific rules or JS (random color on #randomizeButton) */
         .button-secondary { background-color: var(--c-grey); } .button-secondary:hover:not(:disabled) { background-color: var(--c-grey-darker); }
         .button-success { background-color: var(--c-success); } .button-success:hover:not(:disabled) { background-color: var(--c-success-darker); }
         .button-danger { background-color: var(--c-red); } .button-danger:hover:not(:disabled) { background-color: var(--c-red-darker); }
         .button-large { width: 65%; max-width: 320px; font-size: 1.2em; padding: 15px; display: block; margin-left: auto; margin-right: auto; margin-top: 15px; margin-bottom: 10px; border-radius: 30px; }
-        .button-icon { background: none; border: none; padding: 0 3px; cursor: pointer; font-size: 1em; vertical-align: middle; line-height: 1; color: var(--c-teal); display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+        .button-icon {
+            background: none;
+            border: none;
+            padding: 0 3px;
+            cursor: pointer;
+            font-size: 1em;
+            color: var(--c-teal);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
         .button-icon svg { width: 1.3em; height: 1.3em; fill: currentColor; }
         .button-icon:hover:not(:disabled) { color: var(--c-teal-darker); }
         .button-icon:disabled { background: none !important; color: #ccc !important; cursor: not-allowed; opacity: 0.6; }
@@ -44,11 +59,15 @@
         .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
 
         /* --- Inputs & Forms --- */
-        .input { padding: 10px; border: 1px solid var(--c-border); border-radius: 4px; width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; } .input-group { display: flex; gap: 5px; margin-bottom: 10px; align-items: center;} .input-group .input { flex-grow: 1; margin-bottom: 0; } .input-group label { flex-shrink: 0; margin-right: 5px; font-weight: 500; color: var(--c-text); }
+        .input { padding: 10px; border: 1px solid var(--c-border); border-radius: var(--c-radius); width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; }
+        .input-group { display: flex; gap: 5px; margin-bottom: 10px; align-items: center;}
+        .input-group .input { flex-grow: 1; margin-bottom: 0; }
+        .input-group label { flex-shrink: 0; margin-right: 5px; font-weight: 500; color: var(--c-text); }
 
         /* --- Lists & Elements Styling (Unified) --- */
-        .list-container { margin-top: 15px; } #elementsListContainer { padding-left: 0; list-style: none; margin-top: 0; /* Adjusted */ }
-        .list-item, .element-item { padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; border: 1px solid var(--c-border); border-radius: 5px; cursor: pointer; background-color: var(--c-white); color: var(--c-text); min-height: 50px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+        .list-container { margin-top: 15px; }
+        #elementsListContainer { padding-left: 0; list-style: none; margin-top: 0; }
+        .list-item, .element-item { padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; border: 1px solid var(--c-border); border-radius: var(--c-radius); cursor: pointer; background-color: var(--c-white); color: var(--c-text); min-height: 50px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
         .list-item.enabled, .element-item.enabled { background-color: var(--c-teal); color: var(--c-white); border-color: var(--c-teal); }
         .list-item-name, .element-item-name { flex-grow: 1; padding: 12px 15px; font-weight: 500; text-align: left; }
         .list-item.enabled .list-item-name, .element-item.enabled .element-item-name { color: var(--c-white); }
@@ -56,25 +75,37 @@
         .list-item.enabled .button-icon:hover:not(:disabled), .element-item.enabled .button-icon:hover:not(:disabled) { color: var(--c-light-grey); }
         .list-item-controls-right, .element-item-controls-right { padding: 0 10px; border-left: 1px solid var(--c-border); display: flex; align-items: center; align-self: stretch; gap: 5px; flex-shrink: 0; }
         .list-item.enabled .list-item-controls-right, .element-item.enabled .element-item-controls-right { border-left-color: rgba(255,255,255,0.3); }
-        .list-item-controls-right button, .element-item-controls-right button { line-height: 1; height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
-        .element-item.disabled .element-item-name { text-decoration: line-through; color: #777; } .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-grey); border-color: var(--c-border); cursor: default;} .element-item.disabled .button-icon { color: #bbb; } .element-item.disabled .button-icon:hover { color: #bbb; }
+        .list-item-controls-right button, .element-item-controls-right button { height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; }
+
+        .element-item.disabled .element-item-name { text-decoration: line-through; color: #777; }
+        .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-grey); border-color: var(--c-border); cursor: default;}
+        .element-item.disabled .button-icon { color: #bbb; }
+        .element-item.disabled .button-icon:hover { color: #bbb; }
         .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
 
         /* --- Randomization Screen --- */
-        #randomizationResultsContainer { margin-top: 20px; } .random-result-content { font-size: 2.2em; font-weight: 700; color: var(--c-text); background-color: var(--c-white); border: 1px solid var(--c-border); padding: 20px; border-radius: 4px; min-height: 1.8em; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease; text-align: center; display: block; word-wrap: break-word; } .random-result-content.locked { background-color: var(--c-light-grey) !important; color: var(--c-teal-lighter) !important; border: 1px solid var(--c-light-grey) !important; cursor: pointer; } .random-result-content:not(.locked):hover { background-color: #ddd; } .random-result-content.empty { font-weight: normal; color: var(--c-teal); background-color: var(--c-white); border: 1px solid var(--c-border); cursor: default; }
+        #randomizationResultsContainer { margin-top: 20px; }
+        .random-result-content { font-size: 2.2em; font-weight: 700; color: var(--c-text); background-color: var(--c-white); border: 1px solid var(--c-border); padding: 20px; border-radius: var(--c-radius); min-height: 1.8em; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease; text-align: center; display: block; word-wrap: break-word; }
+        .random-result-content.locked { background-color: var(--c-light-grey) !important; color: var(--c-teal-lighter) !important; border: 1px solid var(--c-light-grey) !important; cursor: pointer; }
+        .random-result-content:not(.locked):hover { background-color: #ddd; }
+        .random-result-content.empty { font-weight: normal; color: var(--c-teal); background-color: var(--c-white); border: 1px solid var(--c-border); cursor: default; }
 
         /* --- Footer Bar & Action Buttons --- */
         .home-actions-group {
             display: flex;
-            gap: 20px; /* Modificado de 25px a 20px */
+            gap: 20px;
             align-items: center;
             justify-content: flex-start;
             margin-top: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 0;
             padding-left: 5px;
             flex-wrap: wrap;
         }
-        .footer-bar { padding: 15px 0 0 0; margin-top: 20px; text-align: center; }
+        .footer-bar {
+             padding: 15px 0 0 0;
+             margin-top: 10px;
+             text-align: center;
+        }
         .footer-bar #goToRandomizeBtn { margin: 0 auto; }
 
         /* --- Edit Screen Layout --- */
@@ -91,14 +122,14 @@
             gap: 15px;
         }
         .sub-header-right {
-             /* Container for conditional save button */
+            /* Container for conditional save button */
         }
         /* Style for the element count display */
         .edit-screen-sub-header .element-count-heading {
             margin: 0;
-            font-size: 0.95em; /* Small */
+            font-size: 0.95em;
             color: var(--c-text);
-            font-weight: 500; /* Thin */
+            font-weight: 500;
         }
         /* Make the actual numbers slightly bolder */
         .edit-screen-sub-header .element-count-heading span {
@@ -110,24 +141,22 @@
         .edit-screen-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .edit-screen-footer .button-group {
              display: flex;
-             gap: 20px; /* Modificado de 25px a 20px */
+             gap: 20px;
              align-items: center;
         }
 
-        /* --- Randomization Footer (REMOVED Help Button Styles) --- */
+        /* --- Randomization Footer --- */
         .randomization-footer {
              display: flex;
              justify-content: flex-start; /* Only back button now */
              align-items: center;
              margin-top: 10px;
         }
-        /* #helpButton, #helpTooltip styles REMOVED */
-
 
         /* --- Animated Circular Icon Buttons --- */
-        .io-button { width: 45px; height: 45px; border: 1px solid var(--c-teal); border-radius: 50%; background-color: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); padding: 0; margin: 0; vertical-align: middle; flex-shrink: 0; }
+        .io-button { width: 45px; height: 45px; border: 1px solid var(--c-teal); border-radius: 50%; background-color: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease, fill 0.3s ease; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); padding: 0; margin: 0; vertical-align: middle; flex-shrink: 0; }
         .io-button .io-svgIcon { width: 24px; height: 24px; fill: var(--c-teal); transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), fill 0.3s ease; }
-        .io-button .tooltip { position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); opacity: 0; background-color: var(--c-dark-bg); color: white; padding: 6px 12px; border-radius: 5px; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease, bottom 0.3s ease; pointer-events: none; white-space: nowrap; font-size: 0.85em; z-index: 10; }
+        .io-button .tooltip { position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); opacity: 0; background-color: var(--c-dark-bg); color: white; padding: 6px 12px; border-radius: var(--c-radius); display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease, bottom 0.3s ease; pointer-events: none; white-space: nowrap; font-size: 0.85em; z-index: 10; }
         .io-button .tooltip::before { position: absolute; content: ""; width: 10px; height: 10px; background-color: var(--c-dark-bg); transform: rotate(45deg) translateX(-50%); bottom: -5px; left: 50%; z-index: -1; }
         /* Default Hover */
         .io-button:hover:not(:disabled) { background-color: var(--c-teal); border-color: var(--c-teal-darker); }
@@ -140,25 +169,179 @@
         .save-and-back-button.io-button:hover:not(:disabled) .io-svgIcon { fill: var(--c-white) !important; animation: none !important; }
         @keyframes slide-in-top { 0% { transform: translateY(-8px) scale(0.9); opacity: 0; } 100% { transform: translateY(0px) scale(1); opacity: 1; } }
 
-        /* --- Estilos específicos para el botón Randomizar --- */
+        /* --- Specific styles for Randomize Button (Randomization Screen) --- */
         #randomizeButton {
-            /* Hereda tamaño, fuente, color base de .button, .button-primary, .button-large */
-            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
-            outline: none; /* Quita el borde de foco por defecto */
-            will-change: transform, background-color; /* Optimización para la animación */
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+            will-change: transform, background-color;
+        }
+        #randomizeButton:hover:not(:disabled) {
+            transform: translateY(-7px);
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2);
+        }
+        #randomizeButton:active:not(:disabled),
+        #randomizeButton.spacebar-active:not(:disabled) { /* Class added for spacebar feedback */
+            transform: translateY(-1px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
         }
 
-        #randomizeButton:hover:not(:disabled) { /* Solo aplica efectos si no está deshabilitado */
-            transform: translateY(-7px); /* Levanta el botón */
-            /* El background-color se aplicará con JavaScript */
-            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
-            /* color: #fff; ya es blanco por .button */
+        /* --- Subtle Hover Effect for Main Randomize Button (Home Screen) --- */
+        #goToRandomizeBtn:hover:not(:disabled) {
+          background-color: var(--c-teal-lighter);
         }
 
-        #randomizeButton:active:not(:disabled) { /* Efecto al presionar */
-            transform: translateY(-1px); /* Baja ligeramente */
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15); /* Sombra reducida al presionar */
+        /* --- Remove "card" effect from main screens --- */
+        .screen.card {
+            border: none;
+            border-radius: 0;
+            margin-bottom: 0;
+            background-color: transparent;
+            box-shadow: none;
+            /* padding: 16px; Kept from .card */
         }
+
+        /* --- Styles for Input with Floating Label --- */
+        .floating-input-container {
+            position: relative;
+        }
+        #listNameInput {
+            border: 2px solid var(--c-border);
+            padding: 18px 10px 6px 10px;
+            color: var(--c-text);
+            background: transparent;
+            border-radius: var(--c-radius);
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .floating-label {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            padding: 0 5px;
+            background: var(--c-background);
+            white-space: nowrap;
+            transform: translate(0, 0);
+            transform-origin: 0 0;
+            transition: transform 120ms ease-in, color 120ms ease-in;
+            font-weight: 500;
+            line-height: 1.2;
+            color: var(--c-grey);
+            pointer-events: none;
+            font-size: 1em;
+        }
+        #listNameInput:focus + .floating-label,
+        #listNameInput:not(:placeholder-shown) + .floating-label {
+            transform: translate(0, -65%) scale(.85);
+            color: var(--c-teal);
+            background: var(--c-background);
+        }
+        /* --- End Floating Label Styles --- */
+
+        /* --- Styles for Information Modal --- */
+        #modalOverlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            /* display: flex; Is managed by JS */
+            align-items: center;
+            justify-content: center;
+        }
+        #infoModal {
+            background-color: var(--c-white);
+            padding: 25px 30px;
+            border-radius: var(--c-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1000;
+            max-width: 90%;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: var(--c-text);
+        }
+        #infoModal h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--c-teal);
+            text-align: center;
+        }
+        #infoModal h3 { /* Specific style for h3 inside modal */
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+            font-size: 1.05em;
+            color: var(--c-teal-darker);
+        }
+        #infoModal p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 0.95em;
+            color: var(--c-grey-darker);
+        }
+        #infoModal strong {
+             font-weight: 600;
+             color: var(--c-text);
+        }
+        #modalCloseBtn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--c-grey);
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #modalCloseBtn:hover {
+            color: var(--c-teal-darker);
+        }
+
+         /* --- Styles for Info Button --- */
+         #infoButton { /* Button to open modal - Absolute positioning */
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border: none; /* No border */
+            background-color: transparent; /* Transparent background */
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
+            border-radius: 50%; /* Ensure it remains circular */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        #infoButton .io-svgIcon { /* Icon inside info button */
+            width: 24px;
+            height: 24px;
+            fill: var(--c-grey); /* Initial grey icon */
+            transition: fill 0.3s ease; /* Transition for icon color */
+            animation: none !important; /* Ensure no extra animation */
+        }
+        /* Updated hover: teal background, white icon */
+        #infoButton:hover:not(:disabled) {
+            background-color: var(--c-teal);
+            border-color: var(--c-teal-darker); /* Kept in case border is added back */
+        }
+         #infoButton:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-white);
+            animation: none !important; /* Ensure no extra animation */
+          }
+         /* --- End Info Button Styles --- */
+        /* --- End Modal Styles --- */
 
     </style>
 </head>
@@ -166,9 +349,13 @@
 
     <div class="card screen" id="homeScreen">
         <div class="card-content">
-            <h1>Music List Randomizer</h1>
-            <div id="listsContainer" class="list-container"></div>
-            <hr> <div class="home-actions-group">
+             <button id="infoButton" class="io-button" aria-label="Información y Ayuda">
+                <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"> <path d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z"/></svg>
+                <span class="tooltip">Ayuda / Info</span>
+             </button>
+             <h1>Practice Helper</h1>
+             <div id="listsContainer" class="list-container"></div>
+             <hr> <div class="home-actions-group">
                  <button class="io-button create-btn" onclick="createNewListAndGoToEdit()" aria-label="Crear nueva lista">
                      <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                      <span class="tooltip">Crear nueva lista</span>
@@ -182,515 +369,823 @@
                      <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                      <span class="tooltip">Exportar listas seleccionadas</span>
                  </button>
-            </div>
-            <div class="footer-bar"> <button id="goToRandomizeBtn" class="button button-primary button-large" onclick="showRandomizationScreen()" disabled> Randomizar </button>
-            </div>
-        </div>
-    </div>
+             </div>
+             <div class="footer-bar"> <button id="goToRandomizeBtn" class="button button-primary button-large" onclick="showRandomizationScreen()" disabled> Randomizar </button>
+             </div>
+         </div>
+     </div>
 
-    <div class="card screen" id="editScreen">
-        <div class="card-content">
-            <div class="input-group" style="margin-bottom: 15px;">
-                <label for="listNameInput">Nombre de la lista:</label>
-                <input class="input" id="listNameInput" type="text" placeholder="Nombre de la lista" oninput="updateListName(this.value)">
-            </div>
+     <div class="card screen" id="editScreen">
+         <div class="card-content">
+             <div class="floating-input-container" style="margin-bottom: 15px;">
+                 <input class="input" id="listNameInput" type="text" placeholder=" " oninput="updateListName(this.value)">
+                 <label class="floating-label" for="listNameInput">Nombre de la lista</label>
+             </div>
 
-            <div id="editScreenSubHeader" class="edit-screen-sub-header">
-                <div class="sub-header-left">
-                    <button id="editScreenAddBtn" class="io-button add-elem-btn" onclick="promptAddElement()" aria-label="Añadir Elemento">
-                        <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                        <span class="tooltip">Añadir elemento</span>
+             <div id="editScreenSubHeader" class="edit-screen-sub-header">
+                 <div class="sub-header-left">
+                     <button id="editScreenAddBtn" class="io-button add-elem-btn" onclick="promptAddElement()" aria-label="Añadir Elemento">
+                         <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                         <span class="tooltip">Añadir elemento</span>
+                     </button>
+                     <h3 class="element-count-heading"><span id="elementCountDisplay">0/0</span></h3>
+                 </div>
+
+                 <div class="sub-header-right">
+                     <button id="editScreenTopSaveBtn" class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver" style="display: none;"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
+                         <span class="tooltip">Guardar y volver</span>
                     </button>
-                    <h3 class="element-count-heading"><span id="elementCountDisplay">0/0</span></h3>
-                </div>
-
-                <div class="sub-header-right">
-                    <button id="editScreenTopSaveBtn" class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver" style="display: none;"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
-                        <span class="tooltip">Guardar y volver</span>
-                   </button>
-                </div>
-            </div>
-            <ul id="elementsListContainer"></ul> <div class="edit-screen-bottom-controls">
-                <div class="edit-screen-footer">
-                    <div class="button-group"> <button class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver">
+                 </div>
+             </div>
+             <ul id="elementsListContainer"></ul>
+             <div class="edit-screen-bottom-controls">
+                 <div class="edit-screen-footer">
+                     <div class="button-group">
+                           <button class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver">
                              <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
                              <span class="tooltip">Guardar y volver</span>
-                         </button>
-                         <button class="io-button import-elem-btn" onclick="triggerImportTxt()" aria-label="Importar Elementos (TXT)">
-                             <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-                             <span class="tooltip">Importar elementos (.txt)</span>
-                         </button>
-                         <input type="file" id="importFile" accept=".txt,text/plain" class="hidden" onchange="handleImportTxt(event)">
-                         <button class="io-button export-elem-btn" onclick="exportTxt()" aria-label="Exportar Elementos (TXT)">
-                             <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-                             <span class="tooltip">Exportar elementos (.txt)</span>
-                         </button>
-                    </div>
-                    <div class="button-group"> <button id="deleteListBtn" class="io-button delete-list-io-btn" onclick="deleteList()" aria-label="Eliminar Lista Completa">
+                           </button>
+                           <button class="io-button import-elem-btn" onclick="triggerImportTxt()" aria-label="Importar Elementos (TXT)">
+                               <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                               <span class="tooltip">Importar elementos (.txt)</span>
+                           </button>
+                           <input type="file" id="importFile" accept=".txt,text/plain" class="hidden" onchange="handleImportTxt(event)">
+                           <button class="io-button export-elem-btn" onclick="exportTxt()" aria-label="Exportar Elementos (TXT)">
+                               <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                               <span class="tooltip">Exportar elementos (.txt)</span>
+                           </button>
+                     </div>
+                     <div class="button-group">
+                           <button id="deleteListBtn" class="io-button delete-list-io-btn" onclick="deleteList()" aria-label="Eliminar Lista Completa">
                              <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
                              <span class="tooltip">Eliminar lista completa</span>
-                         </button>
-                    </div>
-                </div>
-            </div> </div> </div> <div class="card screen" id="randomizationScreen">
-        <div class="card-content">
-            <div id="randomizationResultsContainer"></div>
-            <div class="text-center" style="margin-top: 20px;">
-                <button id="randomizeButton" class="button button-primary button-large" onclick="randomizeResults()"> Randomizar </button>
-            </div>
-            <hr>
-            <div class="randomization-footer">
-                <button class="io-button back-btn" onclick="showHomeScreen()" aria-label="Volver">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-                    <span class="tooltip">Volver</span>
-                </button>
-                </div>
-            </div>
+                           </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
     </div>
-    <script>
-        // --- Global Variables ---
-        let lists = [];
-        let selectedListIndex = null;
-        let lastDisplayedRandomElements = {};
-        const MIN_ELEMENTS_FOR_TOP_SAVE = 10;
 
-        // --- Persistence ---
-        function saveLists() {
-            try {
-                localStorage.setItem('musicListRandomizerData_v2', JSON.stringify(lists));
-                console.log("saveLists: OK", lists.length);
-            } catch (e) {
-                console.error("saveLists ERROR:", e);
-            }
-        }
+    <div class="card screen" id="randomizationScreen">
+         <div class="card-content">
+             <div id="randomizationResultsContainer"></div>
+             <div class="text-center" style="margin-top: 20px;">
+                 <button id="randomizeButton" class="button button-primary button-large" onclick="randomizeResults()"> Randomizar </button>
+             </div>
+             <hr>
+             <div class="randomization-footer">
+                 <button class="io-button back-btn" onclick="showHomeScreen()" aria-label="Volver">
+                     <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                     <span class="tooltip">Volver</span>
+                 </button>
+             </div>
+         </div>
+     </div>
 
-        function loadLists() {
-            const data = localStorage.getItem('musicListRandomizerData_v2');
-            console.log("loadLists: Data found:", !!data);
-            if (data) {
-                try {
-                    const parsed = JSON.parse(data);
-                    if (!Array.isArray(parsed)) { throw new Error("Not array."); }
-                    lists = parsed.map(list => ({
-                        id: list.id || Date.now().toString() + Math.random(),
-                        name: list.name || "?",
-                        elements: Array.isArray(list.elements) ? list.elements.map(el => ({
-                            id: el.id || Date.now().toString() + Math.random(),
-                            name: el.name || "?",
-                            enabled: typeof el.enabled === 'boolean' ? el.enabled : true
-                        })) : [],
-                        enabled: typeof list.enabled === 'boolean' ? list.enabled : true,
-                        lockedElementId: list.lockedElementId || null
-                    }));
-                    console.log(`loadLists: OK ${lists.length} lists.`);
-                } catch (e) {
-                    console.error("loadLists ERROR:", e);
-                    lists = [];
-                    try { localStorage.removeItem('musicListRandomizerData_v2'); } catch (e2) {}
-                }
-            } else {
-                console.log("loadLists: No data.");
-                lists = [];
-            }
-        }
+     <div id="modalOverlay" style="display: none;">
+         <div id="infoModal">
+             <button id="modalCloseBtn">&times;</button>
+             <h2>Ayuda / Información</h2>
 
-        // --- Screen Management ---
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none');
-            const screenToShow = document.getElementById(screenId);
-            if (screenToShow) {
-                screenToShow.style.display = 'block';
-                const randBtn = document.getElementById('goToRandomizeBtn');
-                if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
-            } else {
-                console.error("Screen ID not found", screenId);
-            }
-            window.scrollTo(0, 0);
-        }
+             <h3>Cómo Usar</h3>
+             <p>Para empezar crea una lista (puede ser, por ejemplo "Temas", "Ejercicios", "Tonos", etc.)</p>
+             <p>Añade tantos elementos cuantos quieres en la lista. Puedes activar/desactivar los elementos dentro de la lista para luego randomizarlos. De la misma forma puedes activar y desactivar las propias listas.</p>
+             <p>Una vez creadas y seleccionadas las listas pulsa el botón "Randomizar", que te llevará a la pantalla de selección aleatoria.</p>
+             <p>Pulsando el botón principal ("Randomizar" en la nueva pantalla) seleccionará un elemento al azar de cada lista activada. Pulsa el botón de nuevo para repetir la acción. Puedes bloquear/desbloquear el elemento randomizado haciendo click sobre él (por ejemplo si quieres practicar un determinado tema en varios tonos). Los elementos bloqueados no se randomizarán al pulsar el botón principal.</p>
 
-        function showHomeScreen() {
-            renderHome();
-            showScreen('homeScreen');
-            selectedListIndex = null;
-        }
+             <h3>Import/Export</h3>
+             <p>Puedes Importar y exportar tanto las listas individuales (a través de la pantalla de edición de listas) como varias listas (en la pantalla principal), en cuyo caso se exportarán solamente las listas activadas.</p>
 
-        function showEditScreen(index) {
-            selectedListIndex = index;
-            if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) {
-                renderEditScreen();
-                showScreen('editScreen');
-            } else {
-                console.error("Invalid list index", index);
-                showHomeScreen();
-            }
-        }
+             <h3>Acerca de</h3>
+             <p>Practice Helper es un programa creado para músicos con el fin de ayudarles a practicar ejercicios y estudiar repertorio. Es un port de mi aplicación para Android que escribí en su momento y gracias a la ayuda de Gemini AI he podido crear esa webapp.</p>
 
-        function showRandomizationScreen() {
-            lists.forEach(list => list.lockedElementId = null);
-            lastDisplayedRandomElements = {};
-            renderRandomizationScreen(true, false);
-            showScreen('randomizationScreen');
-        }
+             <h3>Feedback</h3>
+             <p>Si tienes cualquier feedback constructivo no dudes en escribirme al degtiarev.music@gmail.com</p>
 
-        // --- Home Screen Logic ---
-        function createNewListAndGoToEdit() {
-            const defaultName = `Nueva Lista ${lists.length + 1}`;
-            const newList = { id: Date.now().toString(), name: defaultName, elements: [], enabled: true, lockedElementId: null };
-            lists.push(newList);
-            saveLists();
-            showEditScreen(lists.length - 1);
-            renderHome();
-        }
+             <h3>Roadmap</h3>
+             <p>Agregar un módulo que imita el comportamiento de mi otra aplicación Note Randomizer, juntando de esa manera ambas herramientas.</p>
+         </div>
+     </div>
 
-        function toggleListEnabled(listId) {
-            const index = lists.findIndex(l => l.id === listId);
-            if (index === -1) return;
-            lists[index].enabled = !lists[index].enabled;
-            saveLists();
-            renderHome();
-        }
+      <script>
+         // --- Global Variables ---
+         let lists = [];
+         let selectedListIndex = null;
+         let lastDisplayedRandomElements = {};
+         const MIN_ELEMENTS_FOR_TOP_SAVE = 10;
 
-        function moveList(listId, direction) {
-            const index = lists.findIndex(l => l.id === listId);
-            if (index === -1) return;
-            if (direction === 'up' && index > 0) {
-                [lists[index], lists[index - 1]] = [lists[index - 1], lists[index]];
-            } else if (direction === 'down' && index < lists.length - 1) {
-                [lists[index], lists[index + 1]] = [lists[index + 1], lists[index]];
-            } else {
-                return;
-            }
-            saveLists();
-            renderHome();
-        }
+         // --- Persistence ---
+         function saveLists() {
+             try {
+                 localStorage.setItem('musicListRandomizerData_v2', JSON.stringify(lists));
+                 console.log("saveLists: OK", lists.length);
+             } catch (e) {
+                 console.error("saveLists ERROR:", e);
+             }
+         }
 
-        // --- Edit Screen Logic ---
-        function updateListName(newName) {
-            if (selectedListIndex !== null && lists[selectedListIndex]) {
-                lists[selectedListIndex].name = newName;
-            }
-        }
+         function loadLists() {
+             const data = localStorage.getItem('musicListRandomizerData_v2');
+             console.log("loadLists: Data found:", !!data);
+             if (data) {
+                 try {
+                     const parsed = JSON.parse(data);
+                     if (!Array.isArray(parsed)) { throw new Error("Not array."); }
+                     lists = parsed.map(list => ({
+                         id: list.id || Date.now().toString() + Math.random(),
+                         name: list.name || "?",
+                         elements: Array.isArray(list.elements) ? list.elements.map(el => ({
+                             id: el.id || Date.now().toString() + Math.random(),
+                             name: el.name || "?",
+                             enabled: typeof el.enabled === 'boolean' ? el.enabled : true
+                         })) : [],
+                         enabled: typeof list.enabled === 'boolean' ? list.enabled : true,
+                         lockedElementId: list.lockedElementId || null
+                     }));
+                     console.log(`loadLists: OK ${lists.length} lists.`);
+                 } catch (e) {
+                     console.error("loadLists ERROR:", e);
+                     lists = [];
+                     try { localStorage.removeItem('musicListRandomizerData_v2'); } catch (e2) {}
+                 }
+             } else {
+                 console.log("loadLists: No data.");
+                 lists = [];
+             }
+         }
 
-        function saveAndGoHome() {
-            if (selectedListIndex !== null && lists[selectedListIndex]) {
-                const currentName = document.getElementById('listNameInput').value.trim();
-                if (!currentName) {
-                     alert("El nombre de la lista no puede estar vacío.");
-                     console.warn("List name cannot be empty on save.");
-                     return;
-                }
-                lists[selectedListIndex].name = currentName;
-            }
-            saveLists();
-            showHomeScreen();
-        }
+         // --- Screen Management ---
+         function showScreen(screenId) {
+             document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none');
+             const screenToShow = document.getElementById(screenId);
+             if (screenToShow) {
+                 screenToShow.style.display = 'block';
+                 const randBtn = document.getElementById('goToRandomizeBtn');
+                 if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
+             } else {
+                 console.error("Screen ID not found", screenId);
+             }
+             window.scrollTo(0, 0);
+         }
 
-        function deleteList() {
-            console.log("deleteList called", selectedListIndex);
-            if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) {
-                console.error("Invalid index for deleteList", selectedListIndex);
-                return;
-            }
-            const listIndexToDelete = selectedListIndex;
-            const listNameToDelete = lists[listIndexToDelete].name;
-            console.log("Confirm delete", listNameToDelete, listIndexToDelete);
+         function showHomeScreen() {
+             renderHome();
+             showScreen('homeScreen');
+             selectedListIndex = null;
+         }
 
-            if (confirm(`¿Estás seguro de que quieres eliminar la lista "${listNameToDelete}"?\nEsta acción no se puede deshacer.`)) {
-                console.log("Deletion confirmed");
-                if (lists[listIndexToDelete] && lists[listIndexToDelete].name === listNameToDelete) {
-                    lists.splice(listIndexToDelete, 1);
-                    console.log("List spliced from array");
-                    saveLists();
-                    showHomeScreen();
-                } else {
-                    console.error("Data consistency error during delete. Aborting.");
-                    renderHome();
-                }
-            } else {
-                console.log("Deletion cancelled by user");
-            }
-        }
+         function showEditScreen(index) {
+             selectedListIndex = index;
+             if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) {
+                 renderEditScreen();
+                 showScreen('editScreen');
+             } else {
+                 console.error("Invalid list index", index);
+                 showHomeScreen();
+             }
+         }
 
-        function promptAddElement() {
-            if (selectedListIndex === null || !lists[selectedListIndex]) return;
-            const list = lists[selectedListIndex];
-            const elementName = prompt("Introduce el nombre del nuevo elemento:");
+         function showRandomizationScreen() {
+             lists.forEach(list => list.lockedElementId = null);
+             lastDisplayedRandomElements = {};
+             renderRandomizationScreen(true, false);
+             showScreen('randomizationScreen');
+         }
 
-            if (elementName === null) {
-                console.log("Add element cancelled.");
-                return;
-            }
-            const trimmedName = elementName.trim();
-            if (!trimmedName) {
-                console.warn("Element name cannot be empty.");
-                return;
-            }
-            const elementExists = list.elements.some(el => el.name.toLowerCase() === trimmedName.toLowerCase());
-            if(elementExists) {
-                 alert(`El elemento "${trimmedName}" ya existe en esta lista.`);
+          // --- Modal Logic ---
+          function openInfoModal() {
+               const overlay = document.getElementById('modalOverlay');
+               if(overlay) overlay.style.display = 'flex'; // Use flex to enable centering
+          }
+
+          function closeInfoModal() {
+               const overlay = document.getElementById('modalOverlay');
+               if(overlay) overlay.style.display = 'none';
+          }
+
+
+         // --- Home Screen Logic ---
+         function createNewListAndGoToEdit() {
+             const defaultName = `New List ${lists.length + 1}`; // Using English default
+             const newList = { id: Date.now().toString(), name: defaultName, elements: [], enabled: true, lockedElementId: null };
+             lists.push(newList);
+             saveLists();
+             showEditScreen(lists.length - 1);
+             renderHome(); // Render home after creating list to update list count etc. if needed
+         }
+
+         function toggleListEnabled(listId) {
+             const index = lists.findIndex(l => l.id === listId);
+             if (index === -1) return;
+             lists[index].enabled = !lists[index].enabled;
+             saveLists();
+             renderHome();
+         }
+
+         function moveList(listId, direction) {
+             const index = lists.findIndex(l => l.id === listId);
+             if (index === -1) return;
+             if (direction === 'up' && index > 0) {
+                 [lists[index], lists[index - 1]] = [lists[index - 1], lists[index]];
+             } else if (direction === 'down' && index < lists.length - 1) {
+                 [lists[index], lists[index + 1]] = [lists[index + 1], lists[index]];
+             } else {
+                 return; // No move possible
+             }
+             saveLists();
+             renderHome();
+         }
+
+         // --- Edit Screen Logic ---
+         function updateListName(newName) {
+             if (selectedListIndex !== null && lists[selectedListIndex]) {
+                 lists[selectedListIndex].name = newName;
+                 // No saveLists() here, only on explicit save actions
+             }
+         }
+
+         function saveAndGoHome() {
+             if (selectedListIndex !== null && lists[selectedListIndex]) {
+                 const currentName = document.getElementById('listNameInput').value.trim();
+                 if (!currentName) {
+                      alert("List name cannot be empty."); // English alert
+                      console.warn("List name cannot be empty on save.");
+                      return;
+                 }
+                 lists[selectedListIndex].name = currentName; // Make sure name is updated before saving
+             }
+             saveLists(); // Save everything before leaving
+             showHomeScreen();
+         }
+
+         function deleteList() {
+             console.log("deleteList called", selectedListIndex);
+             if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) {
+                 console.error("Invalid index for deleteList", selectedListIndex);
+                 return;
+             }
+             const listIndexToDelete = selectedListIndex;
+             const listNameToDelete = lists[listIndexToDelete].name;
+             console.log("Confirm delete", listNameToDelete, listIndexToDelete);
+
+             // Using English confirm dialog
+             if (confirm(`Are you sure you want to delete the list "${listNameToDelete}"?\nThis action cannot be undone.`)) {
+                 console.log("Deletion confirmed");
+                 // Double check index and name before splicing, just in case state changed somehow
+                 if (lists[listIndexToDelete] && lists[listIndexToDelete].name === listNameToDelete) {
+                     lists.splice(listIndexToDelete, 1);
+                     console.log("List spliced from array");
+                     saveLists();
+                     showHomeScreen();
+                 } else {
+                     console.error("Data consistency error during delete. Aborting.");
+                     renderHome(); // Go home anyway to avoid inconsistent state
+                 }
+             } else {
+                 console.log("Deletion cancelled by user");
+             }
+         }
+
+         function promptAddElement() {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const list = lists[selectedListIndex];
+             const elementName = prompt("Enter the name for the new element:"); // English prompt
+
+             if (elementName === null) { // User cancelled prompt
+                 console.log("Add element cancelled.");
+                 return;
+             }
+             const trimmedName = elementName.trim();
+             if (!trimmedName) {
+                 console.warn("Element name cannot be empty.");
+                 alert("Element name cannot be empty."); // English alert
+                 return;
+             }
+             // Check for duplicates (case-insensitive)
+             const elementExists = list.elements.some(el => el.name.toLowerCase() === trimmedName.toLowerCase());
+             if(elementExists) {
+                 alert(`Element "${trimmedName}" already exists in this list.`); // English alert
                  console.warn(`Element "${trimmedName}" already exists.`);
                  return;
-            }
-            list.elements.push({
-                id: Date.now().toString() + Math.random(),
-                name: trimmedName,
-                enabled: true
-            });
-            saveLists();
-            renderEditScreen(); // Re-render to show new element and update counts
-            console.log(`Element "${trimmedName}" added to list "${list.name}".`);
-        }
+             }
 
-        function deleteElement(elementId) {
-            if (selectedListIndex === null || !lists[selectedListIndex]) return;
-            const list = lists[selectedListIndex];
-            const index = list.elements.findIndex(el => el.id === elementId);
+             list.elements.push({
+                 id: Date.now().toString() + Math.random(), // Unique ID
+                 name: trimmedName,
+                 enabled: true // Default to enabled
+             });
+             // Do not save here, allow user to save explicitly via Save button
+             renderEditScreen(); // Re-render to show new element and update counts
+             console.log(`Element "${trimmedName}" added to list "${list.name}".`);
+         }
 
-            if (index === -1) {
-                console.warn("Element ID not found for deletion:", elementId);
-                return;
-            }
-            if (list.lockedElementId === elementId) {
-                list.lockedElementId = null;
-            }
-            list.elements.splice(index, 1);
-            saveLists();
-            renderEditScreen(); // Re-render to remove element and update counts
-        }
+         function deleteElement(elementId) {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const list = lists[selectedListIndex];
+             const index = list.elements.findIndex(el => el.id === elementId);
 
-        function toggleElementEnabled(elementId) {
-            if (selectedListIndex === null || !lists[selectedListIndex]) return;
-            const list = lists[selectedListIndex];
-            const element = list.elements.find(el => el.id === elementId);
+             if (index === -1) {
+                 console.warn("Element ID not found for deletion:", elementId);
+                 return;
+             }
+             // If the element being deleted is the currently locked one, unlock the list
+             if (list.lockedElementId === elementId) {
+                 list.lockedElementId = null; // Unlock if deleted
+             }
+             list.elements.splice(index, 1);
+             // Do not save here, allow user to save explicitly
+             renderEditScreen(); // Re-render to remove element and update counts
+         }
 
-            if (!element) {
+         function toggleElementEnabled(elementId) {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const list = lists[selectedListIndex];
+             const element = list.elements.find(el => el.id === elementId);
+
+             if (!element) {
                  console.warn("Element ID not found for toggle:", elementId);
                  return;
-            }
-            element.enabled = !element.enabled;
-            if (!element.enabled && list.lockedElementId === elementId) {
-                list.lockedElementId = null;
-            }
-            saveLists();
-            renderEditScreen(); // Re-render to show status change and update counts
-        }
+             }
+             element.enabled = !element.enabled;
+             // If disabling the currently locked element, unlock the list
+             if (!element.enabled && list.lockedElementId === elementId) {
+                 list.lockedElementId = null; // Unlock if disabled
+             }
+             // Do not save here, allow user to save explicitly
+             renderEditScreen(); // Re-render to show status change and update counts
+         }
 
-        function moveElement(elementId, direction) {
-            if (selectedListIndex === null || !lists[selectedListIndex]) return;
-            const elements = lists[selectedListIndex].elements;
-            const index = elements.findIndex(el => el.id === elementId);
+         function moveElement(elementId, direction) {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const elements = lists[selectedListIndex].elements;
+             const index = elements.findIndex(el => el.id === elementId);
 
-            if (index === -1) return;
-            if (direction === 'up' && index > 0) {
-                [elements[index], elements[index - 1]] = [elements[index - 1], elements[index]];
-            } else if (direction === 'down' && index < elements.length - 1) {
-                [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]];
-            } else {
-                return;
-            }
-            saveLists();
-            renderEditScreen();
-        }
+             if (index === -1) return; // Element not found
+             if (direction === 'up' && index > 0) {
+                 // Swap with previous element
+                 [elements[index], elements[index - 1]] = [elements[index - 1], elements[index]];
+             } else if (direction === 'down' && index < elements.length - 1) {
+                 // Swap with next element
+                 [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]];
+             } else {
+                 return; // No move possible
+             }
+             // Do not save here, allow user to save explicitly
+             renderEditScreen(); // Re-render list order
+         }
 
-        // --- Import/Export Logic ---
-        function triggerImportTxt() { document.getElementById('importFile').click(); }
-        function handleImportTxt(event) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const lines = e.target.result.split(/[\r\n]+/).filter(line=>line.trim()!==''); if(lines.length===0){return;} const list = lists[selectedListIndex]; const names=new Set(list.elements.map(el=>el.name.toLowerCase())); let added=0; lines.forEach(line=>{const name=line.trim(); if(name && !names.has(name.toLowerCase())){ list.elements.push({id:Date.now().toString()+Math.random(),name:name,enabled:true}); names.add(name.toLowerCase()); added++;}}); if(added>0){ saveLists(); renderEditScreen(); console.log(`${added} elem import TXT.`);} else{ console.log("No new elem TXT.");} event.target.value=null; }; reader.onerror = function(e){console.error("Error elem TXT", e); event.target.value=null;}; reader.readAsText(file); }
-        function exportTxt() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; if (list.elements.length === 0) { alert("No hay elementos para exportar."); return; } const data = list.elements.map(el => el.name).join('\n'); const blob = new Blob([data], { type: 'text/plain;charset=utf-8' }); const filename = list.name.replace(/[^a-z0-9_\-\s]/gi, '_').replace(/[\s]/g, '_') + '_elementos.txt'; const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); }
-        function triggerImportNamesTxt() { document.getElementById('importNamesFile').click(); }
-        function exportNamesTxt() { const enabledLists = lists.filter(list => list.enabled); if (enabledLists.length === 0) { alert("No hay listas habilitadas seleccionadas para exportar."); return; } let txtData = ""; enabledLists.forEach(list => { txtData += `# ${list.name}\n`; list.elements.forEach(element => { txtData += `${element.name}\n`; }); txtData += "\n"; }); const suggestedFilename = 'listas_seleccionadas_export.txt'; let userFilename = prompt("Elige un nombre para el archivo de exportación (.txt):", suggestedFilename); if (userFilename === null) { console.log("Export cancelled."); return; } userFilename = userFilename.trim(); if (!userFilename) { userFilename = suggestedFilename; } if (!userFilename.toLowerCase().endsWith('.txt')) { userFilename += '.txt'; } try { const blob = new Blob([txtData.trim()], { type: 'text/plain;charset=utf-8' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = userFilename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href); console.log("Export TXT OK:", userFilename); } catch (e) { console.error("Error export TXT:", e); alert("Hubo un error al intentar exportar las listas."); } }
-        function handleImportNamesTxt(event) { const file = event.target.files[0]; console.log("handleImportNamesTxt: File selected:", file ? file.name : 'No file'); if (!file) { event.target.value = null; return; } const reader = new FileReader(); reader.onload = function(e) { console.log("handleImportNamesTxt: File loaded."); try { const fileContent = e.target.result; if (!fileContent || fileContent.trim() === '') { throw new Error("El archivo está vacío o no tiene contenido válido."); } const lines = fileContent.split(/[\r\n]+/); let currentListIndex = -1; let listsAdded = 0; let elementsAdded = 0; let listMap = {}; lists.forEach((list, index) => { listMap[list.name.toLowerCase()] = index; }); console.log("handleImportNamesTxt: Processing lines..."); let currentListNameForLog = ""; lines.forEach(line => { const trimmedLine = line.trim(); if (trimmedLine.startsWith('# ')) { const listName = trimmedLine.substring(2).trim(); if (!listName) return; currentListNameForLog = listName; const lowerCaseListName = listName.toLowerCase(); if (listMap.hasOwnProperty(lowerCaseListName)) { currentListIndex = listMap[lowerCaseListName]; console.log(`-> Found existing list "${listName}", adding elements to it.`); } else { console.log(`-> Creating new list "${listName}"`); const newList = { id: Date.now().toString() + Math.random(), name: listName, elements: [], enabled: true, lockedElementId: null }; lists.push(newList); currentListIndex = lists.length - 1; listMap[lowerCaseListName] = currentListIndex; listsAdded++; } } else if (trimmedLine && currentListIndex !== -1 && currentListIndex < lists.length) { const elementName = trimmedLine; const currentList = lists[currentListIndex]; const elementExists = currentList.elements.some(el => el.name.toLowerCase() === elementName.toLowerCase()); if (!elementExists) { currentList.elements.push({ id: Date.now().toString() + Math.random(), name: elementName, enabled: true }); elementsAdded++; } else { console.log(` -> Skipping duplicate element "${elementName}" in list "${currentListNameForLog}"`); } } }); console.log("handleImportNamesTxt: Processing complete."); if (listsAdded > 0 || elementsAdded > 0) { saveLists(); renderHome(); alert(`Importación completada:\n- ${listsAdded} listas nuevas creadas.\n- ${elementsAdded} elementos nuevos añadidos a listas.`); console.log(`Import TXT: ${listsAdded} lists, ${elementsAdded} elements added.`); } else { alert("Importación completada. No se encontraron nuevas listas ni nuevos elementos para añadir."); console.log("Import TXT: No new lists or elements added."); } } catch (error) { console.error("Error processing TXT file:", error); alert(`Error al procesar el archivo: ${error.message}`); } finally { event.target.value = null; console.log("handleImportNamesTxt: Input reset."); } }; reader.onerror = function(e) { console.error("Error reading file:", e); alert("Error al leer el archivo."); event.target.value = null; }; console.log("handleImportNamesTxt: Reading file..."); reader.readAsText(file); }
+         // --- Import/Export Logic ---
+         function triggerImportTxt() { document.getElementById('importFile').click(); }
 
-        // --- Randomization Screen Logic ---
-        function randomizeResults() {
-            renderRandomizationScreen(false, true);
-        }
+         function handleImportTxt(event) {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const file = event.target.files[0];
+             if (!file) return; // No file selected
+             const reader = new FileReader();
+             reader.onload = function(e) {
+                 const lines = e.target.result.split(/[\r\n]+/).map(line => line.trim()).filter(line => line !== '');
+                 if (lines.length === 0) {
+                     alert("File is empty or contains no valid element names."); // English alert
+                     return;
+                 }
+                 const list = lists[selectedListIndex];
+                 const existingNamesLower = new Set(list.elements.map(el => el.name.toLowerCase()));
+                 let addedCount = 0;
+                 lines.forEach(name => {
+                     if (name && !existingNamesLower.has(name.toLowerCase())) {
+                         list.elements.push({
+                             id: Date.now().toString() + Math.random(),
+                             name: name,
+                             enabled: true
+                         });
+                         existingNamesLower.add(name.toLowerCase()); // Add to set to prevent duplicates within the import
+                         addedCount++;
+                     }
+                 });
+                 if (addedCount > 0) {
+                     renderEditScreen(); // Update UI
+                     console.log(`${addedCount} new elements imported into list "${list.name}" from TXT.`);
+                     alert(`${addedCount} new elements imported.`); // English alert
+                 } else {
+                     console.log("No new elements to import from TXT.");
+                     alert("No new elements were imported (already exist or file empty)."); // English alert
+                 }
+                 event.target.value = null; // Reset file input
+             };
+             reader.onerror = function(e) {
+                 console.error("Error reading element TXT file:", e);
+                 alert("Error reading file."); // English alert
+                 event.target.value = null; // Reset file input
+             };
+             reader.readAsText(file);
+         }
 
-        function toggleLock(listId) {
-            const listIndex = lists.findIndex(l => l.id === listId);
-            if (listIndex === -1) return;
-            const list = lists[listIndex];
-            if (list.lockedElementId) {
-                list.lockedElementId = null;
-                console.log(`List "${list.name}" UNLOCKED.`);
-            } else {
-                const elementToLockId = lastDisplayedRandomElements[list.id];
-                if (elementToLockId) {
-                    const elementExistsAndEnabled = list.elements.some(el => el.id === elementToLockId && el.enabled);
-                    if(elementExistsAndEnabled) {
-                        list.lockedElementId = elementToLockId;
-                        console.log(`List "${list.name}" LOCKED on element ID: ${elementToLockId}`);
-                    } else {
-                         list.lockedElementId = null;
-                         console.warn(`Cannot lock list "${list.name}" on element ID ${elementToLockId}, it's invalid or disabled.`);
-                         alert(`No se puede bloquear "${list.name}" en ese elemento porque ya no está disponible o habilitado.`);
-                    }
-                } else {
-                    console.warn(`Cannot lock list "${list.name}": No last displayed element recorded.`);
-                }
-            }
-            renderRandomizationScreen(false, false);
-        }
-
-        // --- Rendering Functions ---
-        function renderHome() {
-            const container = document.getElementById("listsContainer");
-            container.innerHTML = "";
-            lists.forEach((list, index) => {
-                const item = document.createElement("div");
-                item.className = `list-item ${list.enabled ? 'enabled' : ''}`;
-                item.setAttribute('data-list-id', list.id);
-                item.onclick = () => toggleListEnabled(list.id);
-
-                const nameArea = document.createElement("div");
-                nameArea.className = "list-item-name";
-                nameArea.textContent = `${list.name} (${list.elements.length})`;
-
-                const rightCtrls = document.createElement("div");
-                rightCtrls.className = "list-item-controls-right";
-                rightCtrls.onclick = (e) => e.stopPropagation();
-
-                const upBtn = document.createElement("button");
-                upBtn.className="button button-icon";
-                upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
-                upBtn.title="Mover arriba";
-                upBtn.disabled = (index === 0);
-                upBtn.onclick = (e) => { moveList(list.id, 'up'); };
-
-                const downBtn = document.createElement("button");
-                downBtn.className="button button-icon";
-                downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
-                downBtn.title="Mover abajo";
-                downBtn.disabled = (index === lists.length - 1);
-                downBtn.onclick = (e) => { moveList(list.id, 'down'); };
-
-                const editBtn = document.createElement("button");
-                editBtn.className = "button-icon edit-button";
-                editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
-                editBtn.title = "Editar lista";
-                editBtn.onclick = (e) => { showEditScreen(lists.findIndex(l => l.id === list.id)); };
-
-                rightCtrls.appendChild(upBtn);
-                rightCtrls.appendChild(downBtn);
-                rightCtrls.appendChild(editBtn);
-                item.appendChild(nameArea);
-                item.appendChild(rightCtrls);
-                container.appendChild(item);
-            });
-
-            const randBtn = document.getElementById('goToRandomizeBtn');
-            if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
-        }
-
-        function renderEditScreen() {
-            if (selectedListIndex === null || !lists[selectedListIndex]) return;
-            const list = lists[selectedListIndex];
-
-            document.getElementById("listNameInput").value = list.name;
-            const totalElements = list.elements.length;
-            const enabledElements = list.elements.filter(el => el.enabled).length;
-            const countDisplaySpan = document.getElementById('elementCountDisplay');
-            if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; }
-            const topSaveBtn = document.getElementById('editScreenTopSaveBtn');
-            if (topSaveBtn) { const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE; topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none'; }
-
-            const container = document.getElementById("elementsListContainer");
-            container.innerHTML = "";
-
-            if (list.elements.length === 0) {
-                container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No hay elementos en esta lista.</li>";
-            } else {
-                list.elements.forEach((element, index) => {
-                    const li = document.createElement("li");
-                    li.className = `element-item ${element.enabled ? 'enabled' : ''}`;
-                    li.setAttribute('data-element-id', element.id);
-                    li.onclick = () => toggleElementEnabled(element.id);
-
-                    const nameSpan = document.createElement("span");
-                    nameSpan.className = "element-item-name";
-                    nameSpan.textContent = element.name;
-
-                    const rightCtrls = document.createElement("div");
-                    rightCtrls.className = "element-item-controls-right";
-                    rightCtrls.onclick = (e) => e.stopPropagation();
-
-                    const upBtn = document.createElement("button");
-                    upBtn.className="button-icon";
-                    upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
-                    upBtn.title="Mover arriba";
-                    upBtn.disabled=index===0;
-                    upBtn.onclick=(e)=>{moveElement(element.id,'up');};
-
-                    const downBtn = document.createElement("button");
-                    downBtn.className="button-icon";
-                    downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
-                    downBtn.title="Mover abajo";
-                    downBtn.disabled=index===list.elements.length-1;
-                    downBtn.onclick=(e)=>{moveElement(element.id,'down');};
-
-                    const delBtn = document.createElement("button");
-                    delBtn.className="button-icon delete-element-button";
-                    delBtn.innerHTML="×";
-                    delBtn.title="Eliminar elemento";
-                    delBtn.style.fontSize='1.4em';
-                    delBtn.onclick=(e)=>{deleteElement(element.id);};
-
-                    rightCtrls.appendChild(upBtn);
-                    rightCtrls.appendChild(downBtn);
-                    rightCtrls.appendChild(delBtn);
-                    li.appendChild(nameSpan);
-                    li.appendChild(rightCtrls);
-                    container.appendChild(li);
-                });
-            }
-        }
-
-        function renderRandomizationScreen(initialState = false, shouldRandomize = false) {
-            const container = document.getElementById('randomizationResultsContainer');
-            container.innerHTML = '';
-
-            const enabledLists = lists.filter(list => list.enabled);
-            const randButton = document.getElementById('randomizeButton'); // Get button reference
-
-            if (enabledLists.length === 0) {
-                container.innerHTML = '<p class="info-text text-center">No hay listas habilitadas para randomizar.</p>';
-                 if (randButton) randButton.disabled = true; // Disable if no lists
+         function exportTxt() {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return;
+             const list = lists[selectedListIndex];
+             if (list.elements.length === 0) {
+                 alert("No elements to export."); // English alert
                  return;
-            } else {
-                 if (randButton) randButton.disabled = false; // Enable if lists exist
-            }
+             }
+             const data = list.elements.map(el => el.name).join('\n');
+             const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+             // Sanitize filename
+             const filename = list.name.replace(/[^a-z0-9_\-\s]/gi, '_').replace(/[\s_]+/g, '_') + '_elements.txt';
+             const link = document.createElement('a');
+             link.href = URL.createObjectURL(blob);
+             link.download = filename;
+             document.body.appendChild(link);
+             link.click();
+             document.body.removeChild(link);
+             URL.revokeObjectURL(link.href); // Clean up blob URL
+             console.log(`Exported elements for list "${list.name}" to ${filename}`);
+         }
 
-            console.log(`Rendering Randomization: InitialState=${initialState}, ShouldRandomize=${shouldRandomize}`);
+         function triggerImportNamesTxt() { document.getElementById('importNamesFile').click(); }
 
-            enabledLists.forEach(list => {
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'random-result-content';
-                contentDiv.setAttribute('data-list-id-ref', list.id);
+         function exportNamesTxt() {
+             const enabledLists = lists.filter(list => list.enabled);
+             if (enabledLists.length === 0) {
+                 alert("No enabled lists selected for export."); // English alert
+                 return;
+             }
+             let txtData = "";
+             enabledLists.forEach(list => {
+                 txtData += `# ${list.name}\n`;
+                 list.elements.forEach(element => {
+                     txtData += `${element.name}\n`;
+                 });
+                 txtData += "\n"; // Add a blank line between lists
+             });
 
-                let elementToShow = null;
-                let isLocked = !!list.lockedElementId;
-                const enabledElements = list.elements.filter(el => el.enabled);
+             const suggestedFilename = 'selected_lists_export.txt';
+             let userFilename = prompt("Choose a filename for the export (.txt):", suggestedFilename); // English prompt
+             if (userFilename === null) { // User cancelled
+                 console.log("Export cancelled.");
+                 return;
+             }
+             userFilename = userFilename.trim();
+             if (!userFilename) {
+                 userFilename = suggestedFilename; // Use default if empty
+             }
+             // Ensure .txt extension
+             if (!userFilename.toLowerCase().endsWith('.txt')) {
+                 userFilename += '.txt';
+             }
 
-                if (initialState) {
+             try {
+                 const blob = new Blob([txtData.trim()], { type: 'text/plain;charset=utf-8' });
+                 const link = document.createElement('a');
+                 link.href = URL.createObjectURL(blob);
+                 link.download = userFilename;
+                 document.body.appendChild(link);
+                 link.click();
+                 document.body.removeChild(link);
+                 URL.revokeObjectURL(link.href); // Clean up blob URL
+                 console.log("Exported selected lists to TXT:", userFilename);
+             } catch (e) {
+                 console.error("Error exporting lists to TXT:", e);
+                 alert("An error occurred while trying to export the lists."); // English alert
+             }
+         }
+
+         function handleImportNamesTxt(event) {
+             const file = event.target.files[0];
+             console.log("handleImportNamesTxt: File selected:", file ? file.name : 'No file');
+             if (!file) {
+                 event.target.value = null; // Reset input
+                 return;
+             }
+             const reader = new FileReader();
+             reader.onload = function(e) {
+                 console.log("handleImportNamesTxt: File loaded.");
+                 try {
+                     const fileContent = e.target.result;
+                     if (!fileContent || fileContent.trim() === '') {
+                         throw new Error("File is empty or contains no valid content.");
+                     }
+                     const lines = fileContent.split(/[\r\n]+/); // Split by new lines
+
+                     let currentListIndex = -1;
+                     let listsAdded = 0;
+                     let elementsAdded = 0;
+                     // Map existing list names (lowercase) to their index for quick lookup
+                     let existingListMap = {};
+                     lists.forEach((list, index) => {
+                         existingListMap[list.name.toLowerCase()] = index;
+                     });
+
+                     console.log("handleImportNamesTxt: Processing lines...");
+                     let currentListNameForLog = ""; // For logging clarity
+
+                     lines.forEach(line => {
+                         const trimmedLine = line.trim();
+                         if (trimmedLine.startsWith('# ')) { // Found a list header
+                             const listName = trimmedLine.substring(2).trim();
+                             if (!listName) return; // Skip empty list names like '# '
+                             currentListNameForLog = listName;
+                             const lowerCaseListName = listName.toLowerCase();
+
+                             if (existingListMap.hasOwnProperty(lowerCaseListName)) {
+                                 // List already exists, use its index
+                                 currentListIndex = existingListMap[lowerCaseListName];
+                                 console.log(` -> Found existing list "${listName}", adding elements to it.`);
+                             } else {
+                                 // Create a new list
+                                 console.log(` -> Creating new list "${listName}"`);
+                                 const newList = {
+                                     id: Date.now().toString() + Math.random(),
+                                     name: listName,
+                                     elements: [],
+                                     enabled: true,
+                                     lockedElementId: null
+                                 };
+                                 lists.push(newList);
+                                 currentListIndex = lists.length - 1; // Index of the new list
+                                 existingListMap[lowerCaseListName] = currentListIndex; // Add to map
+                                 listsAdded++;
+                             }
+                         } else if (trimmedLine && currentListIndex !== -1 && currentListIndex < lists.length) {
+                             // Found an element line for the current list
+                             const elementName = trimmedLine;
+                             const currentList = lists[currentListIndex];
+                             // Check if element already exists in this list (case-insensitive)
+                             const elementExists = currentList.elements.some(el => el.name.toLowerCase() === elementName.toLowerCase());
+                             if (!elementExists) {
+                                 currentList.elements.push({
+                                     id: Date.now().toString() + Math.random(),
+                                     name: elementName,
+                                     enabled: true
+                                 });
+                                 elementsAdded++;
+                             } else {
+                                 console.log(`  -> Skipping duplicate element "${elementName}" in list "${currentListNameForLog}"`);
+                             }
+                         }
+                     });
+
+                     console.log("handleImportNamesTxt: Processing complete.");
+                     if (listsAdded > 0 || elementsAdded > 0) {
+                         saveLists(); // Save changes
+                         renderHome(); // Update the home screen display
+                         alert(`Import complete:\n- ${listsAdded} new lists created.\n- ${elementsAdded} new elements added to lists.`); // English alert
+                         console.log(`Import from TXT: ${listsAdded} lists, ${elementsAdded} elements added.`);
+                     } else {
+                         alert("Import complete. No new lists or elements were found to add."); // English alert
+                         console.log("Import from TXT: No new lists or elements added.");
+                     }
+
+                 } catch (error) {
+                     console.error("Error processing TXT file:", error);
+                     alert(`Error processing file: ${error.message}`); // English alert
+                 } finally {
+                     event.target.value = null; // Reset file input regardless of outcome
+                     console.log("handleImportNamesTxt: Input reset.");
+                 }
+             };
+             reader.onerror = function(e) {
+                 console.error("Error reading file:", e);
+                 alert("Error reading file."); // English alert
+                 event.target.value = null; // Reset file input
+             };
+             console.log("handleImportNamesTxt: Reading file...");
+             reader.readAsText(file);
+         }
+
+
+         // --- Randomization Screen Logic ---
+         function randomizeResults() {
+             renderRandomizationScreen(false, true); // Trigger randomization
+         }
+
+         function toggleLock(listId) {
+             const listIndex = lists.findIndex(l => l.id === listId);
+             if (listIndex === -1) return; // List not found
+             const list = lists[listIndex];
+
+             if (list.lockedElementId) {
+                 // Currently locked, so unlock it
+                 list.lockedElementId = null;
+                 console.log(`List "${list.name}" UNLOCKED.`);
+             } else {
+                 // Currently unlocked, try to lock it on the last displayed element
+                 const elementToLockId = lastDisplayedRandomElements[list.id];
+                 if (elementToLockId) {
+                     // Check if the element to lock still exists and is enabled
+                     const elementExistsAndEnabled = list.elements.some(el => el.id === elementToLockId && el.enabled);
+                     if (elementExistsAndEnabled) {
+                         list.lockedElementId = elementToLockId;
+                         console.log(`List "${list.name}" LOCKED on element ID: ${elementToLockId}`);
+                     } else {
+                          // Cannot lock on an invalid/disabled element
+                          list.lockedElementId = null; // Ensure it remains unlocked
+                          console.warn(`Cannot lock list "${list.name}" on element ID ${elementToLockId}, it's invalid or disabled.`);
+                          alert(`Cannot lock "${list.name}" on that element because it's no longer available or enabled.`); // English alert
+                     }
+                 } else {
+                     // No element has been displayed for this list yet
+                     console.warn(`Cannot lock list "${list.name}": No last displayed element recorded.`);
+                 }
+             }
+             // Re-render the randomization screen to show the lock status change, but don't re-randomize
+             renderRandomizationScreen(false, false);
+         }
+
+         // --- Rendering Functions ---
+         function renderHome() {
+             const container = document.getElementById("listsContainer");
+             container.innerHTML = ""; // Clear previous list items
+
+             lists.forEach((list, index) => {
+                 const item = document.createElement("div");
+                 item.className = `list-item ${list.enabled ? 'enabled' : ''}`;
+                 item.setAttribute('data-list-id', list.id);
+                 item.onclick = () => toggleListEnabled(list.id); // Click list item to toggle enabled state
+
+                 const nameArea = document.createElement("div");
+                 nameArea.className = "list-item-name";
+                 nameArea.textContent = `${list.name} (${list.elements.length})`; // Display name and element count
+
+                 const rightCtrls = document.createElement("div");
+                 rightCtrls.className = "list-item-controls-right";
+                 rightCtrls.onclick = (e) => e.stopPropagation(); // Prevent item click when clicking controls
+
+                 // Up Button
+                 const upBtn = document.createElement("button");
+                 upBtn.className="button-icon";
+                 upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
+                 upBtn.title="Move Up";
+                 upBtn.disabled = (index === 0); // Disable if first item
+                 upBtn.onclick = (e) => { moveList(list.id, 'up'); };
+
+                 // Down Button
+                 const downBtn = document.createElement("button");
+                 downBtn.className="button-icon";
+                 downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
+                 downBtn.title="Move Down";
+                 downBtn.disabled = (index === lists.length - 1); // Disable if last item
+                 downBtn.onclick = (e) => { moveList(list.id, 'down'); };
+
+                 // Edit Button
+                 const editBtn = document.createElement("button");
+                 editBtn.className = "button-icon edit-button";
+                 editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+                 editBtn.title = "Edit List";
+                 editBtn.onclick = (e) => { showEditScreen(lists.findIndex(l => l.id === list.id)); };
+
+                 // Add controls to right container
+                 rightCtrls.appendChild(upBtn);
+                 rightCtrls.appendChild(downBtn);
+                 rightCtrls.appendChild(editBtn);
+
+                 // Add parts to list item
+                 item.appendChild(nameArea);
+                 item.appendChild(rightCtrls);
+
+                 // Add item to main container
+                 container.appendChild(item);
+             });
+
+             // Update 'Randomize' button state based on whether any lists/elements are enabled
+             const randBtn = document.getElementById('goToRandomizeBtn');
+             if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
+         }
+
+         function renderEditScreen() {
+             if (selectedListIndex === null || !lists[selectedListIndex]) return; // Should not happen if logic is correct
+             const list = lists[selectedListIndex];
+
+             // Set list name input value
+             const listNameInput = document.getElementById("listNameInput");
+             if(listNameInput) listNameInput.value = list.name; // Set initial value first
+
+             // Update element counts
+             const totalElements = list.elements.length;
+             const enabledElements = list.elements.filter(el => el.enabled).length;
+             const countDisplaySpan = document.getElementById('elementCountDisplay');
+             if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; }
+
+             // Show/hide top save button based on element count
+             const topSaveBtn = document.getElementById('editScreenTopSaveBtn');
+             if (topSaveBtn) {
+                 const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE;
+                 topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none';
+             }
+
+             const container = document.getElementById("elementsListContainer");
+             container.innerHTML = ""; // Clear previous elements
+
+             if (list.elements.length === 0) {
+                 // Display message if list is empty
+                 container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No elements in this list.</li>";
+             } else {
+                 // Render each element
+                 list.elements.forEach((element, index) => {
+                     const li = document.createElement("li");
+                     li.className = `element-item ${element.enabled ? 'enabled' : ''}`;
+                     li.setAttribute('data-element-id', element.id);
+                     li.onclick = () => toggleElementEnabled(element.id); // Click item to toggle enabled
+
+                     const nameSpan = document.createElement("span");
+                     nameSpan.className = "element-item-name";
+                     nameSpan.textContent = element.name;
+
+                     const rightCtrls = document.createElement("div");
+                     rightCtrls.className = "element-item-controls-right";
+                     rightCtrls.onclick = (e) => e.stopPropagation(); // Prevent item click
+
+                     // Up Button
+                     const upBtn = document.createElement("button");
+                     upBtn.className="button-icon";
+                     upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
+                     upBtn.title="Move Up";
+                     upBtn.disabled = (index === 0);
+                     upBtn.onclick = (e) => { moveElement(element.id,'up'); };
+
+                     // Down Button
+                     const downBtn = document.createElement("button");
+                     downBtn.className="button-icon";
+                     downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
+                     downBtn.title="Move Down";
+                     downBtn.disabled = (index === list.elements.length - 1);
+                     downBtn.onclick = (e) => { moveElement(element.id,'down'); };
+
+                     // Delete Button (using '×' for simplicity)
+                     const delBtn = document.createElement("button");
+                     delBtn.className="button-icon delete-element-button";
+                     delBtn.innerHTML="&times;"; // HTML entity for '×'
+                     delBtn.title="Delete Element";
+                     delBtn.style.fontSize='1.4em'; // Make '×' slightly larger
+                     delBtn.onclick=(e)=>{deleteElement(element.id);};
+
+                     rightCtrls.appendChild(upBtn);
+                     rightCtrls.appendChild(downBtn);
+                     rightCtrls.appendChild(delBtn);
+
+                     li.appendChild(nameSpan);
+                     li.appendChild(rightCtrls);
+                     container.appendChild(li);
+                 });
+             }
+             // Ensure input value reflects current list name after potential re-renders
+             if(listNameInput) listNameInput.value = list.name;
+         }
+
+         function renderRandomizationScreen(initialState = false, shouldRandomize = false) {
+             const container = document.getElementById('randomizationResultsContainer');
+             container.innerHTML = ''; // Clear previous results
+
+             const enabledLists = lists.filter(list => list.enabled);
+             const randButton = document.getElementById('randomizeButton'); // Main randomize button on this screen
+
+             // Disable randomize button if no lists are enabled
+             if (enabledLists.length === 0) {
+                 container.innerHTML = '<p class="info-text text-center">No enabled lists to randomize.</p>';
+                 if (randButton) randButton.disabled = true;
+                 return;
+             } else {
+                 if (randButton) randButton.disabled = false;
+             }
+
+             console.log(`Rendering Randomization: InitialState=${initialState}, ShouldRandomize=${shouldRandomize}`);
+
+             enabledLists.forEach(list => {
+                 const contentDiv = document.createElement('div');
+                 contentDiv.className = 'random-result-content';
+                 contentDiv.setAttribute('data-list-id-ref', list.id); // Reference to the list ID
+
+                 let elementToShow = null;
+                 let isLocked = !!list.lockedElementId;
+                 const enabledElements = list.elements.filter(el => el.enabled);
+
+                 if (initialState) {
+                     // On first load of the screen, just show list names
                      contentDiv.textContent = list.name;
                      contentDiv.classList.add('empty');
-                     lastDisplayedRandomElements[list.id] = null;
-                } else {
+                     lastDisplayedRandomElements[list.id] = null; // Reset last displayed element
+                 } else {
+                     // Determine which element to show based on lock status and randomization request
                      if (isLocked) {
+                         // If locked, try to show the locked element
                          const lockedElement = enabledElements.find(el => el.id === list.lockedElementId);
                          if (lockedElement) {
                              elementToShow = lockedElement;
+                             // Ensure lastDisplayed is updated even if locked
                              lastDisplayedRandomElements[list.id] = elementToShow.id;
                              console.log(`List "${list.name}": Displaying LOCKED element "${elementToShow.name}" (ID: ${elementToShow.id})`);
                          } else {
+                             // Locked element is no longer valid (e.g., disabled, deleted) - unlock and potentially randomize
                              console.warn(`Locked element ID ${list.lockedElementId} is invalid/disabled in list "${list.name}". Unlocking.`);
                              isLocked = false;
                              list.lockedElementId = null;
                              if (shouldRandomize && enabledElements.length > 0) {
+                                 // Pick a new random element since the locked one failed
                                  const randIdx = Math.floor(Math.random() * enabledElements.length);
                                  elementToShow = enabledElements[randIdx];
                                  lastDisplayedRandomElements[list.id] = elementToShow.id;
                                  console.log(` -> Picked NEW random "${elementToShow.name}" instead.`);
                              } else {
+                                 // Not randomizing or no elements left
                                  elementToShow = null;
                                  lastDisplayedRandomElements[list.id] = null;
                              }
@@ -698,80 +1193,146 @@
                      }
 
                      if (!isLocked) {
+                         // If not locked, decide whether to randomize or show the previous element
                          if (shouldRandomize || !lastDisplayedRandomElements[list.id]) {
+                             // Randomize if requested OR if no previous element is recorded
                              if (enabledElements.length > 0) {
                                  const randIdx = Math.floor(Math.random() * enabledElements.length);
                                  elementToShow = enabledElements[randIdx];
                                  lastDisplayedRandomElements[list.id] = elementToShow.id;
                                  console.log(`List "${list.name}": Picking NEW random element: "${elementToShow?.name}" (ID: ${elementToShow?.id})`);
                              } else {
+                                 // No enabled elements to pick from
                                  elementToShow = null;
                                  lastDisplayedRandomElements[list.id] = null;
                                  console.log(`List "${list.name}": No enabled elements to pick from.`);
                              }
                          } else {
+                             // Not randomizing, try to show the last displayed element
                              const lastElement = enabledElements.find(el => el.id === lastDisplayedRandomElements[list.id]);
-                             if(lastElement) {
+                             if (lastElement) {
                                  elementToShow = lastElement;
                                  console.log(`List "${list.name}": Re-displaying PREVIOUS element: "${elementToShow.name}" (ID: ${elementToShow.id})`);
                              } else {
+                                 // Last displayed element is no longer valid
                                  elementToShow = null;
-                                 lastDisplayedRandomElements[list.id] = null;
-                                 console.log(`List "${list.name}": Last displayed element (ID: ${lastDisplayedRandomElements[list.id]}) is gone. Showing empty.`);
+                                 lastDisplayedRandomElements[list.id] = null; // Clear invalid last element ID
+                                 console.log(`List "${list.name}": Last displayed element (ID: ${lastDisplayedRandomElements[list.id]}) is gone or disabled. Showing empty.`);
                              }
                          }
                      }
 
+                     // Display the chosen element or placeholder text
                      if (elementToShow) {
                          contentDiv.textContent = elementToShow.name;
-                         contentDiv.onclick = () => toggleLock(list.id);
-                         if(isLocked) {
-                             contentDiv.classList.add('locked');
+                         contentDiv.onclick = () => toggleLock(list.id); // Allow clicking to lock/unlock
+                         if (isLocked) {
+                             contentDiv.classList.add('locked'); // Apply locked style
                          }
                      } else {
-                         contentDiv.textContent = `(${list.name} - Sin elementos habilitados)`;
+                         // No element to show (either empty list or initial state)
+                         contentDiv.textContent = `(${list.name} - No enabled elements)`;
                          contentDiv.classList.add('empty');
-                         contentDiv.onclick = null;
+                         contentDiv.onclick = null; // Cannot lock an empty result
                      }
-                }
-                container.appendChild(contentDiv);
-            });
-        }
+                 }
+                 container.appendChild(contentDiv);
+             });
+         }
 
 
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOMContentLoaded: Initializing application...");
-            loadLists();
-            lists.forEach(list => list.lockedElementId = null);
-            lastDisplayedRandomElements = {};
-            console.log("DOMContentLoaded: Initial lock states reset.");
+         // --- Initialization ---
+         document.addEventListener('DOMContentLoaded', () => {
+             console.log("DOMContentLoaded: Initializing application...");
+             loadLists();
+             // Ensure lists start unlocked when app loads
+             lists.forEach(list => list.lockedElementId = null);
+             lastDisplayedRandomElements = {}; // Clear any previously stored random elements
+             console.log("DOMContentLoaded: Initial lock states reset.");
 
-            // --- INICIO: Código para botón Randomizar con color aleatorio ---
-            const randomizeBtn = document.getElementById('randomizeButton');
+             // --- Modal Setup ---
+             const infoButton = document.getElementById('infoButton');
+             const modalOverlay = document.getElementById('modalOverlay');
+             const modalCloseButton = document.getElementById('modalCloseBtn');
 
-            if (randomizeBtn) { // Asegurarse de que el botón existe
-                randomizeBtn.addEventListener('mouseenter', () => {
-                    if (randomizeBtn.disabled) return; // No hacer nada si está deshabilitado
+             if(infoButton) {
+                 infoButton.addEventListener('click', openInfoModal);
+             }
+             if(modalOverlay) {
+                 modalOverlay.addEventListener('click', (event) => {
+                     // Close only if clicking directly on the overlay, not the modal content
+                     if (event.target === modalOverlay) {
+                         closeInfoModal();
+                     }
+                 });
+             }
+             if(modalCloseButton) {
+                 modalCloseButton.addEventListener('click', closeInfoModal);
+             }
+             // --- End Modal Setup ---
 
-                    // Genera un color RGB aleatorio (evitando los muy claros)
-                    const randomColor = `rgb(${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)})`;
-                    randomizeBtn.style.backgroundColor = randomColor;
-                    randomizeBtn.style.borderColor = randomColor; // Opcional: cambiar también el borde
-                });
 
-                randomizeBtn.addEventListener('mouseleave', () => {
-                    // Quita el estilo inline para que vuelva al color definido por sus clases CSS
-                    randomizeBtn.style.backgroundColor = '';
-                    randomizeBtn.style.borderColor = ''; // Opcional: quitar también el borde
-                });
-            }
-            // --- FIN: Código para botón Randomizar ---
+             // --- START: Random color hover for Randomize Button (Randomization Screen) ---
+             const randomizeBtn = document.getElementById('randomizeButton');
+             if (randomizeBtn) { // Ensure button exists
+                 randomizeBtn.addEventListener('mouseenter', () => {
+                     if (randomizeBtn.disabled) return; // Do nothing if disabled
+                     // Generate a random RGB color (avoiding very light ones)
+                     const randomColor = `rgb(${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)})`;
+                     randomizeBtn.style.backgroundColor = randomColor;
+                     randomizeBtn.style.borderColor = randomColor;
+                 });
+                 randomizeBtn.addEventListener('mouseleave', () => {
+                     // Remove inline style to revert to CSS class color
+                     randomizeBtn.style.backgroundColor = '';
+                     randomizeBtn.style.borderColor = '';
+                 });
+             }
+             // --- END: Random color hover ---
 
-            showHomeScreen(); // Mostrar pantalla inicial después de configurar listeners
-            console.log("DOMContentLoaded: Initialization complete. Showing home screen.");
-        });
-    </script>
+
+             // --- START: Spacebar to trigger Randomize ---
+             document.addEventListener('keydown', (event) => {
+                 const randomizeScreen = document.getElementById('randomizationScreen');
+                 const randomizeButton = document.getElementById('randomizeButton');
+
+                 // Check if it's the spacebar
+                 if (event.key === ' ' || event.keyCode === 32) {
+                     // Make sure not typing in an input or text area (or modal is open)
+                     const targetTagName = event.target.tagName.toLowerCase();
+                     const isModalOpen = document.getElementById('modalOverlay')?.style.display === 'flex'; // Check if modal is open
+                     if (targetTagName === 'input' || targetTagName === 'textarea' || isModalOpen) {
+                         return; // Don't interfere with typing or modal interaction
+                     }
+
+                     // Check if randomization screen is visible and button enabled
+                     if (randomizeScreen && randomizeScreen.style.display === 'block' && randomizeButton && !randomizeButton.disabled) {
+                         event.preventDefault(); // Prevent spacebar from scrolling the page
+                         console.log("Spacebar pressed: Triggering randomize!"); // Debug message
+
+                         // Add class for visual feedback
+                         randomizeButton.classList.add('spacebar-active');
+
+                         // Simulate click on Randomize button
+                         randomizeButton.click();
+
+                         // Remove visual feedback class after a short delay
+                         setTimeout(() => {
+                             // Check if button still exists (might navigate away quickly)
+                             if (randomizeButton) {
+                                 randomizeButton.classList.remove('spacebar-active');
+                             }
+                         }, 200); // 200ms delay
+                     }
+                 }
+             });
+             // --- END: Spacebar to trigger Randomize ---
+
+
+             showHomeScreen(); // Show initial screen after setting up listeners
+             console.log("DOMContentLoaded: Initialization complete. Showing home screen.");
+         });
+     </script>
 
 </body>
 </html>
