@@ -19,6 +19,7 @@
             --c-locked-bg: #d6dde4;
             --c-dark-bg: #212529;
             --c-radius: 4px; 
+            --highlight-duration: 0.6s; 
         }
 
         /* --- General & Layout --- */
@@ -42,24 +43,71 @@
         .button-success { background-color: var(--c-success); } .button-success:hover:not(:disabled) { background-color: var(--c-success-darker); }
         .button-danger { background-color: var(--c-red); } .button-danger:hover:not(:disabled) { background-color: var(--c-red-darker); }
         .button-large { width: 65%; max-width: 320px; font-size: 1.2em; padding: 15px; display: block; margin-left: auto; margin-right: auto; margin-top: 15px; margin-bottom: 10px; border-radius: 30px; }
+        
+        /* --- Icon Buttons (para listas y elementos) --- */
         .button-icon {
-            background: none;
-            border: none;
-            padding: 0 3px;
-            cursor: pointer;
-            font-size: 1em;
+            background: none; border: none; padding: 0 3px; cursor: pointer;
+            font-size: 1em; 
             color: var(--c-teal);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: color 0.2s ease, transform 0.1s ease-out, opacity 0.1s ease-out; 
         }
-        .button-icon svg { width: 1.3em; height: 1.3em; fill: currentColor; }
+        .button-icon svg { width: 1.3em; height: 1.3em; fill: currentColor; } 
+        
+        .move-up-btn,
+        .move-down-btn {
+            font-size: 1.2em; 
+        }
+
         .button-icon:hover:not(:disabled) { color: var(--c-teal-darker); }
         .button-icon:disabled { background: none !important; color: #ccc !important; cursor: not-allowed; opacity: 0.6; }
+        
+        .move-up-btn:hover:not(:disabled),
+        .move-down-btn:hover:not(:disabled),
+        .edit-button:hover:not(:disabled) {
+            transform: scale(1.15); 
+        }
+        .move-up-btn:hover:not(:disabled),
+        .move-down-btn:hover:not(:disabled) {
+             color: var(--c-success); 
+        }
+        .edit-button:hover:not(:disabled) {
+             color: var(--c-teal-darker); 
+        }
+
+        .list-item.enabled .move-up-btn:hover:not(:disabled),
+        .list-item.enabled .move-down-btn:hover:not(:disabled),
+        .element-item.enabled .move-up-btn:hover:not(:disabled),
+        .element-item.enabled .move-down-btn:hover:not(:disabled),
+        .list-item.enabled .edit-button:hover:not(:disabled), 
+        .element-item.enabled .edit-button:hover:not(:disabled) { 
+            transform: scale(1.15); 
+        }
+        .list-item.enabled .move-up-btn:hover:not(:disabled),
+        .list-item.enabled .move-down-btn:hover:not(:disabled),
+        .element-item.enabled .move-up-btn:hover:not(:disabled),
+        .element-item.enabled .move-down-btn:hover:not(:disabled) {
+             color: #a7f0ba; 
+        }
+        .list-item.enabled .edit-button:hover:not(:disabled), 
+        .element-item.enabled .edit-button:hover:not(:disabled) {
+            color: var(--c-light-grey); 
+        }
+        
         .delete-element-button:hover { color: var(--c-red) !important; transform: scale(1.1); }
-        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
-        /* Estilo botón link eliminado ya que no se usa */
+        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; transform: scale(1.1); }
+        
+        .button-icon.arrow-active { 
+            transform: scale(0.9); 
+            opacity: 0.7; 
+        }
+
+        .button-link-style { 
+            background: none; border: none; padding: 0; margin: 0;
+            color: var(--c-teal); text-decoration: underline; cursor: pointer; font-size: 0.9em;
+        }
+        .button-link-style:hover { color: var(--c-teal-darker); }
+        .button-link-style:disabled { color: var(--c-grey); text-decoration: none; cursor: default; }
 
         /* --- Inputs & Forms --- */
         .input { padding: 10px; border: 1px solid var(--c-border); border-radius: var(--c-radius); width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; }
@@ -74,12 +122,16 @@
         /* --- Lists & Elements Styling (Unified) --- */
         .list-container { margin-top: 15px; }
         #elementsListContainer { padding-left: 0; list-style: none; margin-top: 0; }
-        .list-item, .element-item { padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; border: 1px solid var(--c-border); border-radius: var(--c-radius); cursor: pointer; background-color: var(--c-white); color: var(--c-text); min-height: 50px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+        .list-item, .element-item { 
+            padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; 
+            border: 1px solid var(--c-border); border-radius: var(--c-radius); cursor: pointer; 
+            background-color: var(--c-white); color: var(--c-text); min-height: 50px; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; 
+        }
         .list-item.enabled, .element-item.enabled { background-color: var(--c-teal); color: var(--c-white); border-color: var(--c-teal); }
         .list-item-name, .element-item-name { flex-grow: 1; padding: 12px 15px; font-weight: 500; text-align: left; }
         .list-item.enabled .list-item-name, .element-item.enabled .element-item-name { color: var(--c-white); }
         .list-item.enabled .button-icon, .element-item.enabled .button-icon { color: var(--c-white); }
-        .list-item.enabled .button-icon:hover:not(:disabled), .element-item.enabled .button-icon:hover:not(:disabled) { color: var(--c-light-grey); }
         .list-item-controls-right, .element-item-controls-right { padding: 0 10px; border-left: 1px solid var(--c-border); display: flex; align-items: center; align-self: stretch; gap: 5px; flex-shrink: 0; }
         .list-item.enabled .list-item-controls-right, .element-item.enabled .element-item-controls-right { border-left-color: rgba(255,255,255,0.3); }
         .list-item-controls-right button, .element-item-controls-right button { height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; }
@@ -88,7 +140,18 @@
         .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-grey); border-color: var(--c-border); cursor: default;}
         .element-item.disabled .button-icon { color: #bbb; }
         .element-item.disabled .button-icon:hover { color: #bbb; }
-        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
+
+        /* Estilos para el feedback visual de movimiento */
+        @keyframes subtlePulse { 
+            0%, 100% { outline: 2px solid transparent; }
+            50% { outline: 4px solid var(--c-success); } 
+        }
+         .list-item.item-just-moved,
+         .element-item.item-just-moved {
+            animation: subtlePulse var(--highlight-duration) ease-in-out; 
+            outline-offset: 2px; 
+         }
+
 
         /* --- Randomization Screen --- */
         #randomizationResultsContainer { margin-top: 20px; }
@@ -322,11 +385,9 @@
             margin-top: 25px;      
             padding-top: 15px;      
             border-top: 1px solid #eee; 
-            /* Solo contiene el checkbox ahora, alineado a la izquierda */
             text-align: left;       
         }
-        #infoModal .show-on-startup-label, /* Usaremos show-on-startup-label en el HTML */
-        #infoModal .dont-show-label { /* Mantenido por si acaso */
+        #infoModal .show-on-startup-label {
             display: flex;         
             align-items: center;
             gap: 8px;              
@@ -334,8 +395,7 @@
             font-size: 0.9em;
             color: var(--c-grey-darker);
         }
-        #infoModal .show-on-startup-label input[type="checkbox"],
-        #infoModal .dont-show-label input[type="checkbox"] {
+        #infoModal .show-on-startup-label input[type="checkbox"] {
             width: 16px;
             height: 16px;
             accent-color: var(--c-teal); 
@@ -505,9 +565,11 @@
             <p>v2.6 (06.05.25) - Implementada la función de metrónomo, ajustes de diseño</p> 
             
             <div class="modal-footer-options">
-                 <label class="show-on-startup-label"> <input type="checkbox" id="showInfoOnStartup"> Mostrar ayuda al inicio
+                 <label class="show-on-startup-label"> 
+                     <input type="checkbox" id="showInfoOnStartup"> 
+                     Mostrar ayuda al inicio
                  </label>
-                 </div>
+            </div>
        </div>
     </div>
 
@@ -517,6 +579,7 @@
         let selectedListIndex = null;
         let lastDisplayedRandomElements = {};
         const MIN_ELEMENTS_FOR_TOP_SAVE = 10;
+        const HIGHLIGHT_DURATION = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000; 
 
         // --- Metronome Variables ---
         let audioContext = null;
@@ -535,8 +598,31 @@
 
         // --- Screen Management ---
         function showScreen(screenId) { document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none'); const screenToShow = document.getElementById(screenId); if (screenToShow) { screenToShow.style.display = 'block'; const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; } else { console.error("Screen ID not found", screenId); } window.scrollTo(0, 0); }
-        function showHomeScreen() { renderHome(); showScreen('homeScreen'); selectedListIndex = null; }
-        function showEditScreen(index) { selectedListIndex = index; if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) { renderEditScreen(); showScreen('editScreen'); } else { console.error("Invalid list index", index); showHomeScreen(); } }
+        
+        // MODIFICADO: para parar metrónomo al salir de pantalla Randomize
+        function showHomeScreen() { 
+             if (isMetronomeRunning) {
+                 stopMetronome();
+                 console.log("Metrónomo detenido al volver a Home.");
+             }
+             renderHome(); 
+             showScreen('homeScreen'); 
+             selectedListIndex = null; 
+        }
+        function showEditScreen(index) { 
+             // No debería haber metrónomo activo aquí, pero por si acaso
+             if (isMetronomeRunning) {
+                 stopMetronome();
+             }
+             selectedListIndex = index; 
+             if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) { 
+                 renderEditScreen(); 
+                 showScreen('editScreen'); 
+             } else { 
+                 console.error("Invalid list index", index); 
+                 showHomeScreen(); 
+             } 
+        }
         function showRandomizationScreen() { lists.forEach(list => list.lockedElementId = null); lastDisplayedRandomElements = {}; renderRandomizationScreen(true, false); showScreen('randomizationScreen'); const metronomeCard = document.getElementById('metronomeCard'); if (metronomeCard && metronomeCard.classList.contains('visible')) { /* Mantener la tarjeta visible si ya lo estaba */ } }
 
         // --- Modal Logic ---
@@ -550,24 +636,20 @@
                     showOnStartupCheckbox.checked = shouldShow;
                 } catch (e) {
                      console.error("Error reading localStorage for info modal preference:", e);
-                     showOnStartupCheckbox.checked = true; // Marcar por defecto si hay error
+                     showOnStartupCheckbox.checked = true; 
                 }
             }
-
             if(overlay) overlay.style.display = 'flex';
         }
 
         function closeInfoModal() {
             const showOnStartupCheckbox = document.getElementById('showInfoOnStartup'); 
-
             if (showOnStartupCheckbox) {
                 try {
                     if (showOnStartupCheckbox.checked) {
-                        // MARCADO: Quiere verla al inicio -> Eliminar la preferencia "vista"
                         localStorage.removeItem('practiceHelper_infoModalSeen');
                         console.log("Preferencia actualizada: El modal de info SE mostrará en el próximo inicio.");
                     } else {
-                        // DESMARCADO: No quiere verla al inicio -> Establecer la preferencia "vista"
                         localStorage.setItem('practiceHelper_infoModalSeen', 'true');
                         console.log("Preferencia actualizada: El modal de info NO se mostrará automáticamente en el próximo inicio.");
                     }
@@ -575,7 +657,6 @@
                     console.error("Error updating preference in localStorage:", e);
                 }
             }
-
             const overlay = document.getElementById('modalOverlay');
             if(overlay) overlay.style.display = 'none';
         }
@@ -583,16 +664,64 @@
         // --- Home Screen Logic ---
         function createNewListAndGoToEdit() { const defaultName = `New List ${lists.length + 1}`; const newList = { id: Date.now().toString(), name: defaultName, elements: [], enabled: true, lockedElementId: null }; lists.push(newList); saveLists(); showEditScreen(lists.length - 1); renderHome(); }
         function toggleListEnabled(listId) { const index = lists.findIndex(l => l.id === listId); if (index === -1) return; lists[index].enabled = !lists[index].enabled; saveLists(); renderHome(); }
-        function moveList(listId, direction) { const index = lists.findIndex(l => l.id === listId); if (index === -1) return; if (direction === 'up' && index > 0) { [lists[index], lists[index - 1]] = [lists[index - 1], lists[index]]; } else if (direction === 'down' && index < lists.length - 1) { [lists[index], lists[index + 1]] = [lists[index + 1], lists[index]]; } else { return; } saveLists(); renderHome(); }
+        function moveList(listId, direction) {
+            const index = lists.findIndex(l => l.id === listId);
+            if (index === -1) return;
+            if (direction === 'up' && index > 0) {
+                [lists[index], lists[index - 1]] = [lists[index - 1], lists[index]];
+            } else if (direction === 'down' && index < lists.length - 1) {
+                [lists[index], lists[index + 1]] = [lists[index + 1], lists[index]];
+            } else {
+                return;
+            }
+            saveLists(); 
+            renderHome(); 
+            highlightMovedItem(listId, 'list-item', 'data-list-id'); 
+        }
 
         // --- Edit Screen Logic ---
         function updateListName(newName) { if (selectedListIndex !== null && lists[selectedListIndex]) { lists[selectedListIndex].name = newName; } }
-        function saveAndGoHome() { if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { alert("List name cannot be empty."); console.warn("List name cannot be empty on save."); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen(); }
+        function saveAndGoHome() { 
+             // Parar metrónomo si está activo (aunque no debería ser posible desde aquí)
+             if (isMetronomeRunning) {
+                 stopMetronome();
+             }
+             if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { alert("List name cannot be empty."); console.warn("List name cannot be empty on save."); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen(); 
+        }
         function deleteList() { console.log("deleteList called", selectedListIndex); if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) { console.error("Invalid index for deleteList", selectedListIndex); return; } const listIndexToDelete = selectedListIndex; const listNameToDelete = lists[listIndexToDelete].name; console.log("Confirm delete", listNameToDelete, listIndexToDelete); if (confirm(`Are you sure you want to delete the list "${listNameToDelete}"?\nThis action cannot be undone.`)) { console.log("Deletion confirmed"); if (lists[listIndexToDelete] && lists[listIndexToDelete].name === listNameToDelete) { lists.splice(listIndexToDelete, 1); console.log("List spliced from array"); saveLists(); showHomeScreen(); } else { console.error("Data consistency error during delete. Aborting."); renderHome(); } } else { console.log("Deletion cancelled by user"); } }
         function promptAddElement() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const elementName = prompt("Enter the name for the new element:"); if (elementName === null) { console.log("Add element cancelled."); return; } const trimmedName = elementName.trim(); if (!trimmedName) { console.warn("Element name cannot be empty."); alert("Element name cannot be empty."); return; } const elementExists = list.elements.some(el => el.name.toLowerCase() === trimmedName.toLowerCase()); if(elementExists) { alert(`Element "${trimmedName}" already exists in this list.`); console.warn(`Element "${trimmedName}" already exists.`); return; } list.elements.push({ id: Date.now().toString() + Math.random(), name: trimmedName, enabled: true }); renderEditScreen(); console.log(`Element "${trimmedName}" added to list "${list.name}".`); }
         function deleteElement(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const index = list.elements.findIndex(el => el.id === elementId); if (index === -1) { console.warn("Element ID not found for deletion:", elementId); return; } if (list.lockedElementId === elementId) { list.lockedElementId = null; } list.elements.splice(index, 1); renderEditScreen(); }
         function toggleElementEnabled(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const element = list.elements.find(el => el.id === elementId); if (!element) { console.warn("Element ID not found for toggle:", elementId); return; } element.enabled = !element.enabled; if (!element.enabled && list.lockedElementId === elementId) { list.lockedElementId = null; } renderEditScreen(); }
-        function moveElement(elementId, direction) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const elements = lists[selectedListIndex].elements; const index = elements.findIndex(el => el.id === elementId); if (index === -1) return; if (direction === 'up' && index > 0) { [elements[index], elements[index - 1]] = [elements[index - 1], elements[index]]; } else if (direction === 'down' && index < elements.length - 1) { [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]]; } else { return; } renderEditScreen(); }
+        function moveElement(elementId, direction) { 
+            if (selectedListIndex === null || !lists[selectedListIndex]) return;
+            const elements = lists[selectedListIndex].elements;
+            const index = elements.findIndex(el => el.id === elementId);
+            if (index === -1) return;
+            if (direction === 'up' && index > 0) {
+                [elements[index], elements[index - 1]] = [elements[index - 1], elements[index]];
+            } else if (direction === 'down' && index < elements.length - 1) {
+                [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]];
+            } else {
+                return; 
+            }
+            renderEditScreen(); 
+            highlightMovedItem(elementId, 'element-item', 'data-element-id'); 
+        }
+
+        function highlightMovedItem(itemId, itemClass, dataAttribute) {
+             const highlightDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000; 
+             requestAnimationFrame(() => { 
+                const movedNode = document.querySelector(`.${itemClass}[${dataAttribute}="${itemId}"]`);
+                if (movedNode) {
+                    movedNode.classList.add('item-just-moved');
+                    setTimeout(() => {
+                        if (document.body.contains(movedNode)) { 
+                           movedNode.classList.remove('item-just-moved');
+                        }
+                    }, highlightDuration); 
+                }
+            });
+        }
 
         // --- Import/Export Logic ---
         function triggerImportTxt() { document.getElementById('importFile').click(); }
@@ -721,8 +850,101 @@
         }
 
         // --- Rendering Functions ---
-        function renderHome() { const container = document.getElementById("listsContainer"); container.innerHTML = ""; lists.forEach((list, index) => { const item = document.createElement("div"); item.className = `list-item ${list.enabled ? 'enabled' : ''}`; item.setAttribute('data-list-id', list.id); item.onclick = () => toggleListEnabled(list.id); const nameArea = document.createElement("div"); nameArea.className = "list-item-name"; nameArea.textContent = `${list.name} (${list.elements.length})`; const rightCtrls = document.createElement("div"); rightCtrls.className = "list-item-controls-right"; rightCtrls.onclick = (e) => e.stopPropagation(); const upBtn = document.createElement("button"); upBtn.className="button-icon"; upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; upBtn.title="Move Up"; upBtn.disabled = (index === 0); upBtn.onclick = (e) => { moveList(list.id, 'up'); }; const downBtn = document.createElement("button"); downBtn.className="button-icon"; downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; downBtn.title="Move Down"; downBtn.disabled = (index === lists.length - 1); downBtn.onclick = (e) => { moveList(list.id, 'down'); }; const editBtn = document.createElement("button"); editBtn.className = "button-icon edit-button"; editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`; editBtn.title = "Edit List"; editBtn.onclick = (e) => { showEditScreen(lists.findIndex(l => l.id === list.id)); }; rightCtrls.appendChild(upBtn); rightCtrls.appendChild(downBtn); rightCtrls.appendChild(editBtn); item.appendChild(nameArea); item.appendChild(rightCtrls); container.appendChild(item); }); const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; }
-        function renderEditScreen() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const listNameInput = document.getElementById("listNameInput"); if(listNameInput) listNameInput.value = list.name; const totalElements = list.elements.length; const enabledElements = list.elements.filter(el => el.enabled).length; const countDisplaySpan = document.getElementById('elementCountDisplay'); if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; } const topSaveBtn = document.getElementById('editScreenTopSaveBtn'); if (topSaveBtn) { const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE; topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none'; } const container = document.getElementById("elementsListContainer"); container.innerHTML = ""; if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No elements in this list.</li>"; } else { list.elements.forEach((element, index) => { const li = document.createElement("li"); li.className = `element-item ${element.enabled ? 'enabled' : ''}`; li.setAttribute('data-element-id', element.id); li.onclick = () => toggleElementEnabled(element.id); const nameSpan = document.createElement("span"); nameSpan.className = "element-item-name"; nameSpan.textContent = element.name; const rightCtrls = document.createElement("div"); rightCtrls.className = "element-item-controls-right"; rightCtrls.onclick = (e) => e.stopPropagation(); const upBtn = document.createElement("button"); upBtn.className="button-icon"; upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; upBtn.title="Move Up"; upBtn.disabled = (index === 0); upBtn.onclick = (e) => { moveElement(element.id,'up'); }; const downBtn = document.createElement("button"); downBtn.className="button-icon"; downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; downBtn.title="Move Down"; downBtn.disabled = (index === list.elements.length - 1); downBtn.onclick = (e) => { moveElement(element.id,'down'); }; const delBtn = document.createElement("button"); delBtn.className="button-icon delete-element-button"; delBtn.innerHTML="&times;"; delBtn.title="Delete Element"; delBtn.style.fontSize='1.4em'; delBtn.onclick=(e)=>{deleteElement(element.id);}; rightCtrls.appendChild(upBtn); rightCtrls.appendChild(downBtn); rightCtrls.appendChild(delBtn); li.appendChild(nameSpan); li.appendChild(rightCtrls); container.appendChild(li); }); } if(listNameInput) listNameInput.value = list.name; }
+        function renderHome() { 
+            const container = document.getElementById("listsContainer"); 
+            container.innerHTML = ""; 
+            lists.forEach((list, index) => { 
+                const item = document.createElement("div"); 
+                item.className = `list-item ${list.enabled ? 'enabled' : ''}`; 
+                item.setAttribute('data-list-id', list.id); 
+                item.onclick = () => toggleListEnabled(list.id); 
+                const nameArea = document.createElement("div"); 
+                nameArea.className = "list-item-name"; 
+                nameArea.textContent = `${list.name} (${list.elements.length})`; 
+                const rightCtrls = document.createElement("div"); 
+                rightCtrls.className = "list-item-controls-right"; 
+                rightCtrls.onclick = (e) => e.stopPropagation(); 
+                const upBtn = document.createElement("button"); 
+                upBtn.className="button-icon move-up-btn"; 
+                upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; 
+                upBtn.title="Move Up"; 
+                upBtn.disabled = (index === 0); 
+                upBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'up'); }; 
+                const downBtn = document.createElement("button"); 
+                downBtn.className="button-icon move-down-btn"; 
+                downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; 
+                downBtn.title="Move Down"; 
+                downBtn.disabled = (index === lists.length - 1); 
+                downBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'down'); }; 
+                const editBtn = document.createElement("button"); 
+                editBtn.className = "button-icon edit-button"; 
+                editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`; 
+                editBtn.title = "Edit List"; 
+                editBtn.onclick = (e) => { e.stopPropagation(); showEditScreen(lists.findIndex(l => l.id === list.id)); }; 
+                rightCtrls.appendChild(upBtn); 
+                rightCtrls.appendChild(downBtn); 
+                rightCtrls.appendChild(editBtn); 
+                item.appendChild(nameArea); 
+                item.appendChild(rightCtrls); 
+                container.appendChild(item); 
+            }); 
+            const randBtn = document.getElementById('goToRandomizeBtn'); 
+            if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; 
+        }
+        function renderEditScreen() { 
+            if (selectedListIndex === null || !lists[selectedListIndex]) return; 
+            const list = lists[selectedListIndex]; 
+            const listNameInput = document.getElementById("listNameInput"); 
+            if(listNameInput) listNameInput.value = list.name; 
+            const totalElements = list.elements.length; 
+            const enabledElements = list.elements.filter(el => el.enabled).length; 
+            const countDisplaySpan = document.getElementById('elementCountDisplay'); 
+            if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; } 
+            const topSaveBtn = document.getElementById('editScreenTopSaveBtn'); 
+            if (topSaveBtn) { const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE; topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none'; } 
+            const container = document.getElementById("elementsListContainer"); 
+            container.innerHTML = ""; 
+            if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No elements in this list.</li>"; } 
+            else { 
+                list.elements.forEach((element, index) => { 
+                    const li = document.createElement("li"); 
+                    li.className = `element-item ${element.enabled ? 'enabled' : ''}`; 
+                    li.setAttribute('data-element-id', element.id); 
+                    li.onclick = () => toggleElementEnabled(element.id); 
+                    const nameSpan = document.createElement("span"); 
+                    nameSpan.className = "element-item-name"; 
+                    nameSpan.textContent = element.name; 
+                    const rightCtrls = document.createElement("div"); 
+                    rightCtrls.className = "element-item-controls-right"; 
+                    rightCtrls.onclick = (e) => e.stopPropagation(); 
+                    const upBtn = document.createElement("button"); 
+                    upBtn.className="button-icon move-up-btn"; 
+                    upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; 
+                    upBtn.title="Move Up"; 
+                    upBtn.disabled = (index === 0); 
+                    upBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'up'); }; 
+                    const downBtn = document.createElement("button"); 
+                    downBtn.className="button-icon move-down-btn"; 
+                    downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; 
+                    downBtn.title="Move Down"; 
+                    downBtn.disabled = (index === list.elements.length - 1); 
+                    downBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'down'); }; 
+                    const delBtn = document.createElement("button"); 
+                    delBtn.className="button-icon delete-element-button"; 
+                    delBtn.innerHTML="&times;"; 
+                    delBtn.title="Delete Element"; 
+                    delBtn.style.fontSize='1.4em'; 
+                    delBtn.onclick=(e)=>{ e.stopPropagation(); deleteElement(element.id);}; 
+                    rightCtrls.appendChild(upBtn); 
+                    rightCtrls.appendChild(downBtn); 
+                    rightCtrls.appendChild(delBtn); 
+                    li.appendChild(nameSpan); 
+                    li.appendChild(rightCtrls); 
+                    container.appendChild(li); 
+                }); 
+            } 
+            if(listNameInput) listNameInput.value = list.name; 
+        }
         function renderRandomizationScreen(initialState = false, shouldRandomize = false) { const container = document.getElementById('randomizationResultsContainer'); container.innerHTML = ''; const enabledLists = lists.filter(list => list.enabled); const randButton = document.getElementById('randomizeButton'); if (enabledLists.length === 0) { container.innerHTML = '<p class="info-text text-center">No enabled lists to randomize.</p>'; if (randButton) randButton.disabled = true; return; } else { if (randButton) randButton.disabled = false; } console.log(`Rendering Randomization: InitialState=${initialState}, ShouldRandomize=${shouldRandomize}`); enabledLists.forEach(list => { const contentDiv = document.createElement('div'); contentDiv.className = 'random-result-content'; contentDiv.setAttribute('data-list-id-ref', list.id); let elementToShow = null; let isLocked = !!list.lockedElementId; const enabledElements = list.elements.filter(el => el.enabled); if (initialState) { contentDiv.textContent = list.name; contentDiv.classList.add('empty'); lastDisplayedRandomElements[list.id] = null; } else { if (isLocked) { const lockedElement = enabledElements.find(el => el.id === list.lockedElementId); if (lockedElement) { elementToShow = lockedElement; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List "${list.name}": Displaying LOCKED element "${elementToShow.name}" (ID: ${elementToShow.id})`); } else { console.warn(`Locked element ID ${list.lockedElementId} is invalid/disabled in list "${list.name}". Unlocking.`); isLocked = false; list.lockedElementId = null; if (shouldRandomize && enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(` -> Picked NEW random "${elementToShow.name}" instead.`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; } } } if (!isLocked) { if (shouldRandomize || !lastDisplayedRandomElements[list.id]) { if (enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List "${list.name}": Picking NEW random element: "${elementToShow?.name}" (ID: ${elementToShow?.id})`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List "${list.name}": No enabled elements to pick from.`); } } else { const lastElement = enabledElements.find(el => el.id === lastDisplayedRandomElements[list.id]); if(lastElement) { elementToShow = lastElement; console.log(`List "${list.name}": Re-displaying PREVIOUS element: "${elementToShow.name}" (ID: ${elementToShow.id})`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List "${list.name}": Last displayed element (ID: ${lastDisplayedRandomElements[list.id]}) is gone or disabled. Showing empty.`); } } } if (elementToShow) { contentDiv.textContent = elementToShow.name; contentDiv.onclick = () => toggleLock(list.id); if(isLocked) { contentDiv.classList.add('locked'); } } else { contentDiv.textContent = `(${list.name} - No enabled elements)`; contentDiv.classList.add('empty'); contentDiv.onclick = null; } } container.appendChild(contentDiv); }); }
 
         // --- Initialization ---
@@ -736,20 +958,20 @@
             const infoButton = document.getElementById('infoButton');
             const modalOverlay = document.getElementById('modalOverlay');
             const modalCloseButton = document.getElementById('modalCloseBtn');
-            // Botón Reset ya no existe
             
             const metronomeToggleBtn = document.getElementById('metronomeToggleButton'); 
             const metronomeStartStopBtn = document.getElementById('metronomeStartStopBtn');
             const bpmInput = document.getElementById('bpmInput');
             const bpmSlider = document.getElementById('bpmSlider'); 
             const timeSignatureSelect = document.getElementById('timeSignatureSelect'); 
+            const listsContainer = document.getElementById('listsContainer');
+            const elementsListContainer = document.getElementById('elementsListContainer');
 
             if(metronomeStartStopBtn) {
                 metronomeStartStopBtn.innerHTML = playIconSVG;
                 metronomeStartStopBtn.setAttribute('aria-label', 'Iniciar metrónomo'); 
             }
 
-            // Comprobar si se debe mostrar el modal de info al inicio
             try {
                 if (localStorage.getItem('practiceHelper_infoModalSeen') !== 'true') {
                     openInfoModal(); 
@@ -762,8 +984,6 @@
             if(modalOverlay) { modalOverlay.addEventListener('click', (event) => { if (event.target === modalOverlay) { closeInfoModal(); } }); }
             if(modalCloseButton) { modalCloseButton.addEventListener('click', closeInfoModal); }
             
-            // Listener para botón Reset eliminado
-
             if(metronomeToggleBtn) { metronomeToggleBtn.addEventListener('click', toggleMetronomeCard); } 
             
             if(metronomeStartStopBtn) {
@@ -867,6 +1087,47 @@
                     }
                 }
             });
+            
+            // Listeners para feedback de clic en flechas
+            function handleArrowInteraction(event) {
+                const button = event.target.closest('.move-up-btn, .move-down-btn');
+                if (!button || button.disabled) {
+                    if (event.type === 'mouseleave') {
+                       // Busca CUALQUIER botón activo dentro del contenedor y desactívalo
+                       const activeButtons = event.currentTarget.querySelectorAll('.arrow-active');
+                       activeButtons.forEach(activeBtn => activeBtn.classList.remove('arrow-active'));
+                    }
+                    return;
+                };
+
+                if (event.type === 'mousedown' || event.type === 'touchstart') {
+                    button.classList.add('arrow-active');
+                } else { // mouseup, mouseleave (sobre el botón), touchend, touchcancel
+                    button.classList.remove('arrow-active');
+                }
+            }
+
+            if (listsContainer) {
+                // Mouse events
+                listsContainer.addEventListener('mousedown', handleArrowInteraction);
+                listsContainer.addEventListener('mouseup', handleArrowInteraction);
+                listsContainer.addEventListener('mouseleave', handleArrowInteraction); // Para cuando sales del *contenedor*
+                // Touch events
+                listsContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true });
+                listsContainer.addEventListener('touchend', handleArrowInteraction);
+                listsContainer.addEventListener('touchcancel', handleArrowInteraction);
+            }
+            if (elementsListContainer) {
+                // Mouse events
+                elementsListContainer.addEventListener('mousedown', handleArrowInteraction);
+                elementsListContainer.addEventListener('mouseup', handleArrowInteraction);
+                elementsListContainer.addEventListener('mouseleave', handleArrowInteraction); // Para cuando sales del *contenedor*
+                // Touch events
+                elementsListContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true });
+                elementsListContainer.addEventListener('touchend', handleArrowInteraction);
+                elementsListContainer.addEventListener('touchcancel', handleArrowInteraction);
+            }
+
 
             showHomeScreen();
             console.log("DOMContentLoaded: Initialization complete. Showing home screen.");
