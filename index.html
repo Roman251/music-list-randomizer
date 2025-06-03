@@ -7,440 +7,861 @@
     <style>
         /* --- Color Palette Variables --- */
         :root {
+            /* Original Light Theme Colors */
             --c-purple: #5F0F40; --c-red: #9A031E; --c-orange1: #FB8B24;
             --c-orange2: #E36414; --c-teal: #0F4C5C; --c-background: #f8f9fa;
             --c-text: var(--c-teal); --c-grey: #686e78; --c-light-grey: #e8eef3;
-            --c-border: #dfe4e9; --c-white: #ffffff; --c-success: #28a745;
+            --c-border: #dfe4e9; --c-white: #ffffff; /* Standard white */
+            --c-success: #28a745;
             --c-teal-darker: #0b3a42; --c-grey-darker: #4f5a68;
             --c-red-darker: #7a0218; --c-success-darker: #218838;
             --c-orange1-darker: var(--c-orange2);
             --c-teal-lighter: #327C8F;
-            --c-teal-very-light: #4FB4C8; 
+            --c-teal-very-light: #4FB4C8;
             --c-locked-bg: #d6dde4;
             --c-dark-bg: #212529;
-            --c-radius: 4px; 
-            --highlight-duration: 0.6s; 
+            --c-radius: 4px;
+            --highlight-duration: 0.6s;
+            --key-panel-width: 400px;
+            --theme-transition-duration: 0.3s;
+
+            /* Enhanced variables for theming - Light Theme Defaults */
+            --c-card-bg: var(--c-white);
+            --c-hr-border: #eee;
+            --c-disabled-bg: #ccc;
+            --c-disabled-border: #bbb;
+            --c-disabled-text: #777;
+            --c-disabled-icon-weak: #bbb;
+            --c-disabled-icon-strong: #aaa;
+            --c-button-disabled-text: #888;
+            --c-button-shuffle-disabled-icon-fill: #888;
+            --c-hover-bg-weak: #ddd;
+            --c-modal-overlay-bg: rgba(0, 0, 0, 0.6);
+            --card-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            --c-floating-label-bg: var(--c-background);
         }
 
+        body.theme-dark {
+            --c-background: #282c34; /* Dark screen background */
+            --c-text: #a7d7d9; /* Light teal for general text - used for active enharmonic button text & border */
+            --c-teal: #57c5b8; /* Normal/brighter teal for highlights, buttons, specific text */
+            --c-teal-darker: #4db6ac;
+            --c-teal-lighter: #80cbc4;
+            --c-teal-very-light: #a7ffeb;
+            
+            --c-card-bg: #353a40; 
+            --c-border: #4a4f56;
+            --c-hr-border: #3a3f44;
+
+            --c-grey: #b0bec5;
+            --c-grey-darker: #90a4ae;
+            --c-light-grey: #455a64; 
+            --c-locked-bg: var(--c-card-bg); 
+            --c-dark-bg: #424242; 
+
+            --c-purple: #ab47bc;
+            --c-red: #ef5350;
+            --c-red-darker: #e53935;
+            --c-orange1: #ffa726;
+            --c-orange2: #ff9800;
+            --c-success: #66bb6a;
+            --c-success-darker: #4caf50;
+            
+            --c-disabled-bg: #3e444c;
+            --c-disabled-border: #353a40;
+            --c-disabled-text: #78909c;
+            --c-disabled-icon-weak: #607d8b;
+            --c-disabled-icon-strong: #78909c;
+            --c-button-disabled-text: #90a4ae;
+            --c-button-shuffle-disabled-icon-fill: #78909c;
+
+            --c-hover-bg-weak: #3c4148;
+            --c-modal-overlay-bg: rgba(0, 0, 0, 0.7);
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            --c-floating-label-bg: var(--c-background);
+
+            --c-enabled-item-text-dark: #31363F; 
+        }
+
+
         /* --- General & Layout --- */
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; margin: 0; padding: 10px; background-color: var(--c-background); color: var(--c-text); font-size: 16px; }
-        .card { border: 1px solid var(--c-border); padding: 16px; border-radius: var(--c-radius); margin-bottom: 16px; background-color: var(--c-white); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0; padding: 10px;
+            background-color: var(--c-background);
+            color: var(--c-text);
+            font-size: 16px;
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+        .card {
+            border: 1px solid var(--c-border);
+            padding: 16px;
+            border-radius: var(--c-radius);
+            margin-bottom: 16px;
+            background-color: var(--c-card-bg);
+            box-shadow: var(--card-shadow);
+            transition: background-color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease, box-shadow var(--theme-transition-duration) ease;
+        }
         .card-content { padding: 8px; position: relative; }
-        h1 { text-align: center; margin-top: 0; margin-bottom: 0.8em; color: var(--c-teal); font-weight: 700; font-size: 2em; }
-        h3 { color: var(--c-teal); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.75em; font-weight: 600;}
-        p.info-text { font-size: 0.9em; color: var(--c-grey); margin-bottom: 1em; margin-top: 0.5em; }
-        hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
+        h1 {
+            text-align: center; margin-top: 0; margin-bottom: 0.8em;
+            color: var(--c-teal);
+            font-weight: 700; font-size: 2em;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        h3 {
+            color: var(--c-teal);
+            font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.75em; font-weight: 600;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        p.info-text {
+            font-size: 0.9em; color: var(--c-grey); margin-bottom: 1em; margin-top: 0.5em;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        hr {
+            margin: 25px 0; border: 0; border-top: 1px solid var(--c-hr-border);
+            transition: border-top-color var(--theme-transition-duration) ease;
+        }
         .screen { display: none; }
         .hidden { display: none !important; }
         .text-center { text-align: center; }
 
         /* --- Buttons --- */
-        .button { padding: 10px 18px; border: none; border-radius: var(--c-radius); cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; color: var(--c-white); position: relative; overflow: visible; vertical-align: middle;}
+        .button {
+            padding: 10px 18px; border: 1px solid transparent; border-radius: var(--c-radius);
+            cursor: pointer; margin-top: 10px; margin-right: 5px; font-size: 1em; font-weight: 500;
+            color: var(--c-white); position: relative; overflow: visible; vertical-align: middle;
+            transition: background-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        opacity var(--theme-transition-duration) ease;
+        }
         .button:hover:not(:disabled) {}
-        .button:disabled { background-color: #ccc !important; cursor: not-allowed; opacity: 0.7;}
-        .button-primary { background-color: var(--c-teal); }
-        .button-secondary { background-color: var(--c-grey); } .button-secondary:hover:not(:disabled) { background-color: var(--c-grey-darker); }
-        .button-success { background-color: var(--c-success); } .button-success:hover:not(:disabled) { background-color: var(--c-success-darker); }
-        .button-danger { background-color: var(--c-red); } .button-danger:hover:not(:disabled) { background-color: var(--c-red-darker); }
-        .button-large { width: 65%; max-width: 320px; font-size: 1.2em; padding: 15px; display: block; margin-left: auto; margin-right: auto; margin-top: 15px; margin-bottom: 10px; border-radius: 30px; }
-        
+        .button:disabled {
+            background-color: var(--c-disabled-bg) !important; color: var(--c-button-disabled-text) !important;
+            border-color: var(--c-disabled-border) !important; cursor: not-allowed; opacity: 0.7;
+        }
+        .button-primary { background-color: var(--c-teal); border-color: var(--c-teal); }
+        .button-primary:hover:not(:disabled) { background-color: var(--c-teal-darker); border-color: var(--c-teal-darker); }
+        .button-secondary { background-color: var(--c-grey); border-color: var(--c-grey); color: var(--c-white); }
+        .button-secondary:hover:not(:disabled) { background-color: var(--c-grey-darker); border-color: var(--c-grey-darker);}
+        .button-success { background-color: var(--c-success); border-color: var(--c-success); }
+        .button-success:hover:not(:disabled) { background-color: var(--c-success-darker); border-color: var(--c-success-darker); }
+        .button-danger { background-color: var(--c-red); border-color: var(--c-red); }
+        .button-danger:hover:not(:disabled) { background-color: var(--c-red-darker); border-color: var(--c-red-darker); }
+
         /* --- Icon Buttons (para listas y elementos) --- */
         .button-icon {
             background: none; border: none; padding: 0 3px; cursor: pointer;
-            font-size: 1em; 
-            color: var(--c-teal);
+            font-size: 1em;
+            color: var(--c-teal); 
             display: inline-flex; align-items: center; justify-content: center;
-            transition: color 0.2s ease, transform 0.1s ease-out, opacity 0.1s ease-out; 
+            transition: color var(--theme-transition-duration) ease,
+                        transform 0.06s ease-out,
+                        opacity 0.1s ease-out;
         }
-        .button-icon svg { width: 1.3em; height: 1.3em; fill: currentColor; } 
+        .button-icon svg {
+            width: 1.3em; height: 1.3em; fill: currentColor;
+            transition: fill var(--theme-transition-duration) ease;
+        }
         
-        .move-up-btn,
-        .move-down-btn {
-            font-size: 1.2em; 
+        .list-item.enabled .button-icon,
+        .element-item.enabled .button-icon {
+            color: var(--c-white); 
+        }
+        
+        body.theme-dark .list-item.enabled .button-icon,
+        body.theme-dark .element-item.enabled .button-icon {
+            color: inherit; 
         }
 
-        .button-icon:hover:not(:disabled) { color: var(--c-teal-darker); }
-        .button-icon:disabled { background: none !important; color: #ccc !important; cursor: not-allowed; opacity: 0.6; }
-        
-        .move-up-btn:hover:not(:disabled),
-        .move-down-btn:hover:not(:disabled),
-        .edit-button:hover:not(:disabled) {
-            transform: scale(1.15); 
-        }
-        .move-up-btn:hover:not(:disabled),
-        .move-down-btn:hover:not(:disabled) {
-             color: var(--c-success); 
-        }
-        .edit-button:hover:not(:disabled) {
-             color: var(--c-teal-darker); 
-        }
 
-        .list-item.enabled .move-up-btn:hover:not(:disabled),
-        .list-item.enabled .move-down-btn:hover:not(:disabled),
-        .element-item.enabled .move-up-btn:hover:not(:disabled),
-        .element-item.enabled .move-down-btn:hover:not(:disabled),
-        .list-item.enabled .edit-button:hover:not(:disabled), 
-        .element-item.enabled .edit-button:hover:not(:disabled) { 
-            transform: scale(1.15); 
-        }
-        .list-item.enabled .move-up-btn:hover:not(:disabled),
-        .list-item.enabled .move-down-btn:hover:not(:disabled),
-        .element-item.enabled .move-up-btn:hover:not(:disabled),
-        .element-item.enabled .move-down-btn:hover:not(:disabled) {
-             color: #a7f0ba; 
-        }
-        .list-item.enabled .edit-button:hover:not(:disabled), 
-        .element-item.enabled .edit-button:hover:not(:disabled) {
-            color: var(--c-light-grey); 
-        }
+        .move-up-btn, .move-down-btn { font-size: 1.2em; }
+        .button-icon:disabled { background: none !important; color: var(--c-disabled-icon-strong) !important; cursor: not-allowed; opacity: 0.6; }
+        .move-up-btn:hover:not(:disabled), .move-down-btn:hover:not(:disabled), .edit-button:hover:not(:disabled) { transform: scale(1.15); }
         
+        .list-item.enabled .move-up-btn:hover:not(:disabled), .list-item.enabled .move-down-btn:hover:not(:disabled),
+        .element-item.enabled .move-up-btn:hover:not(:disabled), .element-item.enabled .move-down-btn:hover:not(:disabled) { transform: scale(1.15); }
+        .list-item.enabled .edit-button:hover:not(:disabled), .element-item.enabled .edit-button:hover:not(:disabled) { transform: scale(1.15); }
+        
+        body.theme-dark .list-item.enabled .move-up-btn:hover:not(:disabled),
+        body.theme-dark .list-item.enabled .move-down-btn:hover:not(:disabled),
+        body.theme-dark .element-item.enabled .move-up-btn:hover:not(:disabled),
+        body.theme-dark .element-item.enabled .move-down-btn:hover:not(:disabled) {
+             transform: scale(1.15);
+        }
+         body.theme-dark .list-item.enabled .edit-button:hover:not(:disabled),
+         body.theme-dark .element-item.enabled .edit-button:hover:not(:disabled) {
+             transform: scale(1.15);
+         }
+
+
         .delete-element-button:hover { color: var(--c-red) !important; transform: scale(1.1); }
-        .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; transform: scale(1.1); }
-        
-        .button-icon.arrow-active { 
-            transform: scale(0.9); 
-            opacity: 0.7; 
-        }
+        .element-item.enabled .delete-element-button:hover { color: var(--c-red-lighter); transform: scale(1.1); }
+        body.theme-dark .element-item.enabled .delete-element-button:hover { color: #ff8a8a !important; }
 
-        .button-link-style { 
-            background: none; border: none; padding: 0; margin: 0;
-            color: var(--c-teal); text-decoration: underline; cursor: pointer; font-size: 0.9em;
+
+        .button-icon.arrow-active { transform: scale(0.9); opacity: 0.7; }
+        .button-link-style {
+            background: none; border: none; padding: 0; margin: 0; color: var(--c-teal);
+            text-decoration: underline; cursor: pointer; font-size: 0.9em;
+            transition: color var(--theme-transition-duration) ease;
         }
         .button-link-style:hover { color: var(--c-teal-darker); }
         .button-link-style:disabled { color: var(--c-grey); text-decoration: none; cursor: default; }
 
         /* --- Inputs & Forms --- */
-        .input { padding: 10px; border: 1px solid var(--c-border); border-radius: var(--c-radius); width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em; }
-        .input[type="number"] {
-           width: 70px;
-           text-align: center;
+        .input {
+            padding: 10px; border: 1px solid var(--c-border); border-radius: var(--c-radius);
+            width: calc(100% - 22px); margin-bottom: 10px; font-size: 1em;
+            background-color: var(--c-card-bg);
+            color: var(--c-text);
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
         }
+        .input[type="number"] { width: 70px; text-align: center; }
         .input-group { display: flex; gap: 5px; margin-bottom: 10px; align-items: center;}
         .input-group .input { flex-grow: 1; margin-bottom: 0; }
-        .input-group label { flex-shrink: 0; margin-right: 5px; font-weight: 500; color: var(--c-text); }
+        .input-group label {
+            flex-shrink: 0; margin-right: 5px; font-weight: 500;
+            color: var(--c-text);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        body.theme-dark .input { border-color: var(--c-border); }
+        body.theme-dark .input::placeholder { color: var(--c-grey); }
+
 
         /* --- Lists & Elements Styling (Unified) --- */
         .list-container { margin-top: 15px; }
         #elementsListContainer { padding-left: 0; list-style: none; margin-top: 0; }
-        .list-item, .element-item { 
-            padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px; 
-            border: 1px solid var(--c-border); border-radius: var(--c-radius); cursor: pointer; 
-            background-color: var(--c-white); color: var(--c-text); min-height: 50px; 
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; 
+        
+        .list-item, .element-item {
+            padding: 0; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0px;
+            border: 1px solid var(--c-border); border-radius: var(--c-radius); cursor: pointer;
+            background-color: var(--c-card-bg); 
+            color: var(--c-text); min-height: 50px;
+            transition: background-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        outline var(--theme-transition-duration) ease;
         }
-        .list-item.enabled, .element-item.enabled { background-color: var(--c-teal); color: var(--c-white); border-color: var(--c-teal); }
+
+        body.theme-dark .list-item,
+        body.theme-dark .element-item {
+            background-color: var(--c-background);
+            color: var(--c-text);
+        }
+
+        .list-item.enabled, .element-item.enabled { 
+            background-color: var(--c-teal); 
+            color: var(--c-white); 
+            border-color: var(--c-teal); 
+        }
+
+        body.theme-dark .list-item.enabled,
+        body.theme-dark .element-item.enabled {
+            background-color: var(--c-background); 
+            color: var(--c-teal); 
+            border-color: var(--c-border); 
+            outline: 2px solid var(--c-teal);
+            outline-offset: 1px; 
+        }
+
         .list-item-name, .element-item-name { flex-grow: 1; padding: 12px 15px; font-weight: 500; text-align: left; }
-        .list-item.enabled .list-item-name, .element-item.enabled .element-item-name { color: var(--c-white); }
-        .list-item.enabled .button-icon, .element-item.enabled .button-icon { color: var(--c-white); }
-        .list-item-controls-right, .element-item-controls-right { padding: 0 10px; border-left: 1px solid var(--c-border); display: flex; align-items: center; align-self: stretch; gap: 5px; flex-shrink: 0; }
+        .list-item-controls-right, .element-item-controls-right {
+            padding: 0 10px;
+            border-left: 1px solid var(--c-border);
+            display: flex; align-items: center; align-self: stretch; gap: 5px; flex-shrink: 0;
+            transition: border-left-color var(--theme-transition-duration) ease;
+        }
+        
         .list-item.enabled .list-item-controls-right, .element-item.enabled .element-item-controls-right { border-left-color: rgba(255,255,255,0.3); }
+        
+        body.theme-dark .list-item.enabled .list-item-controls-right,
+        body.theme-dark .element-item.enabled .element-item-controls-right {
+            border-left-color: var(--c-border);
+        }
         .list-item-controls-right button, .element-item-controls-right button { height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; }
 
-        .element-item.disabled .element-item-name { text-decoration: line-through; color: #777; }
-        .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-grey); border-color: var(--c-border); cursor: default;}
-        .element-item.disabled .button-icon { color: #bbb; }
-        .element-item.disabled .button-icon:hover { color: #bbb; }
+        .element-item.disabled .element-item-name { text-decoration: line-through; color: var(--c-disabled-text); }
+        .element-item.disabled { background-color: var(--c-light-grey); color: var(--c-disabled-text); border-color: var(--c-border); cursor: default;}
+        .element-item.disabled .button-icon { color: var(--c-disabled-icon-weak); }
+        .element-item.disabled .button-icon:hover { color: var(--c-disabled-icon-weak); }
 
-        /* Estilos para el feedback visual de movimiento */
-        @keyframes subtlePulse { 
-            0%, 100% { outline: 2px solid transparent; }
-            50% { outline: 4px solid var(--c-success); } 
+        body.theme-dark .element-item.disabled {
+            background-color: var(--c-background);
+            color: var(--c-disabled-text);
+            border-color: var(--c-border);
         }
-         .list-item.item-just-moved,
-         .element-item.item-just-moved {
-            animation: subtlePulse var(--highlight-duration) ease-in-out; 
-            outline-offset: 2px; 
-         }
 
+
+        @keyframes subtlePulse {
+            0%, 100% { outline: 2px solid transparent; }
+            50% { outline: 4px solid var(--c-success); }
+        }
+        .list-item.item-just-moved,
+        .element-item.item-just-moved {
+            animation: subtlePulse var(--highlight-duration) ease-in-out;
+            outline-offset: 2px;
+        }
 
         /* --- Randomization Screen --- */
         #randomizationResultsContainer { margin-top: 20px; }
-        .random-result-content { font-size: 2.2em; font-weight: 700; color: var(--c-text); background-color: var(--c-white); border: 1px solid var(--c-border); padding: 20px; border-radius: var(--c-radius); min-height: 1.8em; cursor: pointer; margin-bottom: 15px; transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease; text-align: center; display: block; word-wrap: break-word; }
-        .random-result-content.locked { background-color: var(--c-light-grey) !important; color: var(--c-teal-lighter) !important; border: 1px solid var(--c-light-grey) !important; cursor: pointer; }
-        .random-result-content:not(.locked):hover { background-color: #ddd; }
-        .random-result-content.empty { font-weight: normal; color: var(--c-teal); background-color: var(--c-white); border: 1px solid var(--c-border); cursor: default; }
+        .random-result-content {
+            font-size: 2.2em; font-weight: 700; 
+            background-color: var(--c-card-bg); border: 1px solid var(--c-border);
+            padding: 20px; border-radius: var(--c-radius); min-height: 1.8em; cursor: pointer;
+            margin-bottom: 15px; text-align: center; display: block; word-wrap: break-word;
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        outline var(--theme-transition-duration) ease;
+            color: var(--c-text);
+        }
+
+        body.theme-dark .random-result-content {
+            background-color: var(--c-background); 
+            color: var(--c-teal); 
+            border: 1px solid var(--c-border); 
+        }
+
+        .random-result-content.locked { 
+            background-color: var(--c-locked-bg) !important; 
+            color: var(--c-teal-lighter) !important;
+            border: 1px solid var(--c-locked-bg) !important; 
+            cursor: pointer;
+        }
+        
+        body.theme-dark .random-result-content.locked {
+            background-color: var(--c-card-bg) !important; 
+            color: var(--c-teal) !important; 
+            border-color: var(--c-border) !important; 
+            outline: 2px solid var(--c-teal);
+            outline-offset: 1px; 
+        }
+
+        .random-result-content:not(.locked):hover { background-color: var(--c-hover-bg-weak); }
+        body.theme-dark .random-result-content:not(.locked):hover {
+             background-color: var(--c-hover-bg-weak);
+        }
+        
+        .random-result-content.empty { 
+            font-weight: normal; color: var(--c-teal); 
+            background-color: var(--c-card-bg); border: 1px solid var(--c-border); 
+            cursor: default; 
+        }
+        body.theme-dark .random-result-content.empty {
+            background-color: var(--c-background); 
+            color: var(--c-teal); 
+            border: 1px solid var(--c-border); 
+        }
+
 
         /* --- Footer Bar & Action Buttons --- */
-        .home-actions-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            justify-content: flex-start;
-            margin-top: 15px;
-            margin-bottom: 0;
-            padding-left: 5px;
-            flex-wrap: wrap;
-        }
-        .footer-bar {
-             padding: 15px 0 0 0;
-             margin-top: 10px;
-             text-align: center;
-        }
-        .footer-bar #goToRandomizeBtn { margin: 0 auto; }
+        .home-actions-group { display: flex; gap: 20px; align-items: center; justify-content: flex-start; margin-top: 15px; margin-bottom: 0; padding-left: 5px; flex-wrap: wrap; }
+        .footer-bar { padding: 15px 0 0 0; margin-top: 10px; text-align: center;  }
+        .home-randomize-action-group { display: inline-flex; align-items: center; justify-content: center; }
 
         /* --- Edit Screen Layout --- */
         .edit-screen-sub-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; min-height: 45px; }
         .sub-header-left { display: flex; align-items: center; gap: 15px; }
-        .sub-header-right { /* Container for conditional save button */ }
-        .edit-screen-sub-header .element-count-heading { margin: 0; font-size: 0.95em; color: var(--c-text); font-weight: 500; }
+        .sub-header-right { }
+        .edit-screen-sub-header .element-count-heading {
+            margin: 0; font-size: 0.95em; color: var(--c-text); font-weight: 500;
+            transition: color var(--theme-transition-duration) ease;
+        }
         .edit-screen-sub-header .element-count-heading span { font-weight: 600; }
 
         /* --- Edit Screen Bottom Controls --- */
-        .edit-screen-bottom-controls { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; }
+        .edit-screen-bottom-controls { margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--c-hr-border); }
         .edit-screen-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .edit-screen-footer .button-group { display: flex; gap: 20px; align-items: center; }
 
         /* --- Randomization Footer --- */
-        .randomization-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; width: 100%; }
+        .randomization-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; width: 100%; }
+        .randomization-footer-left-group { display: flex; align-items: center; min-width: 100px; justify-content: flex-start; }
+        .footer-icon-buttons-right { display: flex; gap: 10px; align-items: center; min-width: 100px; justify-content: flex-end; }
+        .randomization-footer > #randomizeButton.button-shuffle-main { margin-left: 0; margin-right: 0; }
+
+        /* --- Standalone Key Randomizer Footer --- */
+        .standalone-key-randomizer-footer { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--c-hr-border); }
+        .standalone-footer-main-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px;  }
 
         /* --- Metronome Card --- */
         .metronome-card {
-            background-color: var(--c-white);
-            border: 1px solid var(--c-border);
-            border-radius: var(--c-radius);
-            padding: 0 15px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-in-out, padding-top 0.4s ease-in-out, padding-bottom 0.4s ease-in-out;
+            background-color: var(--c-card-bg); border: 1px solid var(--c-border);
+            border-radius: var(--c-radius); padding: 0 15px; margin-top: 15px; margin-bottom: 15px;
+            box-shadow: var(--card-shadow); max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding-top 0.4s ease-in-out, padding-bottom 0.4s ease-in-out,
+                        background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        box-shadow var(--theme-transition-duration) ease;
         }
-        .metronome-card.visible {
-            max-height: 250px; 
-            padding-top: 15px;
-            padding-bottom: 15px;
+        body.theme-dark .metronome-card {
+            background-color: var(--c-background);
         }
-        .metronome-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            gap: 10px; 
-            flex-wrap: wrap;
-        }
-        .bpm-control-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-grow: 1;
-            min-width: 170px; 
-        }
+
+        .metronome-card.visible { max-height: 250px; padding-top: 15px; padding-bottom: 15px; }
+        .metronome-controls { display: flex; align-items: center; justify-content: space-around; gap: 10px; flex-wrap: wrap; }
+        .bpm-control-group { display: flex; align-items: center; gap: 8px; flex-grow: 1; min-width: 170px; }
         .bpm-control-group label {
-            flex-shrink: 0;
-            margin-bottom: 0;
-            color: var(--c-text);
-            font-weight: 500;
+            flex-shrink: 0; margin-bottom: 0; color: var(--c-text); font-weight: 500;
+            transition: color var(--theme-transition-duration) ease;
         }
-        .bpm-control-group .input[type="number"] {
-            width: 65px;
-            text-align: center;
-            margin-bottom: 0;
-            flex-shrink: 0;
-        }
-        .bpm-control-group input[type="range"] {
-            flex-grow: 1;
-            width: auto;
-            accent-color: var(--c-teal);
-            margin-left: 5px;
-        }
-        .time-signature-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .bpm-control-group .input[type="number"] { width: 65px; text-align: center; margin-bottom: 0; flex-shrink: 0; }
+        .bpm-control-group input[type="range"] { flex-grow: 1; width: auto; accent-color: var(--c-teal); margin-left: 5px; }
+        .time-signature-control { display: flex; align-items: center; gap: 8px; }
         .time-signature-control label {
-            flex-shrink: 0;
-            margin-bottom: 0;
-            color: var(--c-text);
-            font-weight: 500;
+            flex-shrink: 0; margin-bottom: 0; color: var(--c-text); font-weight: 500;
+            transition: color var(--theme-transition-duration) ease;
         }
-        #timeSignatureSelect.input { 
-            width: auto; 
-            min-width: 100px;
-            padding: 7px 8px; 
-            font-size: 0.9em;
-            margin-bottom: 0;
-        }
+        #timeSignatureSelect.input { width: auto; min-width: 100px; padding: 7px 8px; font-size: 0.9em; margin-bottom: 0; }
         #metronomeVisualIndicator {
-            width: 20px;
-            height: 20px;
-            background-color: var(--c-light-grey);
-            border: 1px solid var(--c-border);
-            border-radius: 50%;
-            transition: background-color 0.05s ease, border-color 0.05s ease; 
-            flex-shrink: 0;
+            width: 20px; height: 20px;
+            background-color: var(--c-light-grey); border: 1px solid var(--c-border);
+            border-radius: 50%; flex-shrink: 0;
+            transition: background-color 0.05s ease, border-color 0.05s ease, 
+                        background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease;
         }
-        #metronomeVisualIndicator.beat {
-            background-color: var(--c-success); 
-        }
-        #metronomeVisualIndicator.beat.accent-beat {
-            background-color: var(--c-success-darker); 
-            border-color: var(--c-success); 
-        }
+        #metronomeVisualIndicator.beat { background-color: var(--c-success); }
+        #metronomeVisualIndicator.beat.accent-beat { background-color: var(--c-success-darker); border-color: var(--c-success); }
+        
         #metronomeStartStopBtn {
-            padding: 0; 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 50%; 
-            display: inline-flex; 
-            align-items: center;
-            justify-content: center;
+            padding: 0; width: 45px; height: 45px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
             border: 1px solid var(--c-grey); 
-            background-color: var(--c-white); 
+            background-color: var(--c-card-bg); 
             color: var(--c-grey); 
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            margin: 0; 
-            vertical-align: middle; 
-            flex-shrink: 0;
+            cursor: pointer; margin: 0; vertical-align: middle; flex-shrink: 0;
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease;
         }
-        #metronomeStartStopBtn svg { 
-            width: 24px;
-            height: 24px;
-        }
-        #metronomeStartStopBtn:hover:not(:disabled) {
-            background-color: var(--c-teal);   
-            border-color: var(--c-teal);     
-            color: var(--c-white);
+        #metronomeStartStopBtn svg { width: 24px; height: 24px; }
+        #metronomeStartStopBtn:hover:not(:disabled) { 
+            background-color: var(--c-teal); 
+            border-color: var(--c-teal); 
+            color: var(--c-white); 
         }
         #metronomeStartStopBtn.metronome-active { 
             background-color: var(--c-teal-very-light); 
-            border-color: var(--c-teal-very-light);   
+            border-color: var(--c-teal-very-light); 
             color: var(--c-white); 
         }
-        #metronomeStartStopBtn.metronome-active:hover:not(:disabled) {
+        #metronomeStartStopBtn.metronome-active:hover:not(:disabled) { 
             background-color: var(--c-teal); 
             border-color: var(--c-teal);
         }
+
+        body.theme-dark #metronomeStartStopBtn {
+            background-color: var(--c-background);      
+            border-color: var(--c-teal);          
+            color: var(--c-teal);                 
+        }
+        body.theme-dark #metronomeStartStopBtn:hover:not(:disabled) {
+            background-color: var(--c-teal-darker);   
+            border-color: var(--c-teal-darker);      
+            color: var(--c-enabled-item-text-dark); 
+        }
+        body.theme-dark #metronomeStartStopBtn.metronome-active {
+            background-color: var(--c-teal-lighter); 
+            border-color: var(--c-teal-lighter);    
+            color: var(--c-enabled-item-text-dark); 
+        }
+        body.theme-dark #metronomeStartStopBtn.metronome-active:hover:not(:disabled) {
+            background-color: var(--c-teal);         
+            border-color: var(--c-teal);             
+            color: var(--c-enabled-item-text-dark); 
+        }
         #metronomeStartStopBtn:disabled { 
-            background-color: #ccc !important;
-            border-color: #ccc !important;
-            color: #888 !important; 
-            cursor: not-allowed;
-            opacity: 0.7;
+            background-color: var(--c-disabled-bg) !important; 
+            border-color: var(--c-disabled-border) !important; 
+            color: var(--c-disabled-text) !important; 
+            cursor: not-allowed; opacity: 0.7; 
         }
 
 
-        /* --- Animated Circular Icon Buttons --- */
-        .io-button { width: 45px; height: 45px; border: 1px solid var(--c-teal); border-radius: 50%; background-color: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease, fill 0.3s ease; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); padding: 0; margin: 0; vertical-align: middle; flex-shrink: 0; }
-        .io-button .io-svgIcon { width: 24px; height: 24px; fill: var(--c-teal); transition: fill 0.3s ease; } 
-        .io-button .tooltip { position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); opacity: 0; background-color: var(--c-dark-bg); color: white; padding: 6px 12px; border-radius: var(--c-radius); display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease, bottom 0.3s ease; pointer-events: none; white-space: nowrap; font-size: 0.85em; z-index: 10; }
-        .io-button .tooltip::before { position: absolute; content: ""; width: 10px; height: 10px; background-color: var(--c-dark-bg); transform: rotate(45deg) translateX(-50%); bottom: -5px; left: 50%; z-index: -1; }
+        /* --- Animated Circular Icon Buttons (io-button for smaller icons) --- */
+        .io-button {
+            width: 45px; height: 45px; border: 1px solid var(--c-teal); border-radius: 50%;
+            background-color: transparent; display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); padding: 0; margin: 0; vertical-align: middle; flex-shrink: 0;
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        box-shadow var(--theme-transition-duration) ease;
+        }
+        .io-button .io-svgIcon {
+            width: 24px; height: 24px; fill: var(--c-teal);
+            transition: fill var(--theme-transition-duration) ease;
+        }
+        body.theme-dark .io-button { box-shadow: 1px 1px 5px rgba(0,0,0,0.3); } 
+
+
+        .io-button .tooltip {
+            position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); opacity: 0;
+            background-color: var(--c-dark-bg); color: var(--c-white); 
+            padding: 6px 12px; border-radius: var(--c-radius); display: flex; align-items: center; justify-content: center;
+            pointer-events: none; white-space: nowrap; font-size: 0.85em; z-index: 10;
+            transition: opacity 0.3s ease 1.5s, bottom 0.3s ease 1.5s,
+                        background-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease;
+        }
+        #homeScreenShuffleBtn .tooltip,
+        #randomizeButton .tooltip,
+        #panel_randomizeKeyGridBtn .tooltip,
+        #standalone_randomizeKeyGridBtn .tooltip {
+            display: none !important;
+        }
+
+        body.theme-dark .io-button .tooltip {
+            color: var(--c-text); 
+        }
+
+        .io-button .tooltip::before {
+            position: absolute; content: ""; width: 10px; height: 10px;
+            background-color: var(--c-dark-bg);
+            transform: rotate(45deg) translateX(-50%); bottom: -5px; left: 50%; z-index: -1;
+            transition: background-color var(--theme-transition-duration) ease;
+        }
+        .io-button:hover:not(:disabled) .tooltip {
+            opacity: 1; bottom: 125%;
+        }
+
         .io-button:hover:not(:disabled) { background-color: var(--c-teal); border-color: var(--c-teal-darker); }
-        .io-button:hover:not(:disabled) .tooltip { opacity: 1; bottom: 125%; }
-        .io-button:hover:not(:disabled) .io-svgIcon { fill: var(--c-white); } 
+        .io-button:hover:not(:disabled) .io-svgIcon { fill: var(--c-white); }
+        
+        body.theme-dark .io-button:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-enabled-item-text-dark);
+        }
+        body.theme-dark #infoButton:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-enabled-item-text-dark) !important; 
+        }
+        body.theme-dark .save-and-back-button.io-button:hover:not(:disabled) .io-svgIcon,
+        body.theme-dark .delete-list-io-btn:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-enabled-item-text-dark) !important; 
+        }
+
+
         .delete-list-io-btn:hover:not(:disabled) { background-color: var(--c-red) !important; border-color: var(--c-red-darker) !important; }
-        .delete-list-io-btn:hover:not(:disabled) .io-svgIcon { fill: var(--c-white) !important; } 
         .save-and-back-button.io-button:hover:not(:disabled) { background-color: var(--c-success) !important; border-color: var(--c-success-darker) !important; }
-        .save-and-back-button.io-button:hover:not(:disabled) .io-svgIcon { fill: var(--c-white) !important; }
 
-        /* --- Specific styles for Randomize Button (Randomization Screen) --- */
-        #randomizeButton { transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; outline: none; will-change: transform, background-color; }
-        #randomizeButton:hover:not(:disabled) { transform: translateY(-7px); box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2); }
-        #randomizeButton:active:not(:disabled),
-        #randomizeButton.spacebar-active:not(:disabled) { transform: translateY(-1px); box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15); }
-
-        /* --- Randomize Button Consistency --- */
-        #goToRandomizeBtn,
-        #randomizeButton {
-            width: auto;        
-            min-width: 180px;   
-            max-width: 280px;   
-            padding: 12px 30px; 
-            font-size: 1.15em;  
+        /* --- Main Shuffle Button Style --- */
+        .button-shuffle-main {
+            width: 75px; height: 75px; border-radius: 50%; 
+            background-color: var(--c-teal); 
+            border: 1px solid var(--c-teal-darker); 
+            display: inline-flex; align-items: center; justify-content: center; cursor: pointer; position: relative;
+            box-shadow: var(--card-shadow); padding: 0; margin: 0; vertical-align: middle;
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        transform 0.1s ease-out,
+                        box-shadow var(--theme-transition-duration) ease;
         }
-         #randomizeButton {
-            display: inline-block; 
-            margin: 0 10px;      
-            vertical-align: middle; 
+        .button-shuffle-main .io-svgIcon { 
+            width: 38px; height: 38px; 
+            fill: var(--c-white); 
+            transition: fill var(--theme-transition-duration) ease;
         }
-
-        /* --- Subtle Hover Effect for Main Randomize Button (Home Screen) --- */
-        #goToRandomizeBtn:hover:not(:disabled) { 
+        
+        body:not(.theme-dark) .button-shuffle-main:hover:not(:disabled) {
             background-color: var(--c-teal-lighter);
+            border-color: var(--c-teal-lighter);
+        }
+        
+        .button-shuffle-main.button-randomize-animated:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+        body:not(.theme-dark) .button-shuffle-main.button-randomize-animated:hover:not(:disabled) {
+             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        body.theme-dark .button-shuffle-main.button-randomize-animated:hover:not(:disabled) {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6); 
         }
 
-        /* --- Remove "card" effect from main screens --- */
+        body:not(.theme-dark) .button-shuffle-main:active:not(:disabled),
+        body:not(.theme-dark) .button-shuffle-main.spacebar-active:not(:disabled) {
+            background-color: var(--c-teal-lighter); 
+            border-color: var(--c-teal-lighter);
+            transform: scale(1.02) translateY(1px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        body.theme-dark .button-shuffle-main:active:not(:disabled),
+        body.theme-dark .button-shuffle-main.spacebar-active:not(:disabled) {
+            transform: scale(1.02) translateY(1px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        body.theme-dark .button-shuffle-main {
+            background-color: var(--c-background); 
+            border: 2px solid var(--c-teal);    
+        }
+        body.theme-dark .button-shuffle-main .io-svgIcon {
+            fill: var(--c-teal); 
+        }
+        body.theme-dark .button-shuffle-main:hover:not(:disabled) {
+            background-color: var(--c-background); 
+            border-color: var(--c-teal-lighter);    
+        }
+        body.theme-dark .button-shuffle-main:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-teal-lighter); 
+        }
+        body.theme-dark .button-shuffle-main:active:not(:disabled),
+        body.theme-dark .button-shuffle-main.spacebar-active:not(:disabled) {
+            background-color: var(--c-background); 
+            border-color: var(--c-teal-very-light);
+        }
+        body.theme-dark .button-shuffle-main:active:not(:disabled) .io-svgIcon,
+        body.theme-dark .button-shuffle-main.spacebar-active:not(:disabled) .io-svgIcon {
+            fill: var(--c-teal-very-light);
+        }
+
+        .button-shuffle-main:disabled { background-color: var(--c-disabled-bg) !important; border-color: var(--c-disabled-border) !important; cursor: not-allowed; opacity: 0.7; }
+        .button-shuffle-main:disabled .io-svgIcon { fill: var(--c-button-shuffle-disabled-icon-fill) !important; }
+
+        .button-randomize-animated { transition-property: transform, box-shadow, background-color, border-color; outline: none; will-change: transform, box-shadow; }
+
+        #homeScreenShuffleBtn .io-svgIcon, #randomizeButton .io-svgIcon, #panel_randomizeKeyGridBtn .io-svgIcon, #standalone_randomizeKeyGridBtn .io-svgIcon { width: 38px; height: 38px; }
+
+        #panel_randomizeKeyGridBtn.button-shuffle-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px auto 20px auto;
+        }
+        .standalone-key-randomizer-footer .standalone-footer-main-actions > #standalone_randomizeKeyGridBtn.button-shuffle-main { margin-left: 10px; margin-right: 10px; }
+
         .screen.card { border: none; border-radius: 0; margin-bottom: 0; background-color: transparent; box-shadow: none; }
 
-        /* --- Styles for Input with Floating Label --- */
         .floating-input-container { position: relative; }
-        #listNameInput { border: 2px solid var(--c-border); padding: 18px 10px 6px 10px; color: var(--c-text); background: transparent; border-radius: var(--c-radius); width: 100%; box-sizing: border-box; margin-bottom: 0; font-size: 1.1em; font-weight: bold; }
-        .floating-label { position: absolute; left: 12px; top: 12px; padding: 0 5px; background: var(--c-background); white-space: nowrap; transform: translate(0, 0); transform-origin: 0 0; transition: transform 120ms ease-in, color 120ms ease-in; font-weight: 500; line-height: 1.2; color: var(--c-grey); pointer-events: none; font-size: 1em; }
+        #listNameInput {
+            border: 2px solid var(--c-border); padding: 18px 10px 6px 10px;
+            color: var(--c-text); background: transparent;
+            border-radius: var(--c-radius); width: 100%; box-sizing: border-box; margin-bottom: 0;
+            font-size: 1.1em; font-weight: bold;
+            transition: border-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+        .floating-label {
+            position: absolute; left: 12px; top: 12px; padding: 0 5px;
+            background: var(--c-floating-label-bg);
+            white-space: nowrap; transform: translate(0, 0); transform-origin: 0 0;
+            font-weight: 500; line-height: 1.2; color: var(--c-grey); pointer-events: none; font-size: 1em;
+            transition: transform 120ms ease-in, color 120ms ease-in, background-color var(--theme-transition-duration) ease;
+        }
         #listNameInput:focus + .floating-label,
-        #listNameInput:not(:placeholder-shown) + .floating-label { transform: translate(0, -65%) scale(.85); color: var(--c-teal); background: var(--c-background); }
-        
-        /* --- Styles for Information Modal --- */
-        #modalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 999; align-items: center; justify-content: center; }
-        #infoModal { background-color: var(--c-white); padding: 25px 30px; border-radius: var(--c-radius); box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; z-index: 1000; max-width: 90%; width: 500px; max-height: 80vh; overflow-y: auto; color: var(--c-text); }
-        #infoModal h2 { margin-top: 0; margin-bottom: 15px; color: var(--c-teal); text-align: center; }
-        #infoModal h3 { margin-top: 1.2em; margin-bottom: 0.6em; font-size: 1.05em; color: var(--c-teal-darker); }
-        #infoModal p { margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; color: var(--c-grey-darker); }
-        #infoModal ul { padding-left: 25px; margin-bottom: 10px; margin-top: -5px; } 
-        #infoModal li { margin-bottom: 5px; font-size: 0.95em; color: var(--c-grey-darker); }
-        #infoModal strong { font-weight: 600; color: var(--c-text); }
-        #modalCloseBtn { position: absolute; top: 10px; right: 15px; font-size: 1.8em; font-weight: bold; color: var(--c-grey); background: none; border: none; cursor: pointer; line-height: 1; }
-        #modalCloseBtn:hover { color: var(--c-teal-darker); }
-        #infoModal .modal-footer-options {
-            margin-top: 25px;      
-            padding-top: 15px;      
-            border-top: 1px solid #eee; 
-            text-align: left;       
-        }
-        #infoModal .show-on-startup-label {
-            display: flex;         
-            align-items: center;
-            gap: 8px;              
-            cursor: pointer;
-            font-size: 0.9em;
-            color: var(--c-grey-darker);
-        }
-        #infoModal .show-on-startup-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--c-teal); 
+        #listNameInput:not(:placeholder-shown) + .floating-label {
+            transform: translate(0, -65%) scale(.85); color: var(--c-teal);
+            background: var(--c-floating-label-bg);
         }
 
-        /* --- Styles for Info Button --- */
-        #infoButton { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: none; background-color: transparent; box-shadow: none; margin: 0; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        #infoButton .io-svgIcon { width: 24px; height: 24px; fill: var(--c-grey); transition: fill 0.3s ease; } 
+        #modalOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--c-modal-overlay-bg);
+            z-index: 999; align-items: center; justify-content: center;
+            transition: background-color var(--theme-transition-duration) ease;
+        }
+        #infoModal {
+            background-color: var(--c-card-bg);
+            padding: 25px 30px; border-radius: var(--c-radius);
+            box-shadow: var(--card-shadow); 
+            position: relative; z-index: 1000;
+            max-width: 90%; width: 500px; max-height: 80vh; overflow-y: auto;
+            color: var(--c-text);
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease, box-shadow var(--theme-transition-duration) ease;
+        }
+        #infoModal h2 {
+            margin-top: 0; margin-bottom: 15px; color: var(--c-teal); text-align: center;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #infoModal h3 {
+            margin-top: 1.2em; margin-bottom: 0.6em; font-size: 1.05em; color: var(--c-teal-darker);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #infoModal p {
+            margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; color: var(--c-grey-darker);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #infoModal ul { padding-left: 25px; margin-bottom: 10px; margin-top: -5px; }
+        #infoModal li {
+            margin-bottom: 5px; font-size: 0.95em; color: var(--c-grey-darker);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #infoModal strong {
+            font-weight: 600; color: var(--c-text);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #modalCloseBtn {
+            position: absolute; top: 10px; right: 15px; font-size: 1.8em; font-weight: bold;
+            color: var(--c-grey);
+            background: none; border: none; cursor: pointer; line-height: 1;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #modalCloseBtn:hover { color: var(--c-teal-darker); }
+        #infoModal .modal-footer-options, #infoModal .modal-theme-options {
+            margin-top: 25px; padding-top: 15px;
+            border-top: 1px solid var(--c-hr-border);
+            text-align: left;
+            transition: border-top-color var(--theme-transition-duration) ease;
+        }
+        #infoModal .show-on-startup-label, #infoModal .theme-toggle-label {
+            display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9em;
+            color: var(--c-grey-darker);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        #infoModal .show-on-startup-label input[type="checkbox"], #infoModal .theme-toggle-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--c-teal); }
+
+        #infoButton {
+            position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: none;
+            background-color: transparent; box-shadow: none; margin: 0; padding: 0; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: background-color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        #infoButton .io-svgIcon {
+            width: 24px; height: 24px; fill: var(--c-grey);
+            transition: fill var(--theme-transition-duration) ease;
+        }
         #infoButton:hover:not(:disabled) { background-color: var(--c-teal); border-color: var(--c-teal-darker); }
-        #infoButton:hover:not(:disabled) .io-svgIcon { fill: var(--c-white); } 
+        body:not(.theme-dark) #infoButton:hover:not(:disabled) .io-svgIcon { 
+            fill: var(--c-white); 
+        }
+        body.theme-dark #infoButton:hover:not(:disabled) .io-svgIcon {
+            fill: var(--c-enabled-item-text-dark) !important; 
+        }
+
+
+        .key-grid-container-common {
+            display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, auto);
+            gap: 8px; border: 1px solid var(--c-border); padding: 8px; border-radius: var(--c-radius);
+            min-height: 220px;
+            transition: border-color var(--theme-transition-duration) ease;
+        }
+        #panel_keyGridContainer { margin-top: 55px; margin-bottom: 20px; }
+        #standalone_keyGridContainer { margin-top: 10px; margin-bottom: 20px; }
+        
+        .key-grid-cell {
+            background-color: var(--c-card-bg); border: 1px solid var(--c-border);
+            padding: 10px; text-align: center; font-size: 2.2em; font-weight: 700;
+            border-radius: var(--c-radius); height: 75px; display: flex; align-items: center; justify-content: center;
+            color: var(--c-text); box-shadow: 0 1px 2px rgba(0,0,0,0.05); box-sizing: border-box;
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        box-shadow var(--theme-transition-duration) ease;
+        }
+        
+        body.theme-dark .key-grid-cell {
+            background-color: var(--c-background); 
+            color: var(--c-teal); 
+            border: 1px solid var(--c-border); 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .enharmonic-control-button, .keyRand_setAllEnharmonicsBtn_common {
+            min-width: 90px; padding: 8px 10px; font-size: 0.9em; border-radius: 20px;
+            background-color: var(--c-card-bg); color: var(--c-teal); border: 1px solid var(--c-teal);
+            margin-top: 5px; margin-bottom: 5px;
+            transition: background-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease;
+        }
+        .enharmonic-control-button:hover:not(:disabled), .keyRand_setAllEnharmonicsBtn_common:hover:not(:disabled) { 
+            background-color: var(--c-light-grey); border-color: var(--c-teal-darker); color: var(--c-teal-darker); 
+        }
+        
+        body.theme-dark .enharmonic-control-button, 
+        body.theme-dark .keyRand_setAllEnharmonicsBtn_common {
+            background-color: var(--c-background); 
+            color: var(--c-teal); 
+            border: 1px solid var(--c-teal);
+        }
+        body.theme-dark .enharmonic-control-button:hover:not(:disabled),
+        body.theme-dark .keyRand_setAllEnharmonicsBtn_common:hover:not(:disabled) {
+            background-color: var(--c-hover-bg-weak); 
+            border-color: var(--c-teal-darker); 
+            color: var(--c-teal-lighter);
+        }
+
+        /* Light mode active enharmonic button */
+        .enharmonic-control-button.both-state, .keyRand_setAllEnharmonicsBtn_common.active { 
+            background-color: var(--c-text) !important; 
+            color: var(--c-card-bg) !important; 
+            border-color: var(--c-text) !important; 
+        }
+        
+        /* Dark mode active enharmonic button - Background same as normal, text and border lighter teal, NO outline */
+        body.theme-dark .enharmonic-control-button.both-state,
+        body.theme-dark .keyRand_setAllEnharmonicsBtn_common.active {
+            background-color: var(--c-background) !important; /* Screen background (same as normal dark state) */
+            color: var(--c-text) !important; /* Lighter teal text for contrast */
+            border-color: var(--c-text) !important; /* Lighter teal border to match text */
+            outline: none !important; 
+        }
+
+        #panel_keyRand_setAllEnharmonicsBtn_Elem { display: block; margin: 15px auto 0 auto; }
+        #standalone_keyRand_setAllEnharmonicsBtn_Elem { display: block; margin: 15px auto 0 auto; }
+
+        #randomizationScreen.key-panel-active #listRandomizerMainArea { margin-right: var(--key-panel-width); }
+        #listRandomizerMainArea { transition: margin-right 0.3s ease-in-out; }
+        #keyRandomizerPanel {
+            position: fixed; top: 0; right: 0; width: var(--key-panel-width); max-width: 90%; height: 100vh;
+            background-color: var(--c-background); border-left: 1px solid var(--c-border);
+            box-shadow: var(--card-shadow);
+            transform: translateX(100%);
+            z-index: 1000; padding: 15px; box-sizing: border-box; overflow-y: auto;
+            transition: transform 0.3s ease-in-out,
+                        background-color var(--theme-transition-duration) ease,
+                        border-left-color var(--theme-transition-duration) ease,
+                        box-shadow var(--theme-transition-duration) ease;
+        }
+        #keyRandomizerPanel.panel-open { transform: translateX(0%); }
 
     </style>
 </head>
 <body>
-
     <div class="card screen" id="homeScreen">
         <div class="card-content">
             <button id="infoButton" class="io-button" aria-label="Información y Ayuda">
                 <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"> <path d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z"/></svg>
                 <span class="tooltip">Ayuda / Info</span>
             </button>
-            <h1>Practice Helper</h1>
+            <h1 id="mainAppTitle">Practice Helper</h1>
             <div id="listsContainer" class="list-container"></div>
-            <hr> <div class="home-actions-group">
+            <hr>
+            <div class="home-actions-group">
                 <button class="io-button create-btn" onclick="createNewListAndGoToEdit()" aria-label="Crear nueva lista">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                     <span class="tooltip">Crear nueva lista</span>
                 </button>
                 <button class="io-button import-btn" onclick="triggerImportNamesTxt()" aria-label="Importar listas">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                     <span class="tooltip">Importar listas</span>
                 </button>
                 <input type="file" id="importNamesFile" accept=".txt,text/plain" class="hidden" onchange="handleImportNamesTxt(event)">
                 <button class="io-button export-btn" onclick="exportNamesTxt()" aria-label="Exportar listas seleccionadas">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                     <span class="tooltip">Exportar listas seleccionadas</span>
                 </button>
+                <button class="io-button" onclick="navigateToStandaloneKeyRandomizerScreen()" aria-label="Tonalidades aleatorias"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M7.5 6C6.7 6 6 6.7 6 7.5S6.7 9 7.5 9 9 8.3 9 7.5 8.3 6 7.5 6M16.5 15C15.7 15 15 15.7 15 16.5C15 17.3 15.7 18 16.5 18C17.3 18 18 17.3 18 16.5C18 15.7 17.3 15 16.5 15M16.5 6C15.7 6 15 6.7 15 7.5S15.7 9 16.5 9C17.3 9 18 8.3 18 7.5S17.3 6 16.5 6M12 10.5C11.2 10.5 10.5 11.2 10.5 12S11.2 13.5 12 13.5 13.5 12.8 13.5 12 12.8 10.5 12 10.5M7.5 15C6.7 15 6 15.7 6 16.5C6 17.3 6.7 18 7.5 18S9 17.3 9 16.5C9 15.7 8.3 15 7.5 15Z" />
+                    </svg>
+                    <span class="tooltip">Tonalidades aleatorias</span> </button>
             </div>
-            <div class="footer-bar"> <button id="goToRandomizeBtn" class="button button-primary button-large" onclick="showRandomizationScreen()" disabled> Randomizar </button>
+            <div class="footer-bar">
+                <div class="home-randomize-action-group">
+                    <button id="homeScreenShuffleBtn" class="button-shuffle-main button-randomize-animated" onclick="showRandomizationScreen()" aria-label="Aleatorizar Listas">
+                        <svg class="io-svgIcon" viewBox="0 -2 24 24" xmlns="http://www.w3.org/2000/svg"> <g>
+                            <path d="M20.7071 0.29289C20.3166 -0.09763 19.6834 -0.09763 19.2929 0.29289C18.9024 0.68342 18.9024 1.31658 19.2929 1.70711L20.5858 3H17.5C15.4112 3 13.8775 3.9151 12.7003 5.19928C12.4971 5.42096 12.3035 5.65476 12.1184 5.89774C12.5095 6.57215 12.8587 7.25515 13.172 7.88239C13.4853 7.39148 13.815 6.94311 14.1747 6.55072C15.06 5.5849 16.0888 5 17.5 5H20.5858L19.2929 6.29289C18.9024 6.68342 18.9024 7.31658 19.2929 7.70711C19.6834 8.0976 20.3166 8.0976 20.7071 7.70711L23.7071 4.70711C24.0976 4.31658 24.0976 3.68342 23.7071 3.29289L20.7071 0.29289z"></path>
+                            <path d="M7.72125 13.4977C8.0367 13.1061 8.32907 12.6615 8.61321 12.175C8.93906 12.8074 9.30616 13.4838 9.72629 14.1516C9.58197 14.3599 9.43301 14.5608 9.27875 14.7523C8.25526 16.0229 6.90194 17 5 17H1C0.447715 17 0 16.5523 0 16C0 15.4477 0.447715 15 1 15H5C6.09806 15 6.93224 14.4771 7.72125 13.4977z"></path>
+                            <path d="M12.7003 14.8007C13.8775 16.0849 15.4112 17 17.5 17H20.5858L19.2929 18.2929C18.9024 18.6834 18.9024 19.3166 19.2929 19.7071C19.6834 20.0976 20.3166 20.0976 20.7071 19.7071L23.7071 16.7071C24.0976 16.3166 24.0976 15.6834 23.7071 15.2929L20.7071 12.2929C20.3166 11.9024 19.6834 11.9024 19.2929 12.2929C18.9024 12.6834 18.9024 13.3166 19.2929 13.7071L20.5858 15H17.5C16.0888 15 15.06 14.4151 14.1747 13.4493C13.2523 12.443 12.5274 11.0687 11.7694 9.5528C11.7092 9.4324 11.6487 9.3108 11.5878 9.1885C10.9119 7.83107 10.1871 6.37533 9.27875 5.24767C8.25526 3.97713 6.90194 3 5 3H1C0.447715 3 0 3.44771 0 4C0 4.55229 0.447715 5 1 5H5C6.09806 5 6.93224 5.52287 7.72125 6.50233C8.48623 7.45196 9.11547 8.7133 9.82081 10.1272L9.98057 10.4472C10.7226 11.9313 11.5602 13.557 12.7003 14.8007z"></path>
+                        </g> </svg>
+                        </button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="card screen" id="editScreen">
-       <div class="card-content">
+        <div class="card-content">
             <div class="floating-input-container" style="margin-bottom: 15px;">
                 <input class="input" id="listNameInput" type="text" placeholder=" " oninput="updateListName(this.value)">
                 <label class="floating-label" for="listNameInput">Nombre de la lista</label>
@@ -448,13 +869,13 @@
             <div id="editScreenSubHeader" class="edit-screen-sub-header">
                 <div class="sub-header-left">
                     <button id="editScreenAddBtn" class="io-button add-elem-btn" onclick="promptAddElement()" aria-label="Añadir Elemento">
-                        <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                        <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                         <span class="tooltip">Añadir elemento</span>
                     </button>
                     <h3 class="element-count-heading"><span id="elementCountDisplay">0/0</span></h3>
                 </div>
                 <div class="sub-header-right">
-                    <button id="editScreenTopSaveBtn" class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver" style="display: none;"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
+                    <button id="editScreenTopSaveBtn" class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver" style="display: none;"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
                         <span class="tooltip">Guardar y volver</span>
                     </button>
                 </div>
@@ -464,22 +885,22 @@
                 <div class="edit-screen-footer">
                     <div class="button-group">
                         <button class="io-button save-and-back-button" onclick="saveAndGoHome()" aria-label="Guardar y volver">
-                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
                             <span class="tooltip">Guardar y volver</span>
                         </button>
                         <button class="io-button import-elem-btn" onclick="triggerImportTxt()" aria-label="Importar Elementos (TXT)">
-                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                             <span class="tooltip">Importar elementos (.txt)</span>
                         </button>
                         <input type="file" id="importFile" accept=".txt,text/plain" class="hidden" onchange="handleImportTxt(event)">
                         <button class="io-button export-elem-btn" onclick="exportTxt()" aria-label="Exportar Elementos (TXT)">
-                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                             <span class="tooltip">Exportar elementos (.txt)</span>
                         </button>
                     </div>
                     <div class="button-group">
                         <button id="deleteListBtn" class="io-button delete-list-io-btn" onclick="deleteList()" aria-label="Eliminar Lista Completa">
-                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
                             <span class="tooltip">Eliminar lista completa</span>
                         </button>
                     </div>
@@ -488,64 +909,132 @@
         </div>
     </div>
 
-    <div class="card screen" id="randomizationScreen">
-         <div class="card-content">
-            <div id="randomizationResultsContainer"></div>
-            <div id="metronomeCard" class="metronome-card">
-                <div class="metronome-controls">
-                    <div id="metronomeVisualIndicator"></div>
-                    <div class="bpm-control-group">
-                        <label for="bpmInput">BPM:</label>
-                        <input type="number" id="bpmInput" class="input" value="100" min="30" max="300">
-                        <input type="range" id="bpmSlider" min="30" max="300" value="100">
+    <div class="card screen" id="standaloneKeyRandomizerScreen">
+        <div class="card-content">
+            <div id="standalone_keyGridContainer" class="key-grid-container-common" style="margin-bottom: 20px;">
+            </div>
+            
+            <div class="standalone-key-randomizer-footer">
+                <div class="standalone-footer-main-actions"> <button class="io-button back-btn" onclick="showHomeScreen()" aria-label="Volver a Inicio">
+                        <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                        <span class="tooltip">Volver a Inicio</span>
+                    </button>
+                    <button id="standalone_randomizeKeyGridBtn" class="button-shuffle-main button-randomize-animated" aria-label="Aleatorizar Tonalidades">
+                        <svg class="io-svgIcon" viewBox="0 -2 24 24" xmlns="http://www.w3.org/2000/svg"> <g>
+                            <path d="M20.7071 0.29289C20.3166 -0.09763 19.6834 -0.09763 19.2929 0.29289C18.9024 0.68342 18.9024 1.31658 19.2929 1.70711L20.5858 3H17.5C15.4112 3 13.8775 3.9151 12.7003 5.19928C12.4971 5.42096 12.3035 5.65476 12.1184 5.89774C12.5095 6.57215 12.8587 7.25515 13.172 7.88239C13.4853 7.39148 13.815 6.94311 14.1747 6.55072C15.06 5.5849 16.0888 5 17.5 5H20.5858L19.2929 6.29289C18.9024 6.68342 18.9024 7.31658 19.2929 7.70711C19.6834 8.0976 20.3166 8.0976 20.7071 7.70711L23.7071 4.70711C24.0976 4.31658 24.0976 3.68342 23.7071 3.29289L20.7071 0.29289z"></path>
+                            <path d="M7.72125 13.4977C8.0367 13.1061 8.32907 12.6615 8.61321 12.175C8.93906 12.8074 9.30616 13.4838 9.72629 14.1516C9.58197 14.3599 9.43301 14.5608 9.27875 14.7523C8.25526 16.0229 6.90194 17 5 17H1C0.447715 17 0 16.5523 0 16C0 15.4477 0.447715 15 1 15H5C6.09806 15 6.93224 14.4771 7.72125 13.4977z"></path>
+                            <path d="M12.7003 14.8007C13.8775 16.0849 15.4112 17 17.5 17H20.5858L19.2929 18.2929C18.9024 18.6834 18.9024 19.3166 19.2929 19.7071C19.6834 20.0976 20.3166 20.0976 20.7071 19.7071L23.7071 16.7071C24.0976 16.3166 24.0976 15.6834 23.7071 15.2929L20.7071 12.2929C20.3166 11.9024 19.6834 11.9024 19.2929 12.2929C18.9024 12.6834 18.9024 13.3166 19.2929 13.7071L20.5858 15H17.5C16.0888 15 15.06 14.4151 14.1747 13.4493C13.2523 12.443 12.5274 11.0687 11.7694 9.5528C11.7092 9.4324 11.6487 9.3108 11.5878 9.1885C10.9119 7.83107 10.1871 6.37533 9.27875 5.24767C8.25526 3.97713 6.90194 3 5 3H1C0.447715 3 0 3.44771 0 4C0 4.55229 0.447715 5 1 5H5C6.09806 5 6.93224 5.52287 7.72125 6.50233C8.48623 7.45196 9.11547 8.7133 9.82081 10.1272L9.98057 10.4472C10.7226 11.9313 11.5602 13.557 12.7003 14.8007z"></path>
+                        </g> </svg>
+                        </button>
+                    <div style="width: 45px; height: 45px; flex-shrink:0;"></div>
+                </div>
+
+                <div id="standalone_enharmonicControlBtnsContainer" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                </div>
+                <button id="standalone_keyRand_setAllEnharmonicsBtn_Elem" class="button keyRand_setAllEnharmonicsBtn_common">Enarmonizar todo</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card screen" id="randomizationScreen"> <div class="card-content">
+            <div id="listRandomizerMainArea">
+                <div id="randomizationResultsContainer"></div>
+                <div id="metronomeCard" class="metronome-card">
+                    <div class="metronome-controls">
+                        <div id="metronomeVisualIndicator"></div>
+                        <div class="bpm-control-group">
+                            <label for="bpmInput">BPM:</label>
+                            <input type="number" id="bpmInput" class="input" value="100" min="30" max="300">
+                            <input type="range" id="bpmSlider" min="30" max="300" value="100">
+                        </div>
+                        <div class="time-signature-control">
+                            <label for="timeSignatureSelect">Compás:</label>
+                            <select id="timeSignatureSelect" class="input">
+                                <option value="1">Sin acento</option>
+                                <option value="2">2/4</option>
+                                <option value="3">3/4</option>
+                                <option value="4" selected>4/4</option>
+                                <option value="5">5/4</option>
+                                <option value="6">6/8</option>
+                                <option value="7">7/4</option>
+                            </select>
+                        </div>
+                        <button id="metronomeStartStopBtn" aria-label="Iniciar metrónomo"></button>
                     </div>
-                    <div class="time-signature-control">
-                        <label for="timeSignatureSelect">Compás:</label>
-                        <select id="timeSignatureSelect" class="input">
-                            <option value="1">Sin acento</option>
-                            <option value="2">2/4</option>
-                            <option value="3">3/4</option>
-                            <option value="4" selected>4/4</option>
-                            <option value="5">5/4</option>
-                            <option value="6">6/8</option> 
-                            <option value="7">7/4</option> 
-                        </select>
+                </div>
+                <hr>
+                <div class="randomization-footer">
+                    <div class="randomization-footer-left-group">
+                        <button class="io-button back-btn" onclick="showHomeScreen()" aria-label="Volver">
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                            <span class="tooltip">Volver</span>
+                        </button>
+                        <div class="footer-spacer" style="width: 55px; flex-shrink:0;"></div>
                     </div>
-                    <button id="metronomeStartStopBtn" aria-label="Iniciar metrónomo"></button> 
+                    
+                    <button id="randomizeButton" class="button-shuffle-main button-randomize-animated" aria-label="Aleatorizar Listas" onclick="randomizeResults()" disabled>
+                        <svg class="io-svgIcon" viewBox="0 -2 24 24" xmlns="http://www.w3.org/2000/svg"> <g>
+                            <path d="M20.7071 0.29289C20.3166 -0.09763 19.6834 -0.09763 19.2929 0.29289C18.9024 0.68342 18.9024 1.31658 19.2929 1.70711L20.5858 3H17.5C15.4112 3 13.8775 3.9151 12.7003 5.19928C12.4971 5.42096 12.3035 5.65476 12.1184 5.89774C12.5095 6.57215 12.8587 7.25515 13.172 7.88239C13.4853 7.39148 13.815 6.94311 14.1747 6.55072C15.06 5.5849 16.0888 5 17.5 5H20.5858L19.2929 6.29289C18.9024 6.68342 18.9024 7.31658 19.2929 7.70711C19.6834 8.0976 20.3166 8.0976 20.7071 7.70711L23.7071 4.70711C24.0976 4.31658 24.0976 3.68342 23.7071 3.29289L20.7071 0.29289z"></path>
+                            <path d="M7.72125 13.4977C8.0367 13.1061 8.32907 12.6615 8.61321 12.175C8.93906 12.8074 9.30616 13.4838 9.72629 14.1516C9.58197 14.3599 9.43301 14.5608 9.27875 14.7523C8.25526 16.0229 6.90194 17 5 17H1C0.447715 17 0 16.5523 0 16C0 15.4477 0.447715 15 1 15H5C6.09806 15 6.93224 14.4771 7.72125 13.4977z"></path>
+                            <path d="M12.7003 14.8007C13.8775 16.0849 15.4112 17 17.5 17H20.5858L19.2929 18.2929C18.9024 18.6834 18.9024 19.3166 19.2929 19.7071C19.6834 20.0976 20.3166 20.0976 20.7071 19.7071L23.7071 16.7071C24.0976 16.3166 24.0976 15.6834 23.7071 15.2929L20.7071 12.2929C20.3166 11.9024 19.6834 11.9024 19.2929 12.2929C18.9024 12.6834 18.9024 13.3166 19.2929 13.7071L20.5858 15H17.5C16.0888 15 15.06 14.4151 14.1747 13.4493C13.2523 12.443 12.5274 11.0687 11.7694 9.5528C11.7092 9.4324 11.6487 9.3108 11.5878 9.1885C10.9119 7.83107 10.1871 6.37533 9.27875 5.24767C8.25526 3.97713 6.90194 3 5 3H1C0.447715 3 0 3.44771 0 4C0 4.55229 0.447715 5 1 5H5C6.09806 5 6.93224 5.52287 7.72125 6.50233C8.48623 7.45196 9.11547 8.7133 9.82081 10.1272L9.98057 10.4472C10.7226 11.9313 11.5602 13.557 12.7003 14.8007z"></path>
+                        </g> </svg>
+                        </button>
+
+                    <div class="footer-icon-buttons-right"> <button id="metronomeToggleButton" class="io-button" aria-label="Metrónomo">
+                            <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12,1.75L8.57,2.67L4.06,19.53C4.03,19.68 4,19.84 4,20C4,21.11 4.89,22 6,22H18C19.11,22 20,21.11 20,20C20,19.84 19.97,19.68 19.94,19.53L18.58,14.42L17,16L17.2,17H13.41L16.25,14.16L14.84,12.75L10.59,17H6.8L10.29,4H13.71L15.17,9.43L16.8,7.79L15.43,2.67L12,1.75M11.25,5V14.75L12.75,13.25V5H11.25M19.79,7.8L16.96,10.63L16.25,9.92L14.84,11.34L17.66,14.16L19.08,12.75L18.37,12.04L21.2,9.21L19.79,7.8Z" />
+                            </svg>
+                            <span class="tooltip">Metrónomo</span>
+                        </button>
+                        <button id="toggleKeyPanelBtn" class="io-button" aria-label="Panel de Tonalidades">
+                                <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M7.5 6C6.7 6 6 6.7 6 7.5S6.7 9 7.5 9 9 8.3 9 7.5 8.3 6 7.5 6M16.5 15C15.7 15 15 15.7 15 16.5C15 17.3 15.7 18 16.5 18C17.3 18 18 17.3 18 16.5C18 15.7 17.3 15 16.5 15M16.5 6C15.7 6 15 6.7 15 7.5S15.7 9 16.5 9C17.3 9 18 8.3 18 7.5S17.3 6 16.5 6M12 10.5C11.2 10.5 10.5 11.2 10.5 12S11.2 13.5 12 13.5 13.5 12.8 13.5 12 12.8 10.5 12 10.5M7.5 15C6.7 15 6 15.7 6 16.5C6 17.3 6.7 18 7.5 18S9 17.3 9 16.5C9 15.7 8.3 15 7.5 15Z" />
+                            </svg>
+                            <span class="tooltip">Tonalidades</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="randomization-footer">
-                <button class="io-button back-btn" onclick="showHomeScreen()" aria-label="Volver">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-                    <span class="tooltip">Volver</span>
-                </button>
-                 <button id="randomizeButton" class="button button-primary button-large" onclick="randomizeResults()" disabled>Randomizar</button>
-                <button id="metronomeToggleButton" class="io-button" aria-label="Metrónomo">
-                    <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6zm-2 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-                    <span class="tooltip">Metrónomo</span>
-                </button>
+
+            <div id="keyRandomizerPanel" class="slide-panel">
+                <div id="panel_keyGridContainer" class="key-grid-container-common"></div>
+                <button id="panel_randomizeKeyGridBtn" class="button-shuffle-main button-randomize-animated" aria-label="Aleatorizar Tonalidades">
+                        <svg class="io-svgIcon" viewBox="0 -2 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path d="M20.7071 0.29289C20.3166 -0.09763 19.6834 -0.09763 19.2929 0.29289C18.9024 0.68342 18.9024 1.31658 19.2929 1.70711L20.5858 3H17.5C15.4112 3 13.8775 3.9151 12.7003 5.19928C12.4971 5.42096 12.3035 5.65476 12.1184 5.89774C12.5095 6.57215 12.8587 7.25515 13.172 7.88239C13.4853 7.39148 13.815 6.94311 14.1747 6.55072C15.06 5.5849 16.0888 5 17.5 5H20.5858L19.2929 6.29289C18.9024 6.68342 18.9024 7.31658 19.2929 7.70711C19.6834 8.0976 20.3166 8.0976 20.7071 7.70711L23.7071 4.70711C24.0976 4.31658 24.0976 3.68342 23.7071 3.29289L20.7071 0.29289z"></path>
+                            <path d="M7.72125 13.4977C8.0367 13.1061 8.32907 12.6615 8.61321 12.175C8.93906 12.8074 9.30616 13.4838 9.72629 14.1516C9.58197 14.3599 9.43301 14.5608 9.27875 14.7523C8.25526 16.0229 6.90194 17 5 17H1C0.447715 17 0 16.5523 0 16C0 15.4477 0.447715 15 1 15H5C6.09806 15 6.93224 14.4771 7.72125 13.4977z"></path>
+                            <path d="M12.7003 14.8007C13.8775 16.0849 15.4112 17 17.5 17H20.5858L19.2929 18.2929C18.9024 18.6834 18.9024 19.3166 19.2929 19.7071C19.6834 20.0976 20.3166 20.0976 20.7071 19.7071L23.7071 16.7071C24.0976 16.3166 24.0976 15.6834 23.7071 15.2929L20.7071 12.2929C20.3166 11.9024 19.6834 11.9024 19.2929 12.2929C18.9024 12.6834 18.9024 13.3166 19.2929 13.7071L20.5858 15H17.5C16.0888 15 15.06 14.4151 14.1747 13.4493C13.2523 12.443 12.5274 11.0687 11.7694 9.5528C11.7092 9.4324 11.6487 9.3108 11.5878 9.1885C10.9119 7.83107 10.1871 6.37533 9.27875 5.24767C8.25526 3.97713 6.90194 3 5 3H1C0.447715 3 0 3.44771 0 4C0 4.55229 0.447715 5 1 5H5C6.09806 5 6.93224 5.52287 7.72125 6.50233C8.48623 7.45196 9.11547 8.7133 9.82081 10.1272L9.98057 10.4472C10.7226 11.9313 11.5602 13.557 12.7003 14.8007z"></path>
+                        </g>
+                    </svg>
+                    </button>
+                <hr style="margin-top: 25px; margin-bottom: 15px;">
+                <div id="panel_enharmonicControlBtnsContainer" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                </div>
+                <button id="panel_keyRand_setAllEnharmonicsBtn_Elem" class="button keyRand_setAllEnharmonicsBtn_common">Enarmonizar todo</button>
             </div>
         </div>
     </div>
 
     <div id="modalOverlay" style="display: none;">
-       <div id="infoModal">
+        <div id="infoModal">
             <button id="modalCloseBtn">&times;</button>
             <h2>Ayuda / Información</h2>
-            
-            <p><strong>¡Hola! Bienvenido/a a Practice Helper.</strong> Aquí puedes encontrar la información que te ayudará a entender cómo funciona la aplicación. Si tienes preguntas, no dudes en escribirme. ¡Que te cunda la práctica!</p>
+
+            <p><strong>¡Hola, bienvenido/a a Practice Helper!</strong> Aquí puedes encontrar la información que te ayudará a entender cómo funciona la aplicación. Si tienes preguntas, no dudes en escribirme. ¡Que te cunda la práctica!</p>
             <hr style="margin: 15px 0;">
 
             <h3>Cómo Usar</h3>
             <p>Para empezar crea una lista (puede ser, por ejemplo "Temas", "Ejercicios", "Tonos", etc.)</p>
-            <p>Añade tantos elementos cuantos quieres en la lista. Puedes activar/desactivar los elementos dentro de la lista para luego randomizarlos. De la misma forma puedes activar y desactivar las propias listas.</p>
-            <p>Una vez creadas y seleccionadas las listas pulsa el botón "Randomizar", que te llevará a la pantalla de selección aleatoria.</p>
-            <p>Pulsando el botón principal ("Randomizar" en la nueva pantalla) seleccionará un elemento al azar de cada lista activada. Pulsa el botón de nuevo para repetir la acción. Puedes bloquear/desbloquear el elemento randomizado haciendo click sobre él (por ejemplo si quieres practicar un determinado tema en varios tonos). Los elementos bloqueados no se randomizarán al pulsar el botón principal.</p>
+            <p>Añade tantos elementos cuantos quieres en la lista. Puedes activar/desactivar los elementos dentro de la lista para luego aleatorizarlos. De la misma forma puedes activar y desactivar las propias listas.</p>
+            <p>Una vez creadas y seleccionadas las listas pulsa el botón principal, que te llevará a la pantalla de selección aleatoria.</p>
+            <p>Pulsando el botón principal de aleatorizar seleccionará un elemento al azar de cada lista activada. Pulsa el botón de nuevo para repetir la acción. Puedes bloquear/desbloquear el elemento aleatorio haciendo click sobre él (por ejemplo si quieres practicar un determinado tema en varios tonos). Los elementos bloqueados no se randomizarán al pulsar el botón principal.</p>
+            <p>Esta pantalla cuenta también con un metronomo y un panel emergente de "Tonalidades aleatorias" (Puedes acceder a una pantalla con la misma funcionalidad desde la pantalla de inicio).</p>
+            
             <p>La barra espaciadora funciona como:</p>
             <ul>
-                <li>El botón de randomizar si el metrónomo esta desactivado</li>
-                <li>Lanza/para el metrónomo si está activado</li>
+                <li>El botón de aleatorizar listas si el metrónomo está desactivado.</li>
+                <li>Lanza/para el metrónomo si está activado.</li>
             </ul>
 
             <h3>Import/Export</h3>
@@ -557,20 +1046,25 @@
             <h3>Feedback</h3>
             <p>Si tienes cualquier feedback constructivo no dudes en escribirme al degtiarev.music@gmail.com</p>
 
-            <h3>Roadmap</h3>
-            <p>Agregar un módulo que imita el comportamiento de mi otra aplicación Note Randomizer, juntando de esa manera ambas herramientas.</p>
-
             <h3>Historial de versiones:</h3>
             <p>v2.5 (05.05.25) - primer lanzamiento</p>
-            <p>v2.6 (06.05.25) - Implementada la función de metrónomo, ajustes de diseño</p> 
+            <p>v2.6 (06.05.25) - Implementada la función de metrónomo, ajustes de diseño</p>
+            <p>v3 (03.06.25)  - Añadida la función de tonos aleatorios, añadido modo oscuro.</p>
             
-            <div class="modal-footer-options">
-                 <label class="show-on-startup-label"> 
-                     <input type="checkbox" id="showInfoOnStartup"> 
-                     Mostrar ayuda al inicio
-                 </label>
+            <div class="modal-theme-options">
+                <label class="theme-toggle-label">
+                    <input type="checkbox" id="darkModeToggle">
+                    Modo Oscuro
+                </label>
             </div>
-       </div>
+
+            <div class="modal-footer-options">
+                <label class="show-on-startup-label">
+                    <input type="checkbox" id="showInfoOnStartup">
+                    Mostrar ayuda al inicio
+                </label>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -579,15 +1073,15 @@
         let selectedListIndex = null;
         let lastDisplayedRandomElements = {};
         const MIN_ELEMENTS_FOR_TOP_SAVE = 10;
-        const HIGHLIGHT_DURATION = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000; 
+        const HIGHLIGHT_DURATION = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000;
 
         // --- Metronome Variables ---
         let audioContext = null;
         let metronomeIntervalId = null;
         let isMetronomeRunning = false;
         let currentBpm = 100;
-        let beatsPerMeasure = 4; 
-        let currentBeatInMeasure = 0; 
+        let beatsPerMeasure = 4;
+        let currentBeatInMeasure = 0;
 
         const playIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>`;
         const pauseIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M520-200v-560h240v560H520Zm-320 0v-560h240v560H200Zm400-80h80v-400h-80v400Zm-320 0h80v-400h-80v400Zm0-400v400-400Zm320 0v400-400Z"/></svg>`;
@@ -596,66 +1090,132 @@
         function saveLists() { try { localStorage.setItem('musicListRandomizerData_v2', JSON.stringify(lists)); console.log("saveLists: OK", lists.length); } catch (e) { console.error("saveLists ERROR:", e); } }
         function loadLists() { const data = localStorage.getItem('musicListRandomizerData_v2'); console.log("loadLists: Data found:", !!data); if (data) { try { const parsed = JSON.parse(data); if (!Array.isArray(parsed)) { throw new Error("Not array."); } lists = parsed.map(list => ({ id: list.id || Date.now().toString() + Math.random(), name: list.name || "?", elements: Array.isArray(list.elements) ? list.elements.map(el => ({ id: el.id || Date.now().toString() + Math.random(), name: el.name || "?", enabled: typeof el.enabled === 'boolean' ? el.enabled : true })) : [], enabled: typeof list.enabled === 'boolean' ? list.enabled : true, lockedElementId: list.lockedElementId || null })); console.log(`loadLists: OK ${lists.length} lists.`); } catch (e) { console.error("loadLists ERROR:", e); lists = []; try { localStorage.removeItem('musicListRandomizerData_v2'); } catch (e2) {} } } else { console.log("loadLists: No data."); lists = []; } }
 
+        // --- Theme Management ---
+        function applyTheme(themeName) {
+            document.body.className = ''; 
+            if (themeName === 'dark') {
+                document.body.classList.add('theme-dark');
+            }
+            try {
+                localStorage.setItem('practiceHelper_theme', themeName);
+            } catch(e) {
+                console.error("Error saving theme to localStorage", e);
+            }
+            console.log(`Theme applied: ${themeName}`);
+        }
+
+        function loadThemePreference() {
+            let preferredTheme = 'light'; 
+            try {
+                const savedTheme = localStorage.getItem('practiceHelper_theme');
+                if (savedTheme === 'dark') {
+                    preferredTheme = 'dark';
+                }
+            } catch(e) {
+                console.error("Error loading theme from localStorage", e);
+            }
+            applyTheme(preferredTheme);
+            
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.checked = (preferredTheme === 'dark');
+            }
+        }
+
+
         // --- Screen Management ---
-        function showScreen(screenId) { document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none'); const screenToShow = document.getElementById(screenId); if (screenToShow) { screenToShow.style.display = 'block'; const randBtn = document.getElementById('goToRandomizeBtn'); if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; } else { console.error("Screen ID not found", screenId); } window.scrollTo(0, 0); }
-        
-        // MODIFICADO: para parar metrónomo al salir de pantalla Randomize
-        function showHomeScreen() { 
-             if (isMetronomeRunning) {
-                 stopMetronome();
-                 console.log("Metrónomo detenido al volver a Home.");
-             }
-             renderHome(); 
-             showScreen('homeScreen'); 
-             selectedListIndex = null; 
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.style.display = 'none');
+            const screenToShow = document.getElementById(screenId);
+            if (screenToShow) {
+                screenToShow.style.display = 'block';
+                const randBtn = document.getElementById('homeScreenShuffleBtn'); 
+                if(randBtn && screenId === 'homeScreen') { 
+                   randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
+                }
+            } else {
+                console.error("Screen ID not found", screenId);
+            }
+            window.scrollTo(0, 0);
         }
-        function showEditScreen(index) { 
-             // No debería haber metrónomo activo aquí, pero por si acaso
-             if (isMetronomeRunning) {
-                 stopMetronome();
-             }
-             selectedListIndex = index; 
-             if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) { 
-                 renderEditScreen(); 
-                 showScreen('editScreen'); 
-             } else { 
-                 console.error("Invalid list index", index); 
-                 showHomeScreen(); 
-             } 
+
+        function showHomeScreen() {
+            if (isMetronomeRunning) {
+                stopMetronome();
+            }
+            const keyPanel = document.getElementById('keyRandomizerPanel');
+            if (keyPanel && keyPanel.classList.contains('panel-open')) {
+                keyRand_closePanel();
+            }
+
+            const mainTitleElement = document.getElementById('mainAppTitle');
+            if (mainTitleElement) {
+                if (Math.floor(Math.random() * 100) + 1 === 1) { 
+                    mainTitleElement.textContent = "Romandomizer";
+                } else {
+                    mainTitleElement.textContent = "Practice Helper";
+                }
+            }
+
+            renderHome();
+            showScreen('homeScreen');
+            selectedListIndex = null;
         }
-        function showRandomizationScreen() { lists.forEach(list => list.lockedElementId = null); lastDisplayedRandomElements = {}; renderRandomizationScreen(true, false); showScreen('randomizationScreen'); const metronomeCard = document.getElementById('metronomeCard'); if (metronomeCard && metronomeCard.classList.contains('visible')) { /* Mantener la tarjeta visible si ya lo estaba */ } }
+        function showEditScreen(index) {
+            if (isMetronomeRunning) {
+                stopMetronome();
+            }
+             const keyPanel = document.getElementById('keyRandomizerPanel');
+            if (keyPanel && keyPanel.classList.contains('panel-open')) {
+                keyRand_closePanel();
+            }
+            selectedListIndex = index;
+            if (selectedListIndex !== null && typeof selectedListIndex === 'number' && selectedListIndex >= 0 && selectedListIndex < lists.length && lists[selectedListIndex]) {
+                renderEditScreen();
+                showScreen('editScreen');
+            } else {
+                console.error("Invalid list index", index);
+                showHomeScreen();
+            }
+        }
+        function showRandomizationScreen() {
+            lists.forEach(list => list.lockedElementId = null);
+            lastDisplayedRandomElements = {};
+            renderRandomizationScreen(true, false);
+            showScreen('randomizationScreen');
+            const metronomeCard = document.getElementById('metronomeCard');
+            if (metronomeCard && metronomeCard.classList.contains('visible')) { }
+        }
 
         // --- Modal Logic ---
         function openInfoModal() {
             const overlay = document.getElementById('modalOverlay');
-            const showOnStartupCheckbox = document.getElementById('showInfoOnStartup'); 
+            const showOnStartupCheckbox = document.getElementById('showInfoOnStartup');
+            const darkModeToggle = document.getElementById('darkModeToggle');
 
             if (showOnStartupCheckbox) {
                 try {
-                    const shouldShow = localStorage.getItem('practiceHelper_infoModalSeen') !== 'true';
-                    showOnStartupCheckbox.checked = shouldShow;
-                } catch (e) {
-                     console.error("Error reading localStorage for info modal preference:", e);
-                     showOnStartupCheckbox.checked = true; 
-                }
+                    showOnStartupCheckbox.checked = localStorage.getItem('practiceHelper_infoModalSeen') !== 'true';
+                } catch (e) { console.error("Error reading infoModalSeen pref:", e); showOnStartupCheckbox.checked = true; }
+            }
+            if (darkModeToggle) {
+                 try {
+                    darkModeToggle.checked = localStorage.getItem('practiceHelper_theme') === 'dark';
+                } catch (e) { console.error("Error reading theme pref for modal:", e); }
             }
             if(overlay) overlay.style.display = 'flex';
         }
 
         function closeInfoModal() {
-            const showOnStartupCheckbox = document.getElementById('showInfoOnStartup'); 
+            const showOnStartupCheckbox = document.getElementById('showInfoOnStartup');
             if (showOnStartupCheckbox) {
                 try {
                     if (showOnStartupCheckbox.checked) {
                         localStorage.removeItem('practiceHelper_infoModalSeen');
-                        console.log("Preferencia actualizada: El modal de info SE mostrará en el próximo inicio.");
                     } else {
                         localStorage.setItem('practiceHelper_infoModalSeen', 'true');
-                        console.log("Preferencia actualizada: El modal de info NO se mostrará automáticamente en el próximo inicio.");
                     }
-                } catch (e) {
-                    console.error("Error updating preference in localStorage:", e);
-                }
+                } catch (e) { console.error("Error updating infoModalSeen pref:", e); }
             }
             const overlay = document.getElementById('modalOverlay');
             if(overlay) overlay.style.display = 'none';
@@ -674,25 +1234,24 @@
             } else {
                 return;
             }
-            saveLists(); 
-            renderHome(); 
-            highlightMovedItem(listId, 'list-item', 'data-list-id'); 
+            saveLists();
+            renderHome();
+            highlightMovedItem(listId, 'list-item', 'data-list-id');
         }
 
         // --- Edit Screen Logic ---
         function updateListName(newName) { if (selectedListIndex !== null && lists[selectedListIndex]) { lists[selectedListIndex].name = newName; } }
-        function saveAndGoHome() { 
-             // Parar metrónomo si está activo (aunque no debería ser posible desde aquí)
-             if (isMetronomeRunning) {
-                 stopMetronome();
-             }
-             if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { alert("List name cannot be empty."); console.warn("List name cannot be empty on save."); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen(); 
+        function saveAndGoHome() {
+            if (isMetronomeRunning) {
+                stopMetronome();
+            }
+            if (selectedListIndex !== null && lists[selectedListIndex]) { const currentName = document.getElementById('listNameInput').value.trim(); if (!currentName) { alert("List name cannot be empty."); console.warn("List name cannot be empty on save."); return; } lists[selectedListIndex].name = currentName; } saveLists(); showHomeScreen();
         }
         function deleteList() { console.log("deleteList called", selectedListIndex); if (selectedListIndex === null || selectedListIndex < 0 || selectedListIndex >= lists.length || !lists[selectedListIndex]) { console.error("Invalid index for deleteList", selectedListIndex); return; } const listIndexToDelete = selectedListIndex; const listNameToDelete = lists[listIndexToDelete].name; console.log("Confirm delete", listNameToDelete, listIndexToDelete); if (confirm(`Are you sure you want to delete the list "${listNameToDelete}"?\nThis action cannot be undone.`)) { console.log("Deletion confirmed"); if (lists[listIndexToDelete] && lists[listIndexToDelete].name === listNameToDelete) { lists.splice(listIndexToDelete, 1); console.log("List spliced from array"); saveLists(); showHomeScreen(); } else { console.error("Data consistency error during delete. Aborting."); renderHome(); } } else { console.log("Deletion cancelled by user"); } }
         function promptAddElement() { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const elementName = prompt("Enter the name for the new element:"); if (elementName === null) { console.log("Add element cancelled."); return; } const trimmedName = elementName.trim(); if (!trimmedName) { console.warn("Element name cannot be empty."); alert("Element name cannot be empty."); return; } const elementExists = list.elements.some(el => el.name.toLowerCase() === trimmedName.toLowerCase()); if(elementExists) { alert(`Element "${trimmedName}" already exists in this list.`); console.warn(`Element "${trimmedName}" already exists.`); return; } list.elements.push({ id: Date.now().toString() + Math.random(), name: trimmedName, enabled: true }); renderEditScreen(); console.log(`Element "${trimmedName}" added to list "${list.name}".`); }
         function deleteElement(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const index = list.elements.findIndex(el => el.id === elementId); if (index === -1) { console.warn("Element ID not found for deletion:", elementId); return; } if (list.lockedElementId === elementId) { list.lockedElementId = null; } list.elements.splice(index, 1); renderEditScreen(); }
         function toggleElementEnabled(elementId) { if (selectedListIndex === null || !lists[selectedListIndex]) return; const list = lists[selectedListIndex]; const element = list.elements.find(el => el.id === elementId); if (!element) { console.warn("Element ID not found for toggle:", elementId); return; } element.enabled = !element.enabled; if (!element.enabled && list.lockedElementId === elementId) { list.lockedElementId = null; } renderEditScreen(); }
-        function moveElement(elementId, direction) { 
+        function moveElement(elementId, direction) {
             if (selectedListIndex === null || !lists[selectedListIndex]) return;
             const elements = lists[selectedListIndex].elements;
             const index = elements.findIndex(el => el.id === elementId);
@@ -702,23 +1261,23 @@
             } else if (direction === 'down' && index < elements.length - 1) {
                 [elements[index], elements[index + 1]] = [elements[index + 1], elements[index]];
             } else {
-                return; 
+                return;
             }
-            renderEditScreen(); 
-            highlightMovedItem(elementId, 'element-item', 'data-element-id'); 
+            renderEditScreen();
+            highlightMovedItem(elementId, 'element-item', 'data-element-id');
         }
 
         function highlightMovedItem(itemId, itemClass, dataAttribute) {
-             const highlightDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000; 
-             requestAnimationFrame(() => { 
+             const highlightDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--highlight-duration') || '0.6') * 1000;
+             requestAnimationFrame(() => {
                 const movedNode = document.querySelector(`.${itemClass}[${dataAttribute}="${itemId}"]`);
                 if (movedNode) {
                     movedNode.classList.add('item-just-moved');
                     setTimeout(() => {
-                        if (document.body.contains(movedNode)) { 
+                        if (document.body.contains(movedNode)) {
                            movedNode.classList.remove('item-just-moved');
                         }
-                    }, highlightDuration); 
+                    }, highlightDuration);
                 }
             });
         }
@@ -753,19 +1312,19 @@
 
         function playMetronomeTick() {
             if (!audioContext || audioContext.state !== 'running') { return; }
-            currentBeatInMeasure++; 
+            currentBeatInMeasure++;
             if (currentBeatInMeasure > beatsPerMeasure) {
-                currentBeatInMeasure = 1; 
+                currentBeatInMeasure = 1;
             }
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
-            osc.type = 'sine'; 
+            osc.type = 'sine';
             let frequency;
-            let gainValue = 0.5; 
-            if (beatsPerMeasure > 1 && currentBeatInMeasure === 1) { 
-                frequency = 1000; 
+            let gainValue = 0.5;
+            if (beatsPerMeasure > 1 && currentBeatInMeasure === 1) {
+                frequency = 1000;
             } else {
-                frequency = 700;  
+                frequency = 700;
             }
             osc.frequency.setValueAtTime(frequency, audioContext.currentTime);
             gain.gain.setValueAtTime(0, audioContext.currentTime);
@@ -779,12 +1338,12 @@
             if (indicator) {
                 indicator.classList.add('beat');
                 if (beatsPerMeasure > 1 && currentBeatInMeasure === 1) {
-                    indicator.classList.add('accent-beat'); 
+                    indicator.classList.add('accent-beat');
                 }
                 setTimeout(() => {
                     indicator.classList.remove('beat');
-                    indicator.classList.remove('accent-beat'); 
-                }, 70); 
+                    indicator.classList.remove('accent-beat');
+                }, 70);
             }
         }
 
@@ -795,7 +1354,7 @@
         function startMetronome() {
             if (isMetronomeRunning) return;
             initializeAudioContext();
-            currentBeatInMeasure = 0; 
+            currentBeatInMeasure = 0;
             const bpmToStart = currentBpm;
             const bpmNumInput = document.getElementById('bpmInput');
             const bpmRangeSlider = document.getElementById('bpmSlider');
@@ -808,9 +1367,9 @@
             isMetronomeRunning = true;
             const startStopBtn = document.getElementById('metronomeStartStopBtn');
             if (startStopBtn) {
-                startStopBtn.innerHTML = pauseIconSVG; 
-                startStopBtn.classList.add('metronome-active'); 
-                startStopBtn.setAttribute('aria-label', 'Detener metrónomo'); 
+                startStopBtn.innerHTML = pauseIconSVG;
+                startStopBtn.classList.add('metronome-active');
+                startStopBtn.setAttribute('aria-label', 'Detener metrónomo');
             }
         }
 
@@ -822,14 +1381,14 @@
             isMetronomeRunning = false;
             const btn = document.getElementById('metronomeStartStopBtn');
             if (btn) {
-                btn.innerHTML = playIconSVG; 
-                btn.classList.remove('metronome-active'); 
-                btn.setAttribute('aria-label', 'Iniciar metrónomo'); 
+                btn.innerHTML = playIconSVG;
+                btn.classList.remove('metronome-active');
+                btn.setAttribute('aria-label', 'Iniciar metrónomo');
             }
             const indicator = document.getElementById('metronomeVisualIndicator');
             if (indicator) {
                 indicator.classList.remove('beat');
-                indicator.classList.remove('accent-beat'); 
+                indicator.classList.remove('accent-beat');
             }
         }
 
@@ -850,289 +1409,299 @@
         }
 
         // --- Rendering Functions ---
-        function renderHome() { 
-            const container = document.getElementById("listsContainer"); 
-            container.innerHTML = ""; 
-            lists.forEach((list, index) => { 
-                const item = document.createElement("div"); 
-                item.className = `list-item ${list.enabled ? 'enabled' : ''}`; 
-                item.setAttribute('data-list-id', list.id); 
-                item.onclick = () => toggleListEnabled(list.id); 
-                const nameArea = document.createElement("div"); 
-                nameArea.className = "list-item-name"; 
-                nameArea.textContent = `${list.name} (${list.elements.length})`; 
-                const rightCtrls = document.createElement("div"); 
-                rightCtrls.className = "list-item-controls-right"; 
-                rightCtrls.onclick = (e) => e.stopPropagation(); 
-                const upBtn = document.createElement("button"); 
-                upBtn.className="button-icon move-up-btn"; 
-                upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; 
-                upBtn.title="Move Up"; 
-                upBtn.disabled = (index === 0); 
-                upBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'up'); }; 
-                const downBtn = document.createElement("button"); 
-                downBtn.className="button-icon move-down-btn"; 
-                downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; 
-                downBtn.title="Move Down"; 
-                downBtn.disabled = (index === lists.length - 1); 
-                downBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'down'); }; 
-                const editBtn = document.createElement("button"); 
-                editBtn.className = "button-icon edit-button"; 
-                editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`; 
-                editBtn.title = "Edit List"; 
-                editBtn.onclick = (e) => { e.stopPropagation(); showEditScreen(lists.findIndex(l => l.id === list.id)); }; 
-                rightCtrls.appendChild(upBtn); 
-                rightCtrls.appendChild(downBtn); 
-                rightCtrls.appendChild(editBtn); 
-                item.appendChild(nameArea); 
-                item.appendChild(rightCtrls); 
-                container.appendChild(item); 
-            }); 
-            const randBtn = document.getElementById('goToRandomizeBtn'); 
-            if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0; 
+        function renderHome() {
+            const container = document.getElementById("listsContainer");
+            container.innerHTML = "";
+            lists.forEach((list, index) => {
+                const item = document.createElement("div");
+                item.className = `list-item ${list.enabled ? 'enabled' : ''}`;
+                item.setAttribute('data-list-id', list.id);
+                item.onclick = () => toggleListEnabled(list.id);
+                const nameArea = document.createElement("div");
+                nameArea.className = "list-item-name";
+                nameArea.textContent = `${list.name} (${list.elements.length})`;
+                const rightCtrls = document.createElement("div");
+                rightCtrls.className = "list-item-controls-right";
+                rightCtrls.onclick = (e) => e.stopPropagation();
+                const upBtn = document.createElement("button");
+                upBtn.className="button-icon move-up-btn";
+                upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
+                upBtn.title="Move Up";
+                upBtn.disabled = (index === 0);
+                upBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'up'); };
+                const downBtn = document.createElement("button");
+                downBtn.className="button-icon move-down-btn";
+                downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
+                downBtn.title="Move Down";
+                downBtn.disabled = (index === lists.length - 1);
+                downBtn.onclick = (e) => { e.stopPropagation(); moveList(list.id, 'down'); };
+                const editBtn = document.createElement("button");
+                editBtn.className = "button-icon edit-button";
+                editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+                editBtn.title = "Edit List";
+                editBtn.onclick = (e) => { e.stopPropagation(); showEditScreen(lists.findIndex(l => l.id === list.id)); };
+                rightCtrls.appendChild(upBtn);
+                rightCtrls.appendChild(downBtn);
+                rightCtrls.appendChild(editBtn);
+                item.appendChild(nameArea);
+                item.appendChild(rightCtrls);
+                container.appendChild(item);
+            });
+            const randBtn = document.getElementById('homeScreenShuffleBtn'); 
+            if(randBtn) randBtn.disabled = lists.filter(l => l.enabled && l.elements.some(e => e.enabled)).length === 0;
         }
-        function renderEditScreen() { 
-            if (selectedListIndex === null || !lists[selectedListIndex]) return; 
-            const list = lists[selectedListIndex]; 
-            const listNameInput = document.getElementById("listNameInput"); 
-            if(listNameInput) listNameInput.value = list.name; 
-            const totalElements = list.elements.length; 
-            const enabledElements = list.elements.filter(el => el.enabled).length; 
-            const countDisplaySpan = document.getElementById('elementCountDisplay'); 
-            if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; } 
-            const topSaveBtn = document.getElementById('editScreenTopSaveBtn'); 
-            if (topSaveBtn) { const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE; topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none'; } 
-            const container = document.getElementById("elementsListContainer"); 
-            container.innerHTML = ""; 
-            if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No elements in this list.</li>"; } 
-            else { 
-                list.elements.forEach((element, index) => { 
-                    const li = document.createElement("li"); 
-                    li.className = `element-item ${element.enabled ? 'enabled' : ''}`; 
-                    li.setAttribute('data-element-id', element.id); 
-                    li.onclick = () => toggleElementEnabled(element.id); 
-                    const nameSpan = document.createElement("span"); 
-                    nameSpan.className = "element-item-name"; 
-                    nameSpan.textContent = element.name; 
-                    const rightCtrls = document.createElement("div"); 
-                    rightCtrls.className = "element-item-controls-right"; 
-                    rightCtrls.onclick = (e) => e.stopPropagation(); 
-                    const upBtn = document.createElement("button"); 
-                    upBtn.className="button-icon move-up-btn"; 
-                    upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`; 
-                    upBtn.title="Move Up"; 
-                    upBtn.disabled = (index === 0); 
-                    upBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'up'); }; 
-                    const downBtn = document.createElement("button"); 
-                    downBtn.className="button-icon move-down-btn"; 
-                    downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`; 
-                    downBtn.title="Move Down"; 
-                    downBtn.disabled = (index === list.elements.length - 1); 
-                    downBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'down'); }; 
-                    const delBtn = document.createElement("button"); 
-                    delBtn.className="button-icon delete-element-button"; 
-                    delBtn.innerHTML="&times;"; 
-                    delBtn.title="Delete Element"; 
-                    delBtn.style.fontSize='1.4em'; 
-                    delBtn.onclick=(e)=>{ e.stopPropagation(); deleteElement(element.id);}; 
-                    rightCtrls.appendChild(upBtn); 
-                    rightCtrls.appendChild(downBtn); 
-                    rightCtrls.appendChild(delBtn); 
-                    li.appendChild(nameSpan); 
-                    li.appendChild(rightCtrls); 
-                    container.appendChild(li); 
-                }); 
-            } 
-            if(listNameInput) listNameInput.value = list.name; 
+        function renderEditScreen() {
+            if (selectedListIndex === null || !lists[selectedListIndex]) return;
+            const list = lists[selectedListIndex];
+            const listNameInput = document.getElementById("listNameInput");
+            if(listNameInput) listNameInput.value = list.name;
+            const totalElements = list.elements.length;
+            const enabledElements = list.elements.filter(el => el.enabled).length;
+            const countDisplaySpan = document.getElementById('elementCountDisplay');
+            if (countDisplaySpan) { countDisplaySpan.textContent = `${totalElements}/${enabledElements}`; }
+            const topSaveBtn = document.getElementById('editScreenTopSaveBtn');
+            if (topSaveBtn) { const showTopSaveButton = list.elements.length >= MIN_ELEMENTS_FOR_TOP_SAVE; topSaveBtn.style.display = showTopSaveButton ? 'inline-flex' : 'none'; }
+            const container = document.getElementById("elementsListContainer");
+            container.innerHTML = "";
+            if (list.elements.length === 0) { container.innerHTML = "<li style='background: none; padding: 10px 0; list-style: none; text-align: center; color: var(--c-grey);'>No elements in this list.</li>"; }
+            else {
+                list.elements.forEach((element, index) => {
+                    const li = document.createElement("li");
+                    li.className = `element-item ${element.enabled ? 'enabled' : ''}`;
+                    li.setAttribute('data-element-id', element.id);
+                    li.onclick = () => toggleElementEnabled(element.id);
+                    const nameSpan = document.createElement("span");
+                    nameSpan.className = "element-item-name";
+                    nameSpan.textContent = element.name;
+                    const rightCtrls = document.createElement("div");
+                    rightCtrls.className = "element-item-controls-right";
+                    rightCtrls.onclick = (e) => e.stopPropagation();
+                    const upBtn = document.createElement("button");
+                    upBtn.className="button-icon move-up-btn";
+                    upBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>`;
+                    upBtn.title="Move Up";
+                    upBtn.disabled = (index === 0);
+                    upBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'up'); };
+                    const downBtn = document.createElement("button");
+                    downBtn.className="button-icon move-down-btn";
+                    downBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em" fill="currentColor" aria-hidden="true"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
+                    downBtn.title="Move Down";
+                    downBtn.disabled = (index === list.elements.length - 1);
+                    downBtn.onclick = (e) => { e.stopPropagation(); moveElement(element.id,'down'); };
+                    const delBtn = document.createElement("button");
+                    delBtn.className="button-icon delete-element-button";
+                    delBtn.innerHTML="&times;";
+                    delBtn.title="Delete Element";
+                    delBtn.style.fontSize='1.4em';
+                    delBtn.onclick=(e)=>{ e.stopPropagation(); deleteElement(element.id);};
+                    rightCtrls.appendChild(upBtn);
+                    rightCtrls.appendChild(downBtn);
+                    rightCtrls.appendChild(delBtn);
+                    li.appendChild(nameSpan);
+                    li.appendChild(rightCtrls);
+                    container.appendChild(li);
+                });
+            }
+            if(listNameInput) listNameInput.value = list.name;
         }
         function renderRandomizationScreen(initialState = false, shouldRandomize = false) { const container = document.getElementById('randomizationResultsContainer'); container.innerHTML = ''; const enabledLists = lists.filter(list => list.enabled); const randButton = document.getElementById('randomizeButton'); if (enabledLists.length === 0) { container.innerHTML = '<p class="info-text text-center">No enabled lists to randomize.</p>'; if (randButton) randButton.disabled = true; return; } else { if (randButton) randButton.disabled = false; } console.log(`Rendering Randomization: InitialState=${initialState}, ShouldRandomize=${shouldRandomize}`); enabledLists.forEach(list => { const contentDiv = document.createElement('div'); contentDiv.className = 'random-result-content'; contentDiv.setAttribute('data-list-id-ref', list.id); let elementToShow = null; let isLocked = !!list.lockedElementId; const enabledElements = list.elements.filter(el => el.enabled); if (initialState) { contentDiv.textContent = list.name; contentDiv.classList.add('empty'); lastDisplayedRandomElements[list.id] = null; } else { if (isLocked) { const lockedElement = enabledElements.find(el => el.id === list.lockedElementId); if (lockedElement) { elementToShow = lockedElement; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List "${list.name}": Displaying LOCKED element "${elementToShow.name}" (ID: ${elementToShow.id})`); } else { console.warn(`Locked element ID ${list.lockedElementId} is invalid/disabled in list "${list.name}". Unlocking.`); isLocked = false; list.lockedElementId = null; if (shouldRandomize && enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(` -> Picked NEW random "${elementToShow.name}" instead.`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; } } } if (!isLocked) { if (shouldRandomize || !lastDisplayedRandomElements[list.id]) { if (enabledElements.length > 0) { const randIdx = Math.floor(Math.random() * enabledElements.length); elementToShow = enabledElements[randIdx]; lastDisplayedRandomElements[list.id] = elementToShow.id; console.log(`List "${list.name}": Picking NEW random element: "${elementToShow?.name}" (ID: ${elementToShow?.id})`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List "${list.name}": No enabled elements to pick from.`); } } else { const lastElement = enabledElements.find(el => el.id === lastDisplayedRandomElements[list.id]); if(lastElement) { elementToShow = lastElement; console.log(`List "${list.name}": Re-displaying PREVIOUS element: "${elementToShow.name}" (ID: ${elementToShow.id})`); } else { elementToShow = null; lastDisplayedRandomElements[list.id] = null; console.log(`List "${list.name}": Last displayed element (ID: ${lastDisplayedRandomElements[list.id]}) is gone or disabled. Showing empty.`); } } } if (elementToShow) { contentDiv.textContent = elementToShow.name; contentDiv.onclick = () => toggleLock(list.id); if(isLocked) { contentDiv.classList.add('locked'); } } else { contentDiv.textContent = `(${list.name} - No enabled elements)`; contentDiv.classList.add('empty'); contentDiv.onclick = null; } } container.appendChild(contentDiv); }); }
+
+        const PITCH_CLASSES_MAP_KR = {
+            0: { value: 0, default: "C", sharp: "C", flat: "C", name: "C" },
+            1: { value: 1, default: "Db", sharp: "C#", flat: "Db", name: "Db/C#" },
+            2: { value: 2, default: "D", sharp: "D", flat: "D", name: "D" },
+            3: { value: 3, default: "Eb", sharp: "D#", flat: "Eb", name: "Eb/D#" },
+            4: { value: 4, default: "E", sharp: "E", flat: "E", name: "E" },
+            5: { value: 5, default: "F", sharp: "F", flat: "F", name: "F" },
+            6: { value: 6, default: "F#", sharp: "F#", flat: "Gb", name: "Gb/F#" },
+            7: { value: 7, default: "G", sharp: "G", flat: "G", name: "G" },
+            8: { value: 8, default: "Ab", sharp: "G#", flat: "Ab", name: "Ab/G#" },
+            9: { value: 9, default: "A", sharp: "A", flat: "A", name: "A" },
+            10: { value: 10, default: "Bb", sharp: "A#", flat: "Bb", name: "Bb/A#" },
+            11: { value: 11, default: "B", sharp: "B", flat: "B", name: "B" }
+        };
+        const PITCH_CLASSES_ARRAY_KR = Object.values(PITCH_CLASSES_MAP_KR);
+        const INITIAL_KEY_GRID_ORDER_VALUES_KR = [0, 5, 10, 3, 8, 1, 6, 11, 4, 9, 2, 7];
+        const ENHARMONIC_CONTROL_PITCH_VALUES_KR = [1, 3, 6, 8, 10];
+        let currentKeyGridPitchesData_KR = [];
+        let enharmonicDisplayPreferences_KR = { 1: 'flat', 3: 'flat', 6: 'sharp', 8: 'flat', 10: 'flat' };
+        const ENHARMONIC_CYCLE_MODES_KR = ['flat', 'sharp', 'both'];
+        const INITIAL_ENHARMONIC_PREFERENCES_KR = { 1: 'flat', 3: 'flat', 6: 'sharp', 8: 'flat', 10: 'flat' };
+        let panel_keyGridContainer_Elem, panel_randomizeBtn_Elem, panel_enharmonicBtnsContainer_Elem, panel_setAllEnharmonicsBtn_Elem;
+        let standalone_keyGridContainer_Elem, standalone_randomizeBtn_Elem, standalone_enharmonicBtnsContainer_Elem, standalone_setAllEnharmonicsBtn_Elem;
+        let keyRand_panel_Elem, keyRand_togglePanelBtn_Elem, randomizationScreen_Elem;
+
+        function keyRand_shuffleArray_KR(array) { let newArray = [...array]; for (let i = newArray.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[newArray[i], newArray[j]] = [newArray[j], newArray[i]]; } return newArray; }
+        function keyRand_getPitchDisplayString_KR(pitchObject) { if (!pitchObject) return "?"; const preference = enharmonicDisplayPreferences_KR[pitchObject.value]; if (ENHARMONIC_CONTROL_PITCH_VALUES_KR.includes(pitchObject.value)) { switch (preference) { case 'flat': return pitchObject.flat; case 'sharp': return pitchObject.sharp; case 'both': return Math.random() < 0.5 ? pitchObject.flat : pitchObject.sharp; default: return pitchObject.default; } } return pitchObject.default; }
+        function keyRand_renderGrid_KR(targetGridContainer) { if (!targetGridContainer) return; targetGridContainer.innerHTML = ''; if (currentKeyGridPitchesData_KR.length === 0) return; currentKeyGridPitchesData_KR.forEach(pitchObject => { const cell = document.createElement('div'); cell.className = 'key-grid-cell'; cell.textContent = keyRand_getPitchDisplayString_KR(pitchObject); targetGridContainer.appendChild(cell); }); }
+        function keyRand_randomizeAndDisplay_KR_generic(targetGridContainer) { currentKeyGridPitchesData_KR = keyRand_shuffleArray_KR(PITCH_CLASSES_ARRAY_KR); keyRand_renderGrid_KR(targetGridContainer); }
+        function keyRand_updateEnharmonicButton_KR(pitchValue, enharmonicBtnsContainer) { if (!enharmonicBtnsContainer) return; const button = enharmonicBtnsContainer.querySelector(`button[data-pitch-value="${pitchValue}"]`); if (!button) return; const pitchObject = PITCH_CLASSES_MAP_KR[pitchValue]; const currentMode = enharmonicDisplayPreferences_KR[pitchValue]; button.classList.remove('both-state'); switch (currentMode) { case 'flat': button.textContent = pitchObject.flat; break; case 'sharp': button.textContent = pitchObject.sharp; break; case 'both': button.textContent = `${pitchObject.flat}/${pitchObject.sharp}`; button.classList.add('both-state'); break; } }
+        function keyRand_cycleEnharmonicPreference_KR_generic(pitchValue, targetEnharmonicBtnsContainer, targetSetAllBtn) { const currentMode = enharmonicDisplayPreferences_KR[pitchValue]; const currentIndex = ENHARMONIC_CYCLE_MODES_KR.indexOf(currentMode); const nextIndex = (currentIndex + 1) % ENHARMONIC_CYCLE_MODES_KR.length; enharmonicDisplayPreferences_KR[pitchValue] = ENHARMONIC_CYCLE_MODES_KR[nextIndex]; keyRand_updateEnharmonicButton_KR(pitchValue, targetEnharmonicBtnsContainer); keyRand_updateAllEnharmonicsBtnState_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn); }
+        function keyRand_updateAllEnharmonicsBtnState_KR_generic(enharmonicBtnsContainer, setAllBtnElem) { if (!setAllBtnElem || !enharmonicBtnsContainer) return; const areAllCurrentlyBoth = ENHARMONIC_CONTROL_PITCH_VALUES_KR.every(pValue => enharmonicDisplayPreferences_KR[pValue] === 'both'); if (areAllCurrentlyBoth) { setAllBtnElem.classList.add('active'); } else { setAllBtnElem.classList.remove('active'); } }
+        function keyRand_toggleAllEnharmonics_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn) { const areAllCurrentlyBoth = ENHARMONIC_CONTROL_PITCH_VALUES_KR.every(pValue => enharmonicDisplayPreferences_KR[pValue] === 'both'); ENHARMONIC_CONTROL_PITCH_VALUES_KR.forEach(pitchValue => { if (areAllCurrentlyBoth) { enharmonicDisplayPreferences_KR[pitchValue] = INITIAL_ENHARMONIC_PREFERENCES_KR[pitchValue] || 'flat'; } else { enharmonicDisplayPreferences_KR[pitchValue] = 'both'; } keyRand_updateEnharmonicButton_KR(pitchValue, targetEnharmonicBtnsContainer); }); keyRand_updateAllEnharmonicsBtnState_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn); }
+        function keyRand_populateEnharmonicControlButtons_KR(enharmonicBtnsContainer, targetSetAllBtn) { if (!enharmonicBtnsContainer) return; enharmonicBtnsContainer.innerHTML = ''; ENHARMONIC_CONTROL_PITCH_VALUES_KR.forEach(pitchValue => { const button = document.createElement('button'); button.className = 'button enharmonic-control-button'; button.dataset.pitchValue = pitchValue; button.addEventListener('click', () => keyRand_cycleEnharmonicPreference_KR_generic(pitchValue, enharmonicBtnsContainer, targetSetAllBtn)); enharmonicBtnsContainer.appendChild(button); keyRand_updateEnharmonicButton_KR(pitchValue, enharmonicBtnsContainer); }); }
+        function keyRand_initializeUI(uiContext) { if (currentKeyGridPitchesData_KR.length === 0) { currentKeyGridPitchesData_KR = INITIAL_KEY_GRID_ORDER_VALUES_KR.map(val => PITCH_CLASSES_MAP_KR[val]); } keyRand_renderGrid_KR(uiContext.grid); keyRand_populateEnharmonicControlButtons_KR(uiContext.enharmonicContainer, uiContext.setAllBtn); keyRand_updateAllEnharmonicsBtnState_KR_generic(uiContext.enharmonicContainer, uiContext.setAllBtn); }
+        function keyRand_openPanel() { if (keyRand_panel_Elem && randomizationScreen_Elem) { const panelContext = { grid: panel_keyGridContainer_Elem, enharmonicContainer: panel_enharmonicBtnsContainer_Elem, setAllBtn: panel_setAllEnharmonicsBtn_Elem }; keyRand_initializeUI(panelContext); keyRand_panel_Elem.classList.add('panel-open'); randomizationScreen_Elem.classList.add('key-panel-active'); console.log("Panel de tonalidades abierto"); } }
+        function keyRand_closePanel() { if (keyRand_panel_Elem && randomizationScreen_Elem) { keyRand_panel_Elem.classList.remove('panel-open'); randomizationScreen_Elem.classList.remove('key-panel-active'); console.log("Panel de tonalidades cerrado"); } }
+        function navigateToStandaloneKeyRandomizerScreen() { if (isMetronomeRunning) { stopMetronome(); } const standaloneContext = { grid: standalone_keyGridContainer_Elem, enharmonicContainer: standalone_enharmonicBtnsContainer_Elem, setAllBtn: standalone_setAllEnharmonicsBtn_Elem }; keyRand_initializeUI(standaloneContext); showScreen('standaloneKeyRandomizerScreen'); }
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOMContentLoaded: Initializing application...");
             loadLists();
+            loadThemePreference(); 
             lists.forEach(list => list.lockedElementId = null);
             lastDisplayedRandomElements = {};
             console.log("DOMContentLoaded: Initial lock states reset.");
 
+            keyRand_panel_Elem = document.getElementById('keyRandomizerPanel');
+            randomizationScreen_Elem = document.getElementById('randomizationScreen');
+            keyRand_togglePanelBtn_Elem = document.getElementById('toggleKeyPanelBtn');
+
+            panel_keyGridContainer_Elem = document.getElementById('panel_keyGridContainer');
+            panel_randomizeBtn_Elem = document.getElementById('panel_randomizeKeyGridBtn');
+            panel_enharmonicBtnsContainer_Elem = document.getElementById('panel_enharmonicControlBtnsContainer');
+            panel_setAllEnharmonicsBtn_Elem = document.getElementById('panel_keyRand_setAllEnharmonicsBtn_Elem');
+
+            standalone_keyGridContainer_Elem = document.getElementById('standalone_keyGridContainer');
+            standalone_randomizeBtn_Elem = document.getElementById('standalone_randomizeKeyGridBtn');
+            standalone_enharmonicBtnsContainer_Elem = document.getElementById('standalone_enharmonicControlBtnsContainer');
+            standalone_setAllEnharmonicsBtn_Elem = document.getElementById('standalone_keyRand_setAllEnharmonicsBtn_Elem');
+
             const infoButton = document.getElementById('infoButton');
             const modalOverlay = document.getElementById('modalOverlay');
             const modalCloseButton = document.getElementById('modalCloseBtn');
-            
-            const metronomeToggleBtn = document.getElementById('metronomeToggleButton'); 
+            const darkModeToggle = document.getElementById('darkModeToggle'); 
+
+            const metronomeToggleBtn = document.getElementById('metronomeToggleButton');
             const metronomeStartStopBtn = document.getElementById('metronomeStartStopBtn');
             const bpmInput = document.getElementById('bpmInput');
-            const bpmSlider = document.getElementById('bpmSlider'); 
-            const timeSignatureSelect = document.getElementById('timeSignatureSelect'); 
+            const bpmSlider = document.getElementById('bpmSlider');
+            const timeSignatureSelect = document.getElementById('timeSignatureSelect');
             const listsContainer = document.getElementById('listsContainer');
             const elementsListContainer = document.getElementById('elementsListContainer');
 
             if(metronomeStartStopBtn) {
                 metronomeStartStopBtn.innerHTML = playIconSVG;
-                metronomeStartStopBtn.setAttribute('aria-label', 'Iniciar metrónomo'); 
+                metronomeStartStopBtn.setAttribute('aria-label', 'Iniciar metrónomo');
             }
 
             try {
                 if (localStorage.getItem('practiceHelper_infoModalSeen') !== 'true') {
-                    openInfoModal(); 
+                    openInfoModal();
                 }
-            } catch (e) {
-                console.error("Error reading localStorage for info modal preference:", e);
-            }
+            } catch (e) { console.error("Error reading localStorage for info modal preference:", e); }
 
             if(infoButton) { infoButton.addEventListener('click', openInfoModal); }
             if(modalOverlay) { modalOverlay.addEventListener('click', (event) => { if (event.target === modalOverlay) { closeInfoModal(); } }); }
             if(modalCloseButton) { modalCloseButton.addEventListener('click', closeInfoModal); }
             
-            if(metronomeToggleBtn) { metronomeToggleBtn.addEventListener('click', toggleMetronomeCard); } 
-            
-            if(metronomeStartStopBtn) {
-                metronomeStartStopBtn.addEventListener('click', () => {
-                    if (isMetronomeRunning) {
-                        stopMetronome();
-                    } else {
-                        initializeAudioContext(); 
-                        startMetronome();
-                    }
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', (event) => {
+                    applyTheme(event.target.checked ? 'dark' : 'light');
                 });
             }
 
+            if(metronomeToggleBtn) { metronomeToggleBtn.addEventListener('click', toggleMetronomeCard); }
+            if(metronomeStartStopBtn) { metronomeStartStopBtn.addEventListener('click', () => { if (isMetronomeRunning) stopMetronome(); else { initializeAudioContext(); startMetronome(); } }); }
             if (bpmInput && bpmSlider) {
-                bpmSlider.addEventListener('input', () => {
-                    bpmInput.value = bpmSlider.value;
-                    const changeEvent = new Event('change', { bubbles: true });
-                    bpmInput.dispatchEvent(changeEvent);
-                });
-                bpmInput.addEventListener('input', () => {
-                    const value = parseInt(bpmInput.value, 10);
-                    if (!isNaN(value)) {
-                        bpmSlider.value = value; 
-                    }
-                });
-                bpmInput.addEventListener('change', () => {
-                    const wasRunning = isMetronomeRunning;
-                    if (wasRunning) {
-                        stopMetronome(); 
-                    }
-                    let newBpm = parseInt(bpmInput.value, 10);
-                    const minBpm = parseInt(bpmInput.min, 10);
-                    const maxBpm = parseInt(bpmInput.max, 10);
-                    if (!isNaN(newBpm) && newBpm >= minBpm && newBpm <= maxBpm) {
-                        currentBpm = newBpm; 
-                    } else {
-                        console.warn("BPM inválido en input numérico, reseteando a:", currentBpm);
-                        bpmInput.value = currentBpm; 
-                    }
-                    bpmSlider.value = currentBpm; 
-                    console.log("BPM establecido a (después de validación/reseteo):", currentBpm);
-                    if (wasRunning) {
-                        startMetronome();
-                    }
-                });
-                bpmInput.value = currentBpm;
-                bpmSlider.value = currentBpm;
+                bpmSlider.addEventListener('input', () => { bpmInput.value = bpmSlider.value; const changeEvent = new Event('change', { bubbles: true }); bpmInput.dispatchEvent(changeEvent); });
+                bpmInput.addEventListener('input', () => { const value = parseInt(bpmInput.value, 10); if (!isNaN(value)) bpmSlider.value = value; });
+                bpmInput.addEventListener('change', () => { const wasRunning = isMetronomeRunning; if (wasRunning) stopMetronome(); let newBpm = parseInt(bpmInput.value, 10); const minBpm = parseInt(bpmInput.min, 10); const maxBpm = parseInt(bpmInput.max, 10); if (!isNaN(newBpm) && newBpm >= minBpm && newBpm <= maxBpm) currentBpm = newBpm; else { console.warn("BPM inválido:", currentBpm); bpmInput.value = currentBpm; } bpmSlider.value = currentBpm; if (wasRunning) startMetronome(); });
+                bpmInput.value = currentBpm; bpmSlider.value = currentBpm;
             }
-
             if (timeSignatureSelect) {
-                beatsPerMeasure = parseInt(timeSignatureSelect.value, 10); 
-                timeSignatureSelect.addEventListener('change', (event) => {
-                    beatsPerMeasure = parseInt(event.target.value, 10);
-                    currentBeatInMeasure = 0; 
-                    console.log("Compás cambiado a:", beatsPerMeasure);
-                    if (isMetronomeRunning) {
-                        stopMetronome();
-                        startMetronome();
-                    }
-                });
+                beatsPerMeasure = parseInt(timeSignatureSelect.value, 10);
+                timeSignatureSelect.addEventListener('change', (event) => { beatsPerMeasure = parseInt(event.target.value, 10); currentBeatInMeasure = 0; if (isMetronomeRunning) { stopMetronome(); startMetronome(); } });
             }
 
-            const randomizeBtnMain = document.getElementById('randomizeButton'); 
-            if (randomizeBtnMain) { 
-                randomizeBtnMain.addEventListener('mouseenter', () => { 
-                    if (randomizeBtnMain.disabled) return; 
-                    const randomColor = `rgb(${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)})`; 
-                    randomizeBtnMain.style.backgroundColor = randomColor; 
-                    randomizeBtnMain.style.borderColor = randomColor; 
-                }); 
-                randomizeBtnMain.addEventListener('mouseleave', () => { 
-                    randomizeBtnMain.style.backgroundColor = ''; 
-                    randomizeBtnMain.style.borderColor = ''; 
-                }); 
+            function applyRandomColorHover(buttonElement) {
+                if (!buttonElement || 
+                    buttonElement.id === 'homeScreenShuffleBtn' ||
+                    buttonElement.id === 'randomizeButton' ||
+                    buttonElement.id === 'panel_randomizeKeyGridBtn' ||
+                    buttonElement.id === 'standalone_randomizeKeyGridBtn') {
+                    return; 
+                }
+                buttonElement.addEventListener('mouseenter', () => { if (buttonElement.disabled) return; const r = Math.floor(Math.random() * 151) + 50; const g = Math.floor(Math.random() * 151) + 50; const b = Math.floor(Math.random() * 151) + 50; const randomColor = `rgb(${r}, ${g}, ${b})`; buttonElement.style.backgroundColor = randomColor; buttonElement.style.borderColor = randomColor; });
+                buttonElement.addEventListener('mouseleave', () => { buttonElement.style.backgroundColor = ''; buttonElement.style.borderColor = ''; });
             }
+            const shuffleButtonsToColor = [ ]; 
+            shuffleButtonsToColor.forEach(btnId => { const btn = document.getElementById(btnId); if (btn) applyRandomColorHover(btn); });
 
             document.addEventListener('keydown', (event) => {
-                if (event.key === ' ' || event.keyCode === 32) { 
+                if (event.key === ' ' || event.keyCode === 32) {
                     const targetTagName = event.target.tagName.toLowerCase();
                     const isModalOpen = document.getElementById('modalOverlay')?.style.display === 'flex';
-                    if (targetTagName === 'input' || targetTagName === 'textarea' || isModalOpen) {
-                        return; 
-                    }
-                    const randomizeScreen = document.getElementById('randomizationScreen');
-                    if (randomizeScreen && randomizeScreen.style.display === 'block') {
-                        event.preventDefault(); 
+                    if (targetTagName === 'input' || targetTagName === 'textarea' || isModalOpen) return;
+                    
+                    const activeScreenId = document.querySelector('.screen[style*="display: block"]')?.id;
+                    let targetButton = null;
+                    let actionType = null;
+
+                    if (activeScreenId === 'randomizationScreen') {
                         const metronomeCard = document.getElementById('metronomeCard');
                         const metronomeStartStopBtn = document.getElementById('metronomeStartStopBtn');
-                        if (metronomeCard && metronomeCard.classList.contains('visible') && metronomeStartStopBtn) {
-                            console.log("Barra espaciadora: Iniciando/parando metrónomo!");
-                            metronomeStartStopBtn.click(); 
+                        if (metronomeCard && metronomeCard.classList.contains('visible') && metronomeStartStopBtn && !metronomeStartStopBtn.disabled) {
+                            actionType = 'metronome';
+                            targetButton = metronomeStartStopBtn;
                         } else {
-                            const randomizeButton = document.getElementById('randomizeButton');
-                            if (randomizeButton && !randomizeButton.disabled) {
-                                console.log("Barra espaciadora: ¡Randomizando!");
-                                randomizeButton.classList.add('spacebar-active');
-                                randomizeButton.click();
-                                setTimeout(() => { if (randomizeButton) { randomizeButton.classList.remove('spacebar-active'); } }, 200);
-                            }
+                            actionType = 'list_randomize';
+                            targetButton = document.getElementById('randomizeButton');
+                        }
+                    } else if (activeScreenId === 'standaloneKeyRandomizerScreen') {
+                        actionType = 'key_randomize_standalone';
+                        targetButton = standalone_randomizeBtn_Elem;
+                    } else if (activeScreenId === 'homeScreen') {
+                        actionType = 'list_randomize_home';
+                        targetButton = document.getElementById('homeScreenShuffleBtn');
+                    }
+
+                    if (targetButton && !targetButton.disabled) {
+                        event.preventDefault();
+                        let isActiveClassApplied = false;
+                        if (targetButton.classList.contains('button-randomize-animated')) {
+                            targetButton.classList.add('spacebar-active');
+                            isActiveClassApplied = true;
+                        } else if (targetButton.id === 'homeScreenShuffleBtn') { 
+                            targetButton.classList.add('active-simulation-by-space');
+                            isActiveClassApplied = true;
+                        }
+                        
+                        if (typeof targetButton.click === 'function') {
+                            targetButton.click();
+                        }
+                        
+                        if (isActiveClassApplied) {
+                            setTimeout(() => {
+                                if (targetButton && document.body.contains(targetButton)) {
+                                    targetButton.classList.remove('spacebar-active');
+                                    targetButton.classList.remove('active-simulation-by-space');
+                                }
+                            }, 200);
                         }
                     }
                 }
             });
-            
-            // Listeners para feedback de clic en flechas
+
             function handleArrowInteraction(event) {
                 const button = event.target.closest('.move-up-btn, .move-down-btn');
-                if (!button || button.disabled) {
-                    if (event.type === 'mouseleave') {
-                       // Busca CUALQUIER botón activo dentro del contenedor y desactívalo
-                       const activeButtons = event.currentTarget.querySelectorAll('.arrow-active');
-                       activeButtons.forEach(activeBtn => activeBtn.classList.remove('arrow-active'));
-                    }
-                    return;
-                };
-
-                if (event.type === 'mousedown' || event.type === 'touchstart') {
-                    button.classList.add('arrow-active');
-                } else { // mouseup, mouseleave (sobre el botón), touchend, touchcancel
-                    button.classList.remove('arrow-active');
-                }
+                if (!button || button.disabled) { if (event.type === 'mouseleave') { const activeButtons = event.currentTarget.querySelectorAll('.arrow-active'); activeButtons.forEach(activeBtn => activeBtn.classList.remove('arrow-active')); } return; }
+                if (event.type === 'mousedown' || event.type === 'touchstart') { button.classList.add('arrow-active'); } else if (event.type === 'mouseup' || event.type === 'touchend' || event.type === 'mouseleave') { button.classList.remove('arrow-active'); }
             }
 
-            if (listsContainer) {
-                // Mouse events
-                listsContainer.addEventListener('mousedown', handleArrowInteraction);
-                listsContainer.addEventListener('mouseup', handleArrowInteraction);
-                listsContainer.addEventListener('mouseleave', handleArrowInteraction); // Para cuando sales del *contenedor*
-                // Touch events
-                listsContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true });
-                listsContainer.addEventListener('touchend', handleArrowInteraction);
-                listsContainer.addEventListener('touchcancel', handleArrowInteraction);
-            }
-            if (elementsListContainer) {
-                // Mouse events
-                elementsListContainer.addEventListener('mousedown', handleArrowInteraction);
-                elementsListContainer.addEventListener('mouseup', handleArrowInteraction);
-                elementsListContainer.addEventListener('mouseleave', handleArrowInteraction); // Para cuando sales del *contenedor*
-                // Touch events
-                elementsListContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true });
-                elementsListContainer.addEventListener('touchend', handleArrowInteraction);
-                elementsListContainer.addEventListener('touchcancel', handleArrowInteraction);
-            }
+            if (listsContainer) { listsContainer.addEventListener('mousedown', handleArrowInteraction); listsContainer.addEventListener('mouseup', handleArrowInteraction); listsContainer.addEventListener('mouseleave', handleArrowInteraction, true); listsContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true }); listsContainer.addEventListener('touchend', handleArrowInteraction); }
+            if (elementsListContainer) { elementsListContainer.addEventListener('mousedown', handleArrowInteraction); elementsListContainer.addEventListener('mouseup', handleArrowInteraction); elementsListContainer.addEventListener('mouseleave', handleArrowInteraction, true); elementsListContainer.addEventListener('touchstart', handleArrowInteraction, { passive: true }); elementsListContainer.addEventListener('touchend', handleArrowInteraction); }
 
+            if (keyRand_togglePanelBtn_Elem) { keyRand_togglePanelBtn_Elem.addEventListener('click', () => { if (keyRand_panel_Elem.classList.contains('panel-open')) keyRand_closePanel(); else keyRand_openPanel(); }); }
+            if(panel_randomizeBtn_Elem && panel_keyGridContainer_Elem) { panel_randomizeBtn_Elem.addEventListener('click', () => keyRand_randomizeAndDisplay_KR_generic(panel_keyGridContainer_Elem)); }
+            if(panel_setAllEnharmonicsBtn_Elem && panel_enharmonicBtnsContainer_Elem) { panel_setAllEnharmonicsBtn_Elem.addEventListener('click', () => keyRand_toggleAllEnharmonics_KR_generic(panel_enharmonicBtnsContainer_Elem, panel_setAllEnharmonicsBtn_Elem)); }
+            if(standalone_randomizeBtn_Elem && standalone_keyGridContainer_Elem) { standalone_randomizeBtn_Elem.addEventListener('click', () => keyRand_randomizeAndDisplay_KR_generic(standalone_keyGridContainer_Elem)); }
+            if(standalone_setAllEnharmonicsBtn_Elem && standalone_enharmonicBtnsContainer_Elem) { standalone_setAllEnharmonicsBtn_Elem.addEventListener('click', () => keyRand_toggleAllEnharmonics_KR_generic(standalone_enharmonicBtnsContainer_Elem, standalone_setAllEnharmonicsBtn_Elem)); }
 
             showHomeScreen();
-            console.log("DOMContentLoaded: Initialization complete. Showing home screen.");
+            console.log("Application fully initialized and home screen rendered.");
         });
     </script>
-
 </body>
 </html>
