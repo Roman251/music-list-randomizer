@@ -788,10 +788,10 @@
             border-color: var(--c-text) !important; 
         }
         
-        /* Dark mode active enharmonic button - Background same as normal, text and border lighter teal, NO outline */
+        /* Dark mode active enharmonic button - Background same as normal, text and BORDER lighter teal, NO outline */
         body.theme-dark .enharmonic-control-button.both-state,
         body.theme-dark .keyRand_setAllEnharmonicsBtn_common.active {
-            background-color: var(--c-background) !important; /* Screen background (same as normal dark state) */
+            background-color: var(--c-background) !important; 
             color: var(--c-text) !important; /* Lighter teal text for contrast */
             border-color: var(--c-text) !important; /* Lighter teal border to match text */
             outline: none !important; 
@@ -841,10 +841,10 @@
                     <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
                     <span class="tooltip">Exportar listas seleccionadas</span>
                 </button>
-                <button class="io-button" onclick="navigateToStandaloneKeyRandomizerScreen()" aria-label="Tonalidades aleatorias"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <button class="io-button" onclick="navigateToStandaloneKeyRandomizerScreen()" aria-label="Notas aleatorias"> <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M7.5 6C6.7 6 6 6.7 6 7.5S6.7 9 7.5 9 9 8.3 9 7.5 8.3 6 7.5 6M16.5 15C15.7 15 15 15.7 15 16.5C15 17.3 15.7 18 16.5 18C17.3 18 18 17.3 18 16.5C18 15.7 17.3 15 16.5 15M16.5 6C15.7 6 15 6.7 15 7.5S15.7 9 16.5 9C17.3 9 18 8.3 18 7.5S17.3 6 16.5 6M12 10.5C11.2 10.5 10.5 11.2 10.5 12S11.2 13.5 12 13.5 13.5 12.8 13.5 12 12.8 10.5 12 10.5M7.5 15C6.7 15 6 15.7 6 16.5C6 17.3 6.7 18 7.5 18S9 17.3 9 16.5C9 15.7 8.3 15 7.5 15Z" />
                     </svg>
-                    <span class="tooltip">Tonalidades aleatorias</span> </button>
+                    <span class="tooltip">Notas aleatorias</span> </button>
             </div>
             <div class="footer-bar">
                 <div class="home-randomize-action-group">
@@ -987,11 +987,11 @@
                             </svg>
                             <span class="tooltip">Metrónomo</span>
                         </button>
-                        <button id="toggleKeyPanelBtn" class="io-button" aria-label="Panel de Tonalidades">
+                        <button id="toggleKeyPanelBtn" class="io-button" aria-label="Notas aleatorias">
                                 <svg class="io-svgIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M7.5 6C6.7 6 6 6.7 6 7.5S6.7 9 7.5 9 9 8.3 9 7.5 8.3 6 7.5 6M16.5 15C15.7 15 15 15.7 15 16.5C15 17.3 15.7 18 16.5 18C17.3 18 18 17.3 18 16.5C18 15.7 17.3 15 16.5 15M16.5 6C15.7 6 15 6.7 15 7.5S15.7 9 16.5 9C17.3 9 18 8.3 18 7.5S17.3 6 16.5 6M12 10.5C11.2 10.5 10.5 11.2 10.5 12S11.2 13.5 12 13.5 13.5 12.8 13.5 12 12.8 10.5 12 10.5M7.5 15C6.7 15 6 15.7 6 16.5C6 17.3 6.7 18 7.5 18S9 17.3 9 16.5C9 15.7 8.3 15 7.5 15Z" />
                             </svg>
-                            <span class="tooltip">Tonalidades</span>
+                            <span class="tooltip">Notas aleatorias</span>
                         </button>
                     </div>
                 </div>
@@ -1047,7 +1047,7 @@
             <p>Si tienes cualquier feedback constructivo no dudes en escribirme al degtiarev.music@gmail.com</p>
 
             <h3>Historial de versiones:</h3>
-            <p>v2.5 (05.05.25) - primer lanzamiento</p>
+            <p>v2.5 (05.05.25) - Primer lanzamiento</p>
             <p>v2.6 (06.05.25) - Implementada la función de metrónomo, ajustes de diseño</p>
             <p>v3 (03.06.25)  - Añadida la función de tonos aleatorios, añadido modo oscuro.</p>
             
@@ -1525,7 +1525,7 @@
         const ENHARMONIC_CONTROL_PITCH_VALUES_KR = [1, 3, 6, 8, 10];
         let currentKeyGridPitchesData_KR = [];
         let enharmonicDisplayPreferences_KR = { 1: 'flat', 3: 'flat', 6: 'sharp', 8: 'flat', 10: 'flat' };
-        const ENHARMONIC_CYCLE_MODES_KR = ['flat', 'sharp', 'both'];
+        const ENHARMONIC_CYCLE_MODES_KR = ['flat', 'sharp', 'both']; // Standard cycle for non-F# notes
         const INITIAL_ENHARMONIC_PREFERENCES_KR = { 1: 'flat', 3: 'flat', 6: 'sharp', 8: 'flat', 10: 'flat' };
         let panel_keyGridContainer_Elem, panel_randomizeBtn_Elem, panel_enharmonicBtnsContainer_Elem, panel_setAllEnharmonicsBtn_Elem;
         let standalone_keyGridContainer_Elem, standalone_randomizeBtn_Elem, standalone_enharmonicBtnsContainer_Elem, standalone_setAllEnharmonicsBtn_Elem;
@@ -1536,7 +1536,32 @@
         function keyRand_renderGrid_KR(targetGridContainer) { if (!targetGridContainer) return; targetGridContainer.innerHTML = ''; if (currentKeyGridPitchesData_KR.length === 0) return; currentKeyGridPitchesData_KR.forEach(pitchObject => { const cell = document.createElement('div'); cell.className = 'key-grid-cell'; cell.textContent = keyRand_getPitchDisplayString_KR(pitchObject); targetGridContainer.appendChild(cell); }); }
         function keyRand_randomizeAndDisplay_KR_generic(targetGridContainer) { currentKeyGridPitchesData_KR = keyRand_shuffleArray_KR(PITCH_CLASSES_ARRAY_KR); keyRand_renderGrid_KR(targetGridContainer); }
         function keyRand_updateEnharmonicButton_KR(pitchValue, enharmonicBtnsContainer) { if (!enharmonicBtnsContainer) return; const button = enharmonicBtnsContainer.querySelector(`button[data-pitch-value="${pitchValue}"]`); if (!button) return; const pitchObject = PITCH_CLASSES_MAP_KR[pitchValue]; const currentMode = enharmonicDisplayPreferences_KR[pitchValue]; button.classList.remove('both-state'); switch (currentMode) { case 'flat': button.textContent = pitchObject.flat; break; case 'sharp': button.textContent = pitchObject.sharp; break; case 'both': button.textContent = `${pitchObject.flat}/${pitchObject.sharp}`; button.classList.add('both-state'); break; } }
-        function keyRand_cycleEnharmonicPreference_KR_generic(pitchValue, targetEnharmonicBtnsContainer, targetSetAllBtn) { const currentMode = enharmonicDisplayPreferences_KR[pitchValue]; const currentIndex = ENHARMONIC_CYCLE_MODES_KR.indexOf(currentMode); const nextIndex = (currentIndex + 1) % ENHARMONIC_CYCLE_MODES_KR.length; enharmonicDisplayPreferences_KR[pitchValue] = ENHARMONIC_CYCLE_MODES_KR[nextIndex]; keyRand_updateEnharmonicButton_KR(pitchValue, targetEnharmonicBtnsContainer); keyRand_updateAllEnharmonicsBtnState_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn); }
+        
+        // BUG FIX: Enharmonic cycle for F#
+        function keyRand_cycleEnharmonicPreference_KR_generic(pitchValue, targetEnharmonicBtnsContainer, targetSetAllBtn) {
+            const currentMode = enharmonicDisplayPreferences_KR[pitchValue];
+            let nextMode;
+
+            if (pitchValue === 6) { // Specific cycle for F# (value 6)
+                if (currentMode === 'sharp') {
+                    nextMode = 'flat'; // F# -> Gb
+                } else if (currentMode === 'flat') {
+                    nextMode = 'both'; // Gb -> Gb/F#
+                } else { // currentMode must be 'both'
+                    nextMode = 'sharp'; // Gb/F# -> F#
+                }
+            } else {
+                // Original generic cycling for other notes using ENHARMONIC_CYCLE_MODES_KR
+                const currentIndex = ENHARMONIC_CYCLE_MODES_KR.indexOf(currentMode);
+                const nextIndex = (currentIndex + 1) % ENHARMONIC_CYCLE_MODES_KR.length;
+                nextMode = ENHARMONIC_CYCLE_MODES_KR[nextIndex];
+            }
+
+            enharmonicDisplayPreferences_KR[pitchValue] = nextMode;
+            keyRand_updateEnharmonicButton_KR(pitchValue, targetEnharmonicBtnsContainer);
+            keyRand_updateAllEnharmonicsBtnState_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn);
+        }
+
         function keyRand_updateAllEnharmonicsBtnState_KR_generic(enharmonicBtnsContainer, setAllBtnElem) { if (!setAllBtnElem || !enharmonicBtnsContainer) return; const areAllCurrentlyBoth = ENHARMONIC_CONTROL_PITCH_VALUES_KR.every(pValue => enharmonicDisplayPreferences_KR[pValue] === 'both'); if (areAllCurrentlyBoth) { setAllBtnElem.classList.add('active'); } else { setAllBtnElem.classList.remove('active'); } }
         function keyRand_toggleAllEnharmonics_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn) { const areAllCurrentlyBoth = ENHARMONIC_CONTROL_PITCH_VALUES_KR.every(pValue => enharmonicDisplayPreferences_KR[pValue] === 'both'); ENHARMONIC_CONTROL_PITCH_VALUES_KR.forEach(pitchValue => { if (areAllCurrentlyBoth) { enharmonicDisplayPreferences_KR[pitchValue] = INITIAL_ENHARMONIC_PREFERENCES_KR[pitchValue] || 'flat'; } else { enharmonicDisplayPreferences_KR[pitchValue] = 'both'; } keyRand_updateEnharmonicButton_KR(pitchValue, targetEnharmonicBtnsContainer); }); keyRand_updateAllEnharmonicsBtnState_KR_generic(targetEnharmonicBtnsContainer, targetSetAllBtn); }
         function keyRand_populateEnharmonicControlButtons_KR(enharmonicBtnsContainer, targetSetAllBtn) { if (!enharmonicBtnsContainer) return; enharmonicBtnsContainer.innerHTML = ''; ENHARMONIC_CONTROL_PITCH_VALUES_KR.forEach(pitchValue => { const button = document.createElement('button'); button.className = 'button enharmonic-control-button'; button.dataset.pitchValue = pitchValue; button.addEventListener('click', () => keyRand_cycleEnharmonicPreference_KR_generic(pitchValue, enharmonicBtnsContainer, targetSetAllBtn)); enharmonicBtnsContainer.appendChild(button); keyRand_updateEnharmonicButton_KR(pitchValue, enharmonicBtnsContainer); }); }
